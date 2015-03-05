@@ -5,12 +5,13 @@ using System.Linq;
 
 namespace HuffmanCoding
 {
+    using TreeRankedNodes = System.Collections.Generic.SortedDictionary<int, List<Node>>;
     class Node : IComparable<Node>
     {
+        public Node leftNode;
         public Node rightNode;
         public int rank;
         public byte symbol;
-        public Node leftNode;
 
         private int nodeIndex;
 
@@ -59,7 +60,7 @@ namespace HuffmanCoding
             if (otherNode.rank < rank)
                 return false;
 
-            //otherNode.weight == weight
+            //otherNode.rank == rank
             if (otherNode.IsLeaf() && !(IsLeaf()))
                 return false;
 
@@ -75,7 +76,7 @@ namespace HuffmanCoding
             if (nodesAreLeafs && (symbol > otherNode.symbol))
                 return false;
 
-            //nodes aren't leafs (if symbols are same => algorithm/data is wrong)
+            //ranks are same, nodes aren't leafs (if symbols are same => algorithm/data is wrong)
             if (nodeIndex < otherNode.nodeIndex)
                 return true;
 
@@ -109,12 +110,12 @@ namespace HuffmanCoding
         private Node root;
         private int treeCount = 0;
 
-        public Tree(SortedDictionary<int, List<Node>> rankedNodes)
+        public Tree(TreeRankedNodes rankedNodes)
         {
             Build(rankedNodes);
         }
 
-        private void Build(SortedDictionary<int, List<Node>> rankedNodes)
+        private void Build(TreeRankedNodes rankedNodes)
         {
             List<Node> nodes;
             Node temp1;
@@ -124,7 +125,7 @@ namespace HuffmanCoding
             int remainingNodes = 0;
             int rank;
 
-            foreach (KeyValuePair<int, List<Node>> rankedNode in rankedNodes)
+            foreach (var rankedNode in rankedNodes)
             {
                 remainingNodes += rankedNode.Value.Count;
             }
@@ -243,12 +244,12 @@ namespace HuffmanCoding
         private const int SYMBOLS_COUNT = 256;//ascii
 
         //TODO Maybe divide this methods into two? Data reading + frequency calculation AND node merging into result
-        public static SortedDictionary<int, List<Node>> ReadFile(string fileName)
+        public static TreeRankedNodes ReadFile(string fileName)
         {
             using (var sourceFileStream = new FileStream (fileName, FileMode.Open, FileAccess.Read)) {
 
                 //result
-                var rankedNodes = new SortedDictionary<int, List<Node>> ();
+                var rankedNodes = new TreeRankedNodes ();
 
                 //read data & calculate ranks
                 Node[] nodes = new Node[SYMBOLS_COUNT];

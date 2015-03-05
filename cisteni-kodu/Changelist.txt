@@ -15,3 +15,5 @@
    - merge two cycles (main cycle + last chunk cycle)
  - Program:
    - static variables moved into methods 
+ - replace datatypes with "var" keywork
+ - typedef for System.Collections.Generic.SortedDictionary<int, List<Node>>
