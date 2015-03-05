@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace HuffmanskeKapky
 {
@@ -12,7 +13,7 @@ namespace HuffmanskeKapky
         public byte symbol;
         public Node leftNode;
 
-        int index;
+        int nodeIndex;
 
         static int lastNodeIndex;
 
@@ -22,7 +23,7 @@ namespace HuffmanskeKapky
             this.symbol = symbol;
             this.leftNode = left;
             this.rightNode = right;
-            index = lastNodeIndex;
+            nodeIndex = lastNodeIndex;
             lastNodeIndex++;
         }
 
@@ -32,11 +33,7 @@ namespace HuffmanskeKapky
         /// <returns></returns>
         public bool IsLeaf()
         {
-            if ((leftNode == null) && (rightNode == null))
-            {
-                return true;
-            }
-            else return false;
+            return leftNode == null && rightNode == null;
         }
 
         public static int SumWeights(Node firstNode, Node secondNode)
@@ -60,40 +57,35 @@ namespace HuffmanskeKapky
         /// </summary>
         /// <param name="druhy"></param>
         /// <returns></returns>
-        public bool IsLeftNode(Node otherNode)
+        public bool IsNodeLeftward(Node otherNode)
         {
             if (otherNode.weight > weight)
-            {
                 return true;
-            }
-            else if (otherNode.weight < weight)
-            {
+
+            if (otherNode.weight < weight)
                 return false;
-            }
-            else if (otherNode.IsLeaf() && !(IsLeaf()))
-            {
+
+            //otherNode.weight == weight
+            if (otherNode.IsLeaf() && !(IsLeaf()))
                 return false;
-            }
-            else if (IsLeaf() && !(otherNode.IsLeaf()))
-            {
+
+            if (IsLeaf() && !(otherNode.IsLeaf()))
                 return true;
-            }
-            else if ((IsLeaf()) && (otherNode.IsLeaf()) && (symbol < otherNode.symbol))
-            {
+
+            //otherNode.IsLeaf() == IsLeaf()
+            bool nodesAreLeafs = IsLeaf () && otherNode.IsLeaf ();
+
+            if (nodesAreLeafs && (symbol < otherNode.symbol))
                 return true;
-            }
-            else if ((IsLeaf()) && (otherNode.IsLeaf()) && (symbol > otherNode.symbol))
-            {
+
+            if (nodesAreLeafs && (symbol > otherNode.symbol))
                 return false;
-            }
-            else if (index < otherNode.index)
-            {
+
+            //nodes aren't leafs (if symbols are same => algorithm/data is wrong)
+            if (nodeIndex < otherNode.nodeIndex)
                 return true;
-            }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
 
@@ -101,29 +93,23 @@ namespace HuffmanskeKapky
 
         public int CompareTo(Node otherNode)
         {
-            if (this == otherNode)
-            {
+            if (this.Equals (otherNode))
                 return 0;
-            }
-            else if (IsLeftNode(otherNode))
-            {
-                return -1;
-            }
-            else
-            {
-                return 1;
-            }
 
+            if (IsNodeLeftward(otherNode))
+                return -1;
+
+            return 1;
         }
 
         #endregion
     }
 
-    class Tree
+    class HuffmanTree
     {
         private Node root;
 
-        public Tree(SortedDictionary<int, List<Node>> rankedNodes)
+        public HuffmanTree(SortedDictionary<int, List<Node>> rankedNodes)
         {
             Build(rankedNodes);
         }
@@ -133,9 +119,9 @@ namespace HuffmanskeKapky
         private void Build(SortedDictionary<int, List<Node>> rankedNodes)
         {
             List<Node> nodes;
-            Node pom1;
-            Node pom3;
-            Node novy;
+            Node temp1;
+            Node temp2;
+            Node newNode;
             Node oddNode = null;
             int remainingNodes = 0;
             int rank;
@@ -159,76 +145,63 @@ namespace HuffmanskeKapky
                 {
                     for (int i = 0; i < nodes.Count - 1; i++)
                     {
-                        pom1 = nodes[i];
-                        pom3 = nodes[++i];
+                        temp1 = nodes[i];
+                        temp2 = nodes[++i];
 
-                        if (pom1.IsLeftNode(pom3))
-                        {
-                            novy = new Node(pom1.weight + pom3.weight, pom1.symbol, pom1, pom3);
-                        }
-                        else novy = new Node(pom1.weight + pom3.weight, pom1.symbol, pom3, pom1);
+                        if (temp1.IsNodeLeftward(temp2))
+                            newNode = new Node(temp1.weight + temp2.weight, temp1.symbol, temp1, temp2);
+                        else 
+                            newNode = new Node(temp1.weight + temp2.weight, temp1.symbol, temp2, temp1);
 
-                        if (rankedNodes.ContainsKey(novy.weight))
-                        {
-                            rankedNodes[novy.weight].Add(novy);
-                        }
-                        else rankedNodes.Add(novy.weight, new List<Node>() { novy });
-
+                        if (rankedNodes.ContainsKey(newNode.weight))
+                            rankedNodes[newNode.weight].Add(newNode);
+                        else 
+                            rankedNodes.Add(newNode.weight, new List<Node>() { newNode });
 
                         remainingNodes--;
                     }
                     if (nodes.Count % 2 == 1)
-                    {
                         oddNode = nodes[nodes.Count - 1];
-
-                    }
                     else
-                    {
                         oddNode = null;
-                    }
-
                 }
                 else
                 {
-                    pom1 = nodes[0];
-                    if (oddNode.IsLeftNode(pom1))
-                    {
-                        novy = new Node(oddNode.weight + pom1.weight, oddNode.symbol, oddNode, pom1);
-                    }
-                    else novy = new Node(pom1.weight + oddNode.weight, pom1.symbol, pom1, oddNode);
+                    temp1 = nodes[0];
+                    if (oddNode.IsNodeLeftward(temp1))
+                        newNode = new Node(oddNode.weight + temp1.weight, oddNode.symbol, oddNode, temp1);
+                    else 
+                        newNode = new Node(temp1.weight + oddNode.weight, temp1.symbol, temp1, oddNode);
 
-                    if (rankedNodes.ContainsKey(novy.weight))
-                    {
-                        rankedNodes[novy.weight].Add(novy);
-                    }
-                    else rankedNodes.Add(novy.weight, new List<Node>() { novy });
+                    if (rankedNodes.ContainsKey(newNode.weight))
+                        rankedNodes[newNode.weight].Add(newNode);
+                    else 
+                        rankedNodes.Add(newNode.weight, new List<Node>() { newNode });
 
                     remainingNodes--;
 
                     for (int i = 1; i < nodes.Count - 1; i++)
                     {
-                        pom1 = nodes[i];
-                        pom3 = nodes[++i];
+                        temp1 = nodes[i];
+                        temp2 = nodes[++i];
 
-                        if (pom1.IsLeftNode(pom3))
-                        {
-                            novy = new Node(pom1.weight + pom3.weight, pom1.symbol, pom1, pom3);
-                        }
-                        else novy = new Node(pom1.weight + pom3.weight, pom1.symbol, pom3, pom1);
+                        if (temp1.IsNodeLeftward(temp2))
+                            newNode = new Node(temp1.weight + temp2.weight, temp1.symbol, temp1, temp2);
+                        else 
+                            newNode = new Node(temp1.weight + temp2.weight, temp1.symbol, temp2, temp1);
 
-                        if (rankedNodes.ContainsKey(novy.weight))
+                        if (rankedNodes.ContainsKey(newNode.weight))
                         {
-                            rankedNodes[novy.weight].Add(novy);
+                            rankedNodes[newNode.weight].Add(newNode);
                         }
-                        else rankedNodes.Add(novy.weight, new List<Node>() { novy });
+                        else rankedNodes.Add(newNode.weight, new List<Node>() { newNode });
 
                         remainingNodes--;
                     }
                     if (nodes.Count % 2 == 0)
-                    {
                         oddNode = nodes[nodes.Count - 1];
-                    }
-                    else oddNode = null;
+                    else 
+                        oddNode = null;
                 }
                 rankedNodes.Remove(rank);
             }
@@ -283,7 +256,7 @@ namespace HuffmanskeKapky
         }
     }
 
-    class Reader
+    class HuffmanReader
     {
         private static FileStream sourceFileStream;
 
@@ -309,37 +282,22 @@ namespace HuffmanskeKapky
         public static SortedDictionary<int, List<Node>> ReadFile(string fileName)
         {
 
-            if (!(OpenFile(fileName))) return null;
-            else
+            if (!OpenFile(fileName)) 
+                return null;
+
+            SortedDictionary<int, List<Node>> rankedNodes = new SortedDictionary<int, List<Node>>();
+            byte a = 0;
+
+            Node[] nodes = new Node[256];
+            byte[] buffer = new byte[0x4000];
+
+            for (int i = 0; i < sourceFileStream.Length / 0x4000; i++)
             {
-                SortedDictionary<int, List<Node>> rankedNodes = new SortedDictionary<int, List<Node>>();
-                byte a = 0;
+                sourceFileStream.Read(buffer, 0, 16384);
 
-                Node[] nodes = new Node[256];
-                byte[] buffer = new byte[0x4000];
-
-                for (int i = 0; i < sourceFileStream.Length / 0x4000; i++)
+                for (int j = 0; j < 16384; j++)
                 {
-                    sourceFileStream.Read(buffer, 0, 16384);
-
-                    for (int j = 0; j < 16384; j++)
-                    {
-                        a = buffer[j];
-                        if (nodes[a] == null)
-                        {
-                            nodes[a] = new Node(1, (byte)a, null, null);
-                            //   vrcholy.Add(prvky[a]);
-                        }
-                        else
-                        {
-                            nodes[a].weight++;
-                        }
-                    }
-                }
-
-                for (int i = 0; i < sourceFileStream.Length % 0x4000; i++)
-                {
-                    a = (byte)sourceFileStream.ReadByte();
+                    a = buffer[j];
                     if (nodes[a] == null)
                     {
                         nodes[a] = new Node(1, (byte)a, null, null);
@@ -350,24 +308,38 @@ namespace HuffmanskeKapky
                         nodes[a].weight++;
                     }
                 }
-
-                for (int i = 0; i < 256; i++)
-                {
-                    if (nodes[i] != null)
-                    {
-                        if (rankedNodes.ContainsKey(nodes[i].weight))
-                        {
-                            rankedNodes[nodes[i].weight].Add(nodes[i]);
-                        }
-                        else rankedNodes.Add(nodes[i].weight, new List<Node>() { nodes[i] });
-                    }
-                }
-                foreach (KeyValuePair<int, List<Node>> rankedNode in rankedNodes)
-                {
-                    rankedNode.Value.Sort();
-                }
-                return rankedNodes;
             }
+
+            for (int i = 0; i < sourceFileStream.Length % 0x4000; i++)
+            {
+                a = (byte)sourceFileStream.ReadByte();
+                if (nodes[a] == null)
+                {
+                    nodes[a] = new Node(1, (byte)a, null, null);
+                    //   vrcholy.Add(prvky[a]);
+                }
+                else
+                {
+                    nodes[a].weight++;
+                }
+            }
+
+            for (int i = 0; i < 256; i++)
+            {
+                if (nodes[i] != null)
+                {
+                    if (rankedNodes.ContainsKey(nodes[i].weight))
+                    {
+                        rankedNodes[nodes[i].weight].Add(nodes[i]);
+                    }
+                    else rankedNodes.Add(nodes[i].weight, new List<Node>() { nodes[i] });
+                }
+            }
+            foreach (KeyValuePair<int, List<Node>> rankedNode in rankedNodes)
+            {
+                rankedNode.Value.Sort();
+            }
+            return rankedNodes;
         }
 
     }
@@ -375,7 +347,7 @@ namespace HuffmanskeKapky
     class Program
     {
         static SortedDictionary<int, List<Node>> rankedNodes;
-        static Tree huffmanTree;
+        static HuffmanTree huffmanTree;
         //   static Stopwatch sw = new Stopwatch();
 
         static void Main(string[] args)
@@ -387,12 +359,12 @@ namespace HuffmanskeKapky
                 Console.Write("Argument Error");
                 Environment.Exit(0);
             }
-            rankedNodes = Reader.ReadFile(args[0]);
+            rankedNodes = HuffmanReader.ReadFile(args[0]);
 
 
-            if ((rankedNodes != null) && (rankedNodes.Count != 0))
+            if (rankedNodes != null && rankedNodes.Count != 0)
             {
-                huffmanTree = new Tree(rankedNodes);
+                huffmanTree = new HuffmanTree(rankedNodes);
                 huffmanTree.PrintTree();
                 //Console.Write("\n");
                 huffmanTree.PrintTreePrefixed();

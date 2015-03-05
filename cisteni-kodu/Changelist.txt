@@ -1,3 +1,4 @@
 ﻿Changelist
 ==========
  - Translating
+ - if conditions simplifying
