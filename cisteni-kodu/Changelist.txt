@@ -7,3 +7,4 @@
  - PrintTreePrefixed refractoring:
    - remove unnessary variable & conditions
    - replace hex number with decimal
+ - HuffmanCoding.Reader: static -> instance methods & variables

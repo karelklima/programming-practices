@@ -239,9 +239,9 @@ namespace HuffmanCoding
 
     class Reader
     {
-        private static FileStream sourceFileStream;
+        private FileStream sourceFileStream;
 
-        public static bool OpenFile(string fileName)
+        public bool OpenFile(string fileName)
         {
             try
             {
@@ -260,7 +260,7 @@ namespace HuffmanCoding
             return true;
         }
 
-        public static SortedDictionary<int, List<Node>> ReadFile(string fileName)
+        public SortedDictionary<int, List<Node>> ReadFile(string fileName)
         {
 
             if (!OpenFile(fileName)) 
@@ -322,7 +322,6 @@ namespace HuffmanCoding
             }
             return rankedNodes;
         }
-
     }
 }
 
@@ -343,7 +342,9 @@ namespace MFFUK
                 Console.Write("Argument Error");
                 Environment.Exit(0);
             }
-            rankedNodes = HuffmanCoding.Reader.ReadFile(args[0]);
+
+            HuffmanCoding.Reader huffmanReader= new HuffmanCoding.Reader ();
+            rankedNodes = huffmanReader.ReadFile(args[0]);
 
 
             if (rankedNodes != null && rankedNodes.Count != 0)
