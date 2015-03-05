@@ -12,9 +12,9 @@ namespace HuffmanCoding
         public byte symbol;
         public Node leftNode;
 
-        int nodeIndex;
+        private int nodeIndex;
 
-        static int lastNodeIndex;
+        private static int lastNodeIndex;
 
         public Node(int weight, byte symbol, Node left, Node right)
         {
@@ -33,11 +33,6 @@ namespace HuffmanCoding
         public bool IsLeaf()
         {
             return leftNode == null && rightNode == null;
-        }
-
-        public static int SumWeights(Node firstNode, Node secondNode)
-        {
-            return firstNode.weight + secondNode.weight;
         }
 
         /// <summary>
@@ -102,18 +97,22 @@ namespace HuffmanCoding
         }
 
         #endregion
+
+        public static int SumWeights(Node firstNode, Node secondNode)
+        {
+            return firstNode.weight + secondNode.weight;
+        }
     }
 
     class Tree
     {
         private Node root;
+        private int treeCount = 0;
 
         public Tree(SortedDictionary<int, List<Node>> rankedNodes)
         {
             Build(rankedNodes);
         }
-
-        int treeCount = 0;
 
         private void Build(SortedDictionary<int, List<Node>> rankedNodes)
         {

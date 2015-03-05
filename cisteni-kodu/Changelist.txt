@@ -3,3 +3,4 @@
  - Translating
  - if conditions simplifying
  - divide into namespaces
+ - class variables & methods rearrangement
