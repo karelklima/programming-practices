@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace HuffmanskeKapky
+namespace HuffmanCoding
 {
-
     class Node : IComparable<Node>
     {
         public Node rightNode;
@@ -105,11 +104,11 @@ namespace HuffmanskeKapky
         #endregion
     }
 
-    class HuffmanTree
+    class Tree
     {
         private Node root;
 
-        public HuffmanTree(SortedDictionary<int, List<Node>> rankedNodes)
+        public Tree(SortedDictionary<int, List<Node>> rankedNodes)
         {
             Build(rankedNodes);
         }
@@ -256,7 +255,7 @@ namespace HuffmanskeKapky
         }
     }
 
-    class HuffmanReader
+    class Reader
     {
         private static FileStream sourceFileStream;
 
@@ -343,11 +342,14 @@ namespace HuffmanskeKapky
         }
 
     }
+}
 
+namespace MFFUK
+{
     class Program
     {
-        static SortedDictionary<int, List<Node>> rankedNodes;
-        static HuffmanTree huffmanTree;
+        static SortedDictionary<int, List<HuffmanCoding.Node>> rankedNodes;
+        static HuffmanCoding.Tree huffmanTree;
         //   static Stopwatch sw = new Stopwatch();
 
         static void Main(string[] args)
@@ -359,12 +361,12 @@ namespace HuffmanskeKapky
                 Console.Write("Argument Error");
                 Environment.Exit(0);
             }
-            rankedNodes = HuffmanReader.ReadFile(args[0]);
+            rankedNodes = HuffmanCoding.Reader.ReadFile(args[0]);
 
 
             if (rankedNodes != null && rankedNodes.Count != 0)
             {
-                huffmanTree = new HuffmanTree(rankedNodes);
+                huffmanTree = new HuffmanCoding.Tree(rankedNodes);
                 huffmanTree.PrintTree();
                 //Console.Write("\n");
                 huffmanTree.PrintTreePrefixed();
