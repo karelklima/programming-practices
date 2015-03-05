@@ -218,38 +218,21 @@ namespace HuffmanCoding
 
         public void PrintTreePrefixed(Node node, string prefix)
         {
-            bool wasLeftNode = false;
-
-            if (node.IsLeaf())
-            {
-                if ((node.symbol >= 32) && (node.symbol <= 0x7E))
-                {
-                    Console.Write(" ['{0}':{1}]\n", (char)node.symbol, node.weight);
-                    return;
-                }
+            if (node.IsLeaf ()) {
+                //if (!Char.IsControl (Convert.ToChar (node.symbol))) //We cannot use it, because it uses UTF-16
+                //32 - first printable char
+                //126 - last printable char
+                if ((node.symbol >= 32) && (node.symbol <= 126))//printable condition
+                    Console.Write (" ['{0}':{1}]\n", (char)node.symbol, node.weight);
                 else
-                {
-                    Console.Write(" [{0}:{1}]\n", node.symbol, node.weight);
-                }
-                return;
-            }
-            else
-            {
-                // bylVlevo = true;
-            }
-
-            if (!wasLeftNode)
-            {
-                Console.Write("{0,4} -+- ", node.weight);
-                wasLeftNode = true;
-            }
-            prefix = prefix + "      ";
-            if (wasLeftNode)
-            {
-                PrintTreePrefixed(node.rightNode, prefix + "|  ");
-                Console.Write("{0}|\n", prefix);
-                Console.Write("{0}`- ", prefix);
-                PrintTreePrefixed(node.leftNode, prefix + "   ");
+                    Console.Write (" [{0}:{1}]\n", node.symbol, node.weight);
+            } else {
+                Console.Write ("{0,4} -+- ", node.weight);
+                prefix += "      ";
+                PrintTreePrefixed (node.rightNode, prefix + "|  ");
+                Console.Write ("{0}|\n", prefix);
+                Console.Write ("{0}`- ", prefix);
+                PrintTreePrefixed (node.leftNode, prefix + "   ");
             }
         }
     }

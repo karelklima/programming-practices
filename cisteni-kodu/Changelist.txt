@@ -4,3 +4,6 @@
  - if conditions simplifying
  - divide into namespaces
  - class variables & methods rearrangement
+ - PrintTreePrefixed refractoring:
+   - remove unnessary variable & conditions
+   - replace hex number with decimal
