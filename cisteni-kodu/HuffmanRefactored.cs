@@ -1,50 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Diagnostics;
 
 namespace HuffmanskeKapky
 {
 
-    class vrchol : IComparable<vrchol>
+    class Node : IComparable<Node>
     {
-        public vrchol Psyn;
-        public int vaha;
-        public byte znak;
-        public vrchol Lsyn;
+        public Node rightNode;
+        public int weight;
+        public byte symbol;
+        public Node leftNode;
 
-        int stari;
+        int index;
 
-        static int cisloVrchola;
+        static int lastNodeIndex;
 
-        public vrchol(int vaha, byte znak, vrchol Lsyn, vrchol Psyn)
+        public Node(int weight, byte symbol, Node left, Node right)
         {
-            this.vaha = vaha;
-            this.znak = znak;
-            this.Lsyn = Lsyn;
-            this.Psyn = Psyn;
-            stari = cisloVrchola;
-            cisloVrchola++;
+            this.weight = weight;
+            this.symbol = symbol;
+            this.leftNode = left;
+            this.rightNode = right;
+            index = lastNodeIndex;
+            lastNodeIndex++;
         }
 
         /// <summary>
         /// Kdyz nema jedineho syna vraci true.
         /// </summary>
         /// <returns></returns>
-        public bool JeList()
+        public bool IsLeaf()
         {
-            if ((Lsyn == null) && (Psyn == null))
+            if ((leftNode == null) && (rightNode == null))
             {
                 return true;
             }
             else return false;
         }
 
-        public static int SectiVahy(vrchol prvni, vrchol druhy)
+        public static int SumWeights(Node firstNode, Node secondNode)
         {
-            return prvni.vaha + druhy.vaha;
+            return firstNode.weight + secondNode.weight;
         }
 
         /// <summary>
@@ -52,9 +49,9 @@ namespace HuffmanskeKapky
         /// </summary>
         /// <param name="rank"></param>
         /// <returns></returns>
-        public vrchol ZvecVahu(int rank)
+        public Node IncreaseWeight(int rank)
         {
-            vaha += rank;
+            weight += rank;
             return this;
         }
 
@@ -63,33 +60,33 @@ namespace HuffmanskeKapky
         /// </summary>
         /// <param name="druhy"></param>
         /// <returns></returns>
-        public bool BudeVrcholVlevo(vrchol druhy)
+        public bool IsLeftNode(Node otherNode)
         {
-            if (druhy.vaha > vaha)
+            if (otherNode.weight > weight)
             {
                 return true;
             }
-            else if (druhy.vaha < vaha)
+            else if (otherNode.weight < weight)
             {
                 return false;
             }
-            else if (druhy.JeList() && !(JeList()))
+            else if (otherNode.IsLeaf() && !(IsLeaf()))
             {
                 return false;
             }
-            else if (JeList() && !(druhy.JeList()))
+            else if (IsLeaf() && !(otherNode.IsLeaf()))
             {
                 return true;
             }
-            else if ((JeList()) && (druhy.JeList()) && (znak < druhy.znak))
+            else if ((IsLeaf()) && (otherNode.IsLeaf()) && (symbol < otherNode.symbol))
             {
                 return true;
             }
-            else if ((JeList()) && (druhy.JeList()) && (znak > druhy.znak))
+            else if ((IsLeaf()) && (otherNode.IsLeaf()) && (symbol > otherNode.symbol))
             {
                 return false;
             }
-            else if (stari < druhy.stari)
+            else if (index < otherNode.index)
             {
                 return true;
             }
@@ -102,13 +99,13 @@ namespace HuffmanskeKapky
 
         #region IComparable Members
 
-        public int CompareTo(vrchol obj)
+        public int CompareTo(Node otherNode)
         {
-            if (this == obj)
+            if (this == otherNode)
             {
                 return 0;
             }
-            else if (BudeVrcholVlevo(obj))
+            else if (IsLeftNode(otherNode))
             {
                 return -1;
             }
@@ -122,146 +119,146 @@ namespace HuffmanskeKapky
         #endregion
     }
 
-    class strom
+    class Tree
     {
-        private vrchol koren;
+        private Node root;
 
-        public strom(SortedDictionary<int, List<vrchol>> vrcholy)
+        public Tree(SortedDictionary<int, List<Node>> rankedNodes)
         {
-            postavStrom(vrcholy);
+            Build(rankedNodes);
         }
 
-        int pocetStromu = 0;
+        int treeCount = 0;
 
-        private void postavStrom(SortedDictionary<int, List<vrchol>> HuffmanskyLes)
+        private void Build(SortedDictionary<int, List<Node>> rankedNodes)
         {
-            List<vrchol> seznam;
-            vrchol pom1;
-            vrchol pom3;
-            vrchol novy;
-            vrchol lichy = null;
-            int ZbyvaZpracovat = 0;
+            List<Node> nodes;
+            Node pom1;
+            Node pom3;
+            Node novy;
+            Node oddNode = null;
+            int remainingNodes = 0;
             int rank;
 
-            foreach (KeyValuePair<int, List<vrchol>> item in HuffmanskyLes)
+            foreach (KeyValuePair<int, List<Node>> rankedNode in rankedNodes)
             {
-                ZbyvaZpracovat += item.Value.Count;
+                remainingNodes += rankedNode.Value.Count;
             }
 
-            if (ZbyvaZpracovat != 1)
+            if (remainingNodes != 1)
             {
-                pocetStromu = pocetStromu + 1;
+                treeCount = treeCount + 1;
             }
 
-            while (ZbyvaZpracovat != 1)
+            while (remainingNodes != 1)
             {
-                seznam = HuffmanskyLes[HuffmanskyLes.Keys.ElementAt(0)];
-                rank = HuffmanskyLes.Keys.ElementAt(0);
+                nodes = rankedNodes[rankedNodes.Keys.ElementAt(0)];
+                rank = rankedNodes.Keys.ElementAt(0);
 
-                if (lichy == null)
+                if (oddNode == null)
                 {
-                    for (int i = 0; i < seznam.Count - 1; i++)
+                    for (int i = 0; i < nodes.Count - 1; i++)
                     {
-                        pom1 = seznam[i];
-                        pom3 = seznam[++i];
+                        pom1 = nodes[i];
+                        pom3 = nodes[++i];
 
-                        if (pom1.BudeVrcholVlevo(pom3))
+                        if (pom1.IsLeftNode(pom3))
                         {
-                            novy = new vrchol(pom1.vaha + pom3.vaha, pom1.znak, pom1, pom3);
+                            novy = new Node(pom1.weight + pom3.weight, pom1.symbol, pom1, pom3);
                         }
-                        else novy = new vrchol(pom1.vaha + pom3.vaha, pom1.znak, pom3, pom1);
+                        else novy = new Node(pom1.weight + pom3.weight, pom1.symbol, pom3, pom1);
 
-                        if (HuffmanskyLes.ContainsKey(novy.vaha))
+                        if (rankedNodes.ContainsKey(novy.weight))
                         {
-                            HuffmanskyLes[novy.vaha].Add(novy);
+                            rankedNodes[novy.weight].Add(novy);
                         }
-                        else HuffmanskyLes.Add(novy.vaha, new List<vrchol>() { novy });
+                        else rankedNodes.Add(novy.weight, new List<Node>() { novy });
 
 
-                        ZbyvaZpracovat--;
+                        remainingNodes--;
                     }
-                    if (seznam.Count % 2 == 1)
+                    if (nodes.Count % 2 == 1)
                     {
-                        lichy = seznam[seznam.Count - 1];
+                        oddNode = nodes[nodes.Count - 1];
 
                     }
                     else
                     {
-                        lichy = null;
+                        oddNode = null;
                     }
 
                 }
                 else
                 {
-                    pom1 = seznam[0];
-                    if (lichy.BudeVrcholVlevo(pom1))
+                    pom1 = nodes[0];
+                    if (oddNode.IsLeftNode(pom1))
                     {
-                        novy = new vrchol(lichy.vaha + pom1.vaha, lichy.znak, lichy, pom1);
+                        novy = new Node(oddNode.weight + pom1.weight, oddNode.symbol, oddNode, pom1);
                     }
-                    else novy = new vrchol(pom1.vaha + lichy.vaha, pom1.znak, pom1, lichy);
+                    else novy = new Node(pom1.weight + oddNode.weight, pom1.symbol, pom1, oddNode);
 
-                    if (HuffmanskyLes.ContainsKey(novy.vaha))
+                    if (rankedNodes.ContainsKey(novy.weight))
                     {
-                        HuffmanskyLes[novy.vaha].Add(novy);
+                        rankedNodes[novy.weight].Add(novy);
                     }
-                    else HuffmanskyLes.Add(novy.vaha, new List<vrchol>() { novy });
+                    else rankedNodes.Add(novy.weight, new List<Node>() { novy });
 
-                    ZbyvaZpracovat--;
+                    remainingNodes--;
 
-                    for (int i = 1; i < seznam.Count - 1; i++)
+                    for (int i = 1; i < nodes.Count - 1; i++)
                     {
-                        pom1 = seznam[i];
-                        pom3 = seznam[++i];
+                        pom1 = nodes[i];
+                        pom3 = nodes[++i];
 
-                        if (pom1.BudeVrcholVlevo(pom3))
+                        if (pom1.IsLeftNode(pom3))
                         {
-                            novy = new vrchol(pom1.vaha + pom3.vaha, pom1.znak, pom1, pom3);
+                            novy = new Node(pom1.weight + pom3.weight, pom1.symbol, pom1, pom3);
                         }
-                        else novy = new vrchol(pom1.vaha + pom3.vaha, pom1.znak, pom3, pom1);
+                        else novy = new Node(pom1.weight + pom3.weight, pom1.symbol, pom3, pom1);
 
-                        if (HuffmanskyLes.ContainsKey(novy.vaha))
+                        if (rankedNodes.ContainsKey(novy.weight))
                         {
-                            HuffmanskyLes[novy.vaha].Add(novy);
+                            rankedNodes[novy.weight].Add(novy);
                         }
-                        else HuffmanskyLes.Add(novy.vaha, new List<vrchol>() { novy });
+                        else rankedNodes.Add(novy.weight, new List<Node>() { novy });
 
-                        ZbyvaZpracovat--;
+                        remainingNodes--;
                     }
-                    if (seznam.Count % 2 == 0)
+                    if (nodes.Count % 2 == 0)
                     {
-                        lichy = seznam[seznam.Count - 1];
+                        oddNode = nodes[nodes.Count - 1];
                     }
-                    else lichy = null;
+                    else oddNode = null;
                 }
-                HuffmanskyLes.Remove(rank);
+                rankedNodes.Remove(rank);
             }
-            koren = HuffmanskyLes[HuffmanskyLes.Keys.ElementAt(0)][0];
+            root = rankedNodes[rankedNodes.Keys.ElementAt(0)][0];
         }
 
-        public void VypisStrom()
+        public void PrintTree()
         {
             // VypisStrom(this.koren);
         }
 
-        public void VypisStrom2()
+        public void PrintTreePrefixed()
         {
-            VypisStrom2(this.koren, "");
+            PrintTreePrefixed(this.root, "");
         }
 
-        public void VypisStrom2(vrchol vrch, string pre)
+        public void PrintTreePrefixed(Node node, string prefix)
         {
-            bool bylVlevo = false;
+            bool wasLeftNode = false;
 
-            if (vrch.JeList())
+            if (node.IsLeaf())
             {
-                if ((vrch.znak >= 32) && (vrch.znak <= 0x7E))
+                if ((node.symbol >= 32) && (node.symbol <= 0x7E))
                 {
-                    Console.Write(" ['{0}':{1}]\n", (char)vrch.znak, vrch.vaha);
+                    Console.Write(" ['{0}':{1}]\n", (char)node.symbol, node.weight);
                     return;
                 }
                 else
                 {
-                    Console.Write(" [{0}:{1}]\n", vrch.znak, vrch.vaha);
+                    Console.Write(" [{0}:{1}]\n", node.symbol, node.weight);
                 }
                 return;
             }
@@ -270,32 +267,32 @@ namespace HuffmanskeKapky
                 // bylVlevo = true;
             }
 
-            if (!bylVlevo)
+            if (!wasLeftNode)
             {
-                Console.Write("{0,4} -+- ", vrch.vaha);
-                bylVlevo = true;
+                Console.Write("{0,4} -+- ", node.weight);
+                wasLeftNode = true;
             }
-            pre = pre + "      ";
-            if (bylVlevo)
+            prefix = prefix + "      ";
+            if (wasLeftNode)
             {
-                VypisStrom2(vrch.Psyn, pre + "|  ");
-                Console.Write("{0}|\n", pre);
-                Console.Write("{0}`- ", pre);
-                VypisStrom2(vrch.Lsyn, pre + "   ");
+                PrintTreePrefixed(node.rightNode, prefix + "|  ");
+                Console.Write("{0}|\n", prefix);
+                Console.Write("{0}`- ", prefix);
+                PrintTreePrefixed(node.leftNode, prefix + "   ");
             }
         }
     }
 
-    class Nacitacka
+    class Reader
     {
-        private static FileStream vstup;
+        private static FileStream sourceFileStream;
 
-        public static bool OtevrSoubor(string nazev)
+        public static bool OpenFile(string fileName)
         {
             try
             {
-                vstup = new FileStream(nazev, FileMode.Open, FileAccess.Read);
-                if (!(vstup.CanRead))
+                sourceFileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                if (!(sourceFileStream.CanRead))
                 {
                     throw new Exception();
                 }
@@ -309,67 +306,67 @@ namespace HuffmanskeKapky
             return true;
         }
 
-        public static SortedDictionary<int, List<vrchol>> PrectiSoubor(string nazev)
+        public static SortedDictionary<int, List<Node>> ReadFile(string fileName)
         {
 
-            if (!(OtevrSoubor(nazev))) return null;
+            if (!(OpenFile(fileName))) return null;
             else
             {
-                SortedDictionary<int, List<vrchol>> vrcholy = new SortedDictionary<int, List<vrchol>>();
+                SortedDictionary<int, List<Node>> rankedNodes = new SortedDictionary<int, List<Node>>();
                 byte a = 0;
 
-                vrchol[] prvky = new vrchol[256];
-                byte[] bafr = new byte[0x4000];
+                Node[] nodes = new Node[256];
+                byte[] buffer = new byte[0x4000];
 
-                for (int i = 0; i < vstup.Length / 0x4000; i++)
+                for (int i = 0; i < sourceFileStream.Length / 0x4000; i++)
                 {
-                    vstup.Read(bafr, 0, 16384);
+                    sourceFileStream.Read(buffer, 0, 16384);
 
                     for (int j = 0; j < 16384; j++)
                     {
-                        a = bafr[j];
-                        if (prvky[a] == null)
+                        a = buffer[j];
+                        if (nodes[a] == null)
                         {
-                            prvky[a] = new vrchol(1, (byte)a, null, null);
+                            nodes[a] = new Node(1, (byte)a, null, null);
                             //   vrcholy.Add(prvky[a]);
                         }
                         else
                         {
-                            prvky[a].vaha++;
+                            nodes[a].weight++;
                         }
                     }
                 }
 
-                for (int i = 0; i < vstup.Length % 0x4000; i++)
+                for (int i = 0; i < sourceFileStream.Length % 0x4000; i++)
                 {
-                    a = (byte)vstup.ReadByte();
-                    if (prvky[a] == null)
+                    a = (byte)sourceFileStream.ReadByte();
+                    if (nodes[a] == null)
                     {
-                        prvky[a] = new vrchol(1, (byte)a, null, null);
+                        nodes[a] = new Node(1, (byte)a, null, null);
                         //   vrcholy.Add(prvky[a]);
                     }
                     else
                     {
-                        prvky[a].vaha++;
+                        nodes[a].weight++;
                     }
                 }
 
                 for (int i = 0; i < 256; i++)
                 {
-                    if (prvky[i] != null)
+                    if (nodes[i] != null)
                     {
-                        if (vrcholy.ContainsKey(prvky[i].vaha))
+                        if (rankedNodes.ContainsKey(nodes[i].weight))
                         {
-                            vrcholy[prvky[i].vaha].Add(prvky[i]);
+                            rankedNodes[nodes[i].weight].Add(nodes[i]);
                         }
-                        else vrcholy.Add(prvky[i].vaha, new List<vrchol>() { prvky[i] });
+                        else rankedNodes.Add(nodes[i].weight, new List<Node>() { nodes[i] });
                     }
                 }
-                foreach (KeyValuePair<int, List<vrchol>> item in vrcholy)
+                foreach (KeyValuePair<int, List<Node>> rankedNode in rankedNodes)
                 {
-                    item.Value.Sort();
+                    rankedNode.Value.Sort();
                 }
-                return vrcholy;
+                return rankedNodes;
             }
         }
 
@@ -377,8 +374,8 @@ namespace HuffmanskeKapky
 
     class Program
     {
-        static SortedDictionary<int, List<vrchol>> vrcholy;
-        static strom Huffman;
+        static SortedDictionary<int, List<Node>> rankedNodes;
+        static Tree huffmanTree;
         //   static Stopwatch sw = new Stopwatch();
 
         static void Main(string[] args)
@@ -390,15 +387,15 @@ namespace HuffmanskeKapky
                 Console.Write("Argument Error");
                 Environment.Exit(0);
             }
-            vrcholy = Nacitacka.PrectiSoubor(args[0]);
+            rankedNodes = Reader.ReadFile(args[0]);
 
 
-            if ((vrcholy != null) && (vrcholy.Count != 0))
+            if ((rankedNodes != null) && (rankedNodes.Count != 0))
             {
-                Huffman = new strom(vrcholy);
-                Huffman.VypisStrom();
+                huffmanTree = new Tree(rankedNodes);
+                huffmanTree.PrintTree();
                 //Console.Write("\n");
-                Huffman.VypisStrom2();
+                huffmanTree.PrintTreePrefixed();
                 Console.Write("\n");
             }
 
