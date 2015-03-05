@@ -1,7 +1,4 @@
-﻿Loaded assembly: /Users/zaitsevyan/Documents/programming-practices/cisteni-kodu/bin/Debug/cisteni-kodu.exe
-Loaded assembly: /Library/Frameworks/Mono.framework/Versions/3.12.0/lib/mono/gac/System/4.0.0.0__b77a5c561934e089/System.dll [External]
-Loaded assembly: /Library/Frameworks/Mono.framework/Versions/3.12.0/lib/mono/gac/System.Core/4.0.0.0__b77a5c561934e089/System.Core.dll [External]
-3008 -+- 1739 -+- 1005 -+-  517 -+-  290 -+-  ['a':157]
+﻿3008 -+- 1739 -+- 1005 -+-  517 -+-  290 -+-  ['a':157]
       |        |        |        |        |
       |        |        |        |        `-  133 -+-   67 -+-  ['.':34]
       |        |        |        |                 |        |

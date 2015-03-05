@@ -7,4 +7,11 @@
  - PrintTreePrefixed refractoring:
    - remove unnessary variable & conditions
    - replace hex number with decimal
- - HuffmanCoding.Reader: static -> instance methods & variables
+ - HuffmanCoding.Reader.OpenFile: deleted, refractored code moved into ReadFile method
+ - HuffmanCoding.Reader.ReadFile:
+   - magic numbers -> class constants
+   - magic numbers -> class methods (256 -> .Length in for cycle)
+   - for -> while cycle replacement
+   - merge two cycles (main cycle + last chunk cycle)
+ - Program:
+   - static variables moved into methods 

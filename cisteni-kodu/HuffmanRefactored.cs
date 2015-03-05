@@ -8,7 +8,7 @@ namespace HuffmanCoding
     class Node : IComparable<Node>
     {
         public Node rightNode;
-        public int weight;
+        public int rank;
         public byte symbol;
         public Node leftNode;
 
@@ -18,7 +18,7 @@ namespace HuffmanCoding
 
         public Node(int weight, byte symbol, Node left, Node right)
         {
-            this.weight = weight;
+            this.rank = weight;
             this.symbol = symbol;
             this.leftNode = left;
             this.rightNode = right;
@@ -42,7 +42,7 @@ namespace HuffmanCoding
         /// <returns></returns>
         public Node IncreaseWeight(int rank)
         {
-            weight += rank;
+            rank += rank;
             return this;
         }
 
@@ -53,10 +53,10 @@ namespace HuffmanCoding
         /// <returns></returns>
         public bool IsNodeLeftward(Node otherNode)
         {
-            if (otherNode.weight > weight)
+            if (otherNode.rank > rank)
                 return true;
 
-            if (otherNode.weight < weight)
+            if (otherNode.rank < rank)
                 return false;
 
             //otherNode.weight == weight
@@ -100,7 +100,7 @@ namespace HuffmanCoding
 
         public static int SumWeights(Node firstNode, Node secondNode)
         {
-            return firstNode.weight + secondNode.weight;
+            return firstNode.rank + secondNode.rank;
         }
     }
 
@@ -147,14 +147,14 @@ namespace HuffmanCoding
                         temp2 = nodes[++i];
 
                         if (temp1.IsNodeLeftward(temp2))
-                            newNode = new Node(temp1.weight + temp2.weight, temp1.symbol, temp1, temp2);
+                            newNode = new Node(temp1.rank + temp2.rank, temp1.symbol, temp1, temp2);
                         else 
-                            newNode = new Node(temp1.weight + temp2.weight, temp1.symbol, temp2, temp1);
+                            newNode = new Node(temp1.rank + temp2.rank, temp1.symbol, temp2, temp1);
 
-                        if (rankedNodes.ContainsKey(newNode.weight))
-                            rankedNodes[newNode.weight].Add(newNode);
+                        if (rankedNodes.ContainsKey(newNode.rank))
+                            rankedNodes[newNode.rank].Add(newNode);
                         else 
-                            rankedNodes.Add(newNode.weight, new List<Node>() { newNode });
+                            rankedNodes.Add(newNode.rank, new List<Node>() { newNode });
 
                         remainingNodes--;
                     }
@@ -167,14 +167,14 @@ namespace HuffmanCoding
                 {
                     temp1 = nodes[0];
                     if (oddNode.IsNodeLeftward(temp1))
-                        newNode = new Node(oddNode.weight + temp1.weight, oddNode.symbol, oddNode, temp1);
+                        newNode = new Node(oddNode.rank + temp1.rank, oddNode.symbol, oddNode, temp1);
                     else 
-                        newNode = new Node(temp1.weight + oddNode.weight, temp1.symbol, temp1, oddNode);
+                        newNode = new Node(temp1.rank + oddNode.rank, temp1.symbol, temp1, oddNode);
 
-                    if (rankedNodes.ContainsKey(newNode.weight))
-                        rankedNodes[newNode.weight].Add(newNode);
+                    if (rankedNodes.ContainsKey(newNode.rank))
+                        rankedNodes[newNode.rank].Add(newNode);
                     else 
-                        rankedNodes.Add(newNode.weight, new List<Node>() { newNode });
+                        rankedNodes.Add(newNode.rank, new List<Node>() { newNode });
 
                     remainingNodes--;
 
@@ -184,15 +184,15 @@ namespace HuffmanCoding
                         temp2 = nodes[++i];
 
                         if (temp1.IsNodeLeftward(temp2))
-                            newNode = new Node(temp1.weight + temp2.weight, temp1.symbol, temp1, temp2);
+                            newNode = new Node(temp1.rank + temp2.rank, temp1.symbol, temp1, temp2);
                         else 
-                            newNode = new Node(temp1.weight + temp2.weight, temp1.symbol, temp2, temp1);
+                            newNode = new Node(temp1.rank + temp2.rank, temp1.symbol, temp2, temp1);
 
-                        if (rankedNodes.ContainsKey(newNode.weight))
+                        if (rankedNodes.ContainsKey(newNode.rank))
                         {
-                            rankedNodes[newNode.weight].Add(newNode);
+                            rankedNodes[newNode.rank].Add(newNode);
                         }
-                        else rankedNodes.Add(newNode.weight, new List<Node>() { newNode });
+                        else rankedNodes.Add(newNode.rank, new List<Node>() { newNode });
 
                         remainingNodes--;
                     }
@@ -223,11 +223,11 @@ namespace HuffmanCoding
                 //32 - first printable char
                 //126 - last printable char
                 if ((node.symbol >= 32) && (node.symbol <= 126))//printable condition
-                    Console.Write (" ['{0}':{1}]\n", (char)node.symbol, node.weight);
+                    Console.Write (" ['{0}':{1}]\n", (char)node.symbol, node.rank);
                 else
-                    Console.Write (" [{0}:{1}]\n", node.symbol, node.weight);
+                    Console.Write (" [{0}:{1}]\n", node.symbol, node.rank);
             } else {
-                Console.Write ("{0,4} -+- ", node.weight);
+                Console.Write ("{0,4} -+- ", node.rank);
                 prefix += "      ";
                 PrintTreePrefixed (node.rightNode, prefix + "|  ");
                 Console.Write ("{0}|\n", prefix);
@@ -239,88 +239,51 @@ namespace HuffmanCoding
 
     class Reader
     {
-        private FileStream sourceFileStream;
+        private const int READ_FILE_BUFFER_SIZE = 16384;//16KB
+        private const int SYMBOLS_COUNT = 256;//ascii
 
-        public bool OpenFile(string fileName)
+        //TODO Maybe divide this methods into two? Data reading + frequency calculation AND node merging into result
+        public static SortedDictionary<int, List<Node>> ReadFile(string fileName)
         {
-            try
-            {
-                sourceFileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                if (!(sourceFileStream.CanRead))
-                {
-                    throw new Exception();
-                }
-            }
-            catch (Exception)
-            {
-                Console.Write("File Error");
-                Environment.Exit(0);
-                //    return false;
-            }
-            return true;
-        }
+            using (var sourceFileStream = new FileStream (fileName, FileMode.Open, FileAccess.Read)) {
 
-        public SortedDictionary<int, List<Node>> ReadFile(string fileName)
-        {
+                //result
+                var rankedNodes = new SortedDictionary<int, List<Node>> ();
 
-            if (!OpenFile(fileName)) 
-                return null;
+                //read data & calculate ranks
+                Node[] nodes = new Node[SYMBOLS_COUNT];
+                byte[] buffer = new byte[READ_FILE_BUFFER_SIZE];
 
-            SortedDictionary<int, List<Node>> rankedNodes = new SortedDictionary<int, List<Node>>();
-            byte a = 0;
+                long remainingBytes = sourceFileStream.Length;
+                while (remainingBytes > 0) {
+                    int readBytes = sourceFileStream.Read (buffer, 0, READ_FILE_BUFFER_SIZE);
+                    remainingBytes -= readBytes;
 
-            Node[] nodes = new Node[256];
-            byte[] buffer = new byte[0x4000];
-
-            for (int i = 0; i < sourceFileStream.Length / 0x4000; i++)
-            {
-                sourceFileStream.Read(buffer, 0, 16384);
-
-                for (int j = 0; j < 16384; j++)
-                {
-                    a = buffer[j];
-                    if (nodes[a] == null)
-                    {
-                        nodes[a] = new Node(1, (byte)a, null, null);
-                        //   vrcholy.Add(prvky[a]);
-                    }
-                    else
-                    {
-                        nodes[a].weight++;
+                    for (int i = 0; i < readBytes; i++) {
+                        byte symbol = buffer [i];
+                        if (nodes [symbol] == null)
+                            nodes [symbol] = new Node (1, (byte)symbol, null, null);
+                        else
+                            nodes [symbol].rank++;
                     }
                 }
-            }
 
-            for (int i = 0; i < sourceFileStream.Length % 0x4000; i++)
-            {
-                a = (byte)sourceFileStream.ReadByte();
-                if (nodes[a] == null)
-                {
-                    nodes[a] = new Node(1, (byte)a, null, null);
-                    //   vrcholy.Add(prvky[a]);
-                }
-                else
-                {
-                    nodes[a].weight++;
-                }
-            }
-
-            for (int i = 0; i < 256; i++)
-            {
-                if (nodes[i] != null)
-                {
-                    if (rankedNodes.ContainsKey(nodes[i].weight))
-                    {
-                        rankedNodes[nodes[i].weight].Add(nodes[i]);
+                //merge nodes
+                for (int i = 0; i < nodes.Length; i++) {
+                    if (nodes [i] != null) {
+                        if (rankedNodes.ContainsKey (nodes [i].rank))
+                            rankedNodes [nodes [i].rank].Add (nodes [i]);
+                        else
+                            rankedNodes.Add (nodes [i].rank, new List<Node> () { nodes [i] });
                     }
-                    else rankedNodes.Add(nodes[i].weight, new List<Node>() { nodes[i] });
                 }
+
+                foreach (var rankedNode in rankedNodes) {
+                    rankedNode.Value.Sort ();
+                }
+
+                return rankedNodes;
             }
-            foreach (KeyValuePair<int, List<Node>> rankedNode in rankedNodes)
-            {
-                rankedNode.Value.Sort();
-            }
-            return rankedNodes;
         }
     }
 }
@@ -329,8 +292,6 @@ namespace MFFUK
 {
     class Program
     {
-        static SortedDictionary<int, List<HuffmanCoding.Node>> rankedNodes;
-        static HuffmanCoding.Tree huffmanTree;
         //   static Stopwatch sw = new Stopwatch();
 
         static void Main(string[] args)
@@ -342,14 +303,11 @@ namespace MFFUK
                 Console.Write("Argument Error");
                 Environment.Exit(0);
             }
+            var rankedNodes = HuffmanCoding.Reader.ReadFile(args[0]);
 
-            HuffmanCoding.Reader huffmanReader= new HuffmanCoding.Reader ();
-            rankedNodes = huffmanReader.ReadFile(args[0]);
-
-
-            if (rankedNodes != null && rankedNodes.Count != 0)
+            if (rankedNodes.Count != 0)
             {
-                huffmanTree = new HuffmanCoding.Tree(rankedNodes);
+                var huffmanTree = new HuffmanCoding.Tree(rankedNodes);
                 huffmanTree.PrintTree();
                 //Console.Write("\n");
                 huffmanTree.PrintTreePrefixed();
