@@ -68,7 +68,7 @@ namespace HuffmanCoding
                 return true;
 
             //otherNode.IsLeaf() == IsLeaf()
-            bool nodesAreLeafs = IsLeaf () && otherNode.IsLeaf ();
+            var nodesAreLeafs = IsLeaf () && otherNode.IsLeaf ();
 
             if (nodesAreLeafs && (symbol < otherNode.symbol))
                 return true;
@@ -122,7 +122,7 @@ namespace HuffmanCoding
             Node temp2;
             Node newNode;
             Node oddNode = null;
-            int remainingNodes = 0;
+            var remainingNodes = 0;
             int rank;
 
             foreach (var rankedNode in rankedNodes)
@@ -179,7 +179,7 @@ namespace HuffmanCoding
 
                     remainingNodes--;
 
-                    for (int i = 1; i < nodes.Count - 1; i++)
+                    for (var i = 1; i < nodes.Count - 1; i++)
                     {
                         temp1 = nodes[i];
                         temp2 = nodes[++i];
@@ -252,16 +252,16 @@ namespace HuffmanCoding
                 var rankedNodes = new TreeRankedNodes ();
 
                 //read data & calculate ranks
-                Node[] nodes = new Node[SYMBOLS_COUNT];
-                byte[] buffer = new byte[READ_FILE_BUFFER_SIZE];
+                var nodes = new Node[SYMBOLS_COUNT];
+                var buffer = new byte[READ_FILE_BUFFER_SIZE];
 
-                long remainingBytes = sourceFileStream.Length;
+                var remainingBytes = sourceFileStream.Length;
                 while (remainingBytes > 0) {
-                    int readBytes = sourceFileStream.Read (buffer, 0, READ_FILE_BUFFER_SIZE);
+                    var readBytes = sourceFileStream.Read (buffer, 0, READ_FILE_BUFFER_SIZE);
                     remainingBytes -= readBytes;
 
-                    for (int i = 0; i < readBytes; i++) {
-                        byte symbol = buffer [i];
+                    for (var i = 0; i < readBytes; i++) {
+                        var symbol = buffer [i];
                         if (nodes [symbol] == null)
                             nodes [symbol] = new Node (1, (byte)symbol, null, null);
                         else
@@ -270,7 +270,7 @@ namespace HuffmanCoding
                 }
 
                 //merge nodes
-                for (int i = 0; i < nodes.Length; i++) {
+                for (var i = 0; i < nodes.Length; i++) {
                     if (nodes [i] != null) {
                         if (rankedNodes.ContainsKey (nodes [i].rank))
                             rankedNodes [nodes [i].rank].Add (nodes [i]);
