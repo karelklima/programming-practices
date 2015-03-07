@@ -20,6 +20,9 @@
 	- vrchol -> Node
 		- vrchol.JeList() > bool property Node.IsLeaf
 		- odebrani #region pro IComparable Members - zbytecny
+		- vrchol.BudeVrcholVlevo -> Node.IsLeftOf(Node otherNode)
+			- refactoring metody
+			- pridani vyjimky ArgumentException, pokud maji obe Node stejny znak
 
  - Translating
  - if conditions simplifying

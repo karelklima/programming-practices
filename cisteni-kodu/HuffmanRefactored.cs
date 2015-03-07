@@ -31,7 +31,7 @@ namespace HuffmanCoding
         }
 
         /// <summary>
-        /// Kdyz nema jedineho syna vraci true.
+        /// TODO Kdyz nema jedineho syna vraci true.
         /// </summary>
         public bool IsLeaf
         {
@@ -39,6 +39,7 @@ namespace HuffmanCoding
         }
 
         /// <summary>
+        /// TODO proc to vraci this? blby API
         /// Zvetsi vahu vrcholu o zadany int, vraci upraveny vrchol.
         /// </summary>
         /// <param name="rank"></param>
@@ -54,43 +55,42 @@ namespace HuffmanCoding
         /// </summary>
         /// <param name="otherNode"></param>
         /// <returns></returns>
-        public bool IsNodeLeftward(Node otherNode)
+        public bool IsLeftOf(Node otherNode)
         {
-            if (otherNode.Rank > Rank)
-                return true;
+            if (Character == otherNode.Character)
+            {
+                // Characters must differ (if the algorithm is correct)
+                throw new ArgumentException("Characters of both Huffman tree nodes must differ");
+            }
 
-            if (otherNode.Rank < Rank)
-                return false;
+            if (Rank != otherNode.Rank)
+            {
+                // Nodes do not have the same Rank
+                return Rank < otherNode.Rank;
+            }
 
-            //otherNode.rank == rank
-            if (otherNode.IsLeaf && !(IsLeaf))
-                return false;
+            if (IsLeaf != otherNode.IsLeaf)
+            {
+                // One node is a leaf, the other is not
+                return IsLeaf;
+            }
 
-            if (IsLeaf && !(otherNode.IsLeaf))
-                return true;
+            if (IsLeaf)
+            {
+                // Both this and otherNode are leaves
+                return Character < otherNode.Character;
+            }
 
-            //otherNode.IsLeaf() == IsLeaf()
-            var nodesAreLeafs = IsLeaf && otherNode.IsLeaf;
-
-            if (nodesAreLeafs && (Character < otherNode.Character))
-                return true;
-
-            if (nodesAreLeafs && (Character > otherNode.Character))
-                return false;
-
-            //ranks are same, nodes aren't leafs (if symbols are same => algorithm/data is wrong)
-            if (_nodeIndex < otherNode._nodeIndex)
-                return true;
-
-            return false;
+            // Ranks are the same and nodes are not leaves
+            return _nodeIndex < otherNode._nodeIndex;
         }
 
         public int CompareTo(Node otherNode)
         {
-            if (this.Equals(otherNode))
+            if (Equals(otherNode))
                 return 0;
 
-            if (IsNodeLeftward(otherNode))
+            if (IsLeftOf(otherNode))
                 return -1;
 
             return 1;
@@ -144,7 +144,7 @@ namespace HuffmanCoding
                         temp1 = nodes[i];
                         temp2 = nodes[++i];
 
-                        if (temp1.IsNodeLeftward(temp2))
+                        if (temp1.IsLeftOf(temp2))
                             newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp1, temp2);
                         else 
                             newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp2, temp1);
@@ -164,7 +164,7 @@ namespace HuffmanCoding
                 else
                 {
                     temp1 = nodes[0];
-                    if (oddNode.IsNodeLeftward(temp1))
+                    if (oddNode.IsLeftOf(temp1))
                         newNode = new Node(oddNode.Rank + temp1.Rank, oddNode.Character, oddNode, temp1);
                     else 
                         newNode = new Node(temp1.Rank + oddNode.Rank, temp1.Character, temp1, oddNode);
@@ -181,7 +181,7 @@ namespace HuffmanCoding
                         temp1 = nodes[i];
                         temp2 = nodes[++i];
 
-                        if (temp1.IsNodeLeftward(temp2))
+                        if (temp1.IsLeftOf(temp2))
                             newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp1, temp2);
                         else 
                             newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp2, temp1);
