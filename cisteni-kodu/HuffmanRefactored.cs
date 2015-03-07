@@ -6,7 +6,7 @@ using System.Linq;
 namespace HuffmanCoding
 {
     // TODO comment
-    using TreeRankedNodes = System.Collections.Generic.SortedDictionary<int, List<Node>>;
+    using RankedNodesDictionary = System.Collections.Generic.SortedDictionary<int, List<Node>>;
 
     // TODO comment
     class Node : IComparable<Node>
@@ -107,12 +107,12 @@ namespace HuffmanCoding
         private Node _rootNode;
         private int _treeCount = 0;
 
-        public Tree(TreeRankedNodes rankedNodes)
+        public Tree(RankedNodesDictionary rankedNodes)
         {
             Build(rankedNodes);
         }
 
-        private void Build(TreeRankedNodes rankedNodes)
+        private void Build(RankedNodesDictionary rankedNodes)
         {
             List<Node> nodes;
             Node temp1;
@@ -241,12 +241,12 @@ namespace HuffmanCoding
         private const int SYMBOLS_COUNT = 256;//ascii
 
         //TODO Maybe divide this methods into two? Data reading + frequency calculation AND node merging into result
-        public static TreeRankedNodes ReadFile(string fileName)
+        public static RankedNodesDictionary ReadFile(string fileName)
         {
             using (var sourceFileStream = new FileStream (fileName, FileMode.Open, FileAccess.Read)) {
 
                 //result
-                var rankedNodes = new TreeRankedNodes ();
+                var rankedNodes = new RankedNodesDictionary ();
 
                 //read data & calculate ranks
                 var nodes = new Node[SYMBOLS_COUNT];

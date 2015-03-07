@@ -11,6 +11,7 @@
 		- konstanty: UPPER_CASE (odchyleni od naming guidelines)
 		- private fields: _lowerCamelCase
 	- uprava API - nahrazeni public fields pouzitim C# properties s asymetrickym pristupem
+	- typedef RankedNodesDictionary pro System.Collections.Generic.SortedDictionary<int, List<Node>>
 
 2) Konkretni zmeny
 	- rozdeleni do namespaces HuffmanCoding a MFFUK
