@@ -1,5 +1,25 @@
 ﻿Changelist
 ==========
+
+1) Obecne zmeny
+	- preklad nazvu promennych a metod do anglictiny
+	- TODO vyuziti C# property namisto public hodnot
+	- pouziti obecneho typu "var" pro promenne vsude, kde to jde - typova inference
+	- jmenne konvence dle MSDN naming guidelines:
+		- tridy, metody, properties, namespaces: UpperCamelCase
+		- lokalni, promenne, parametry: lowerCamelCase
+		- konstanty: UPPER_CASE (odchyleni od naming guidelines)
+		- private fields: _lowerCamelCase
+	- uprava API - nahrazeni public fields pouzitim C# properties
+
+2) Konkretni zmeny
+	- rozdeleni do namespaces HuffmanCoding a MFFUK
+	- prejmenovani trid vrchol -> Node, strom -> Tree, Nacitacka -> Reader
+
+	- vrchol -> Node
+		- vrchol.JeList() > bool property Node.IsLeaf
+		- odebrani #region pro IComparable Members - zbytecny
+
  - Translating
  - if conditions simplifying
  - divide into namespaces

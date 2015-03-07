@@ -5,35 +5,37 @@ using System.Linq;
 
 namespace HuffmanCoding
 {
+    // TODO comment
     using TreeRankedNodes = System.Collections.Generic.SortedDictionary<int, List<Node>>;
+
+    // TODO comment
     class Node : IComparable<Node>
     {
-        public Node leftNode;
-        public Node rightNode;
-        public int rank;
-        public byte symbol;
+        public int Rank { get; set; }
+        public byte Symbol { get; private set; }
+        public Node LeftChildNode { get; private set; }
+        public Node RightChildNode { get; private set; }
+        
+        private int _nodeIndex;
 
-        private int nodeIndex;
+        private static int _lastNodeIndex;
 
-        private static int lastNodeIndex;
-
-        public Node(int weight, byte symbol, Node left, Node right)
+        public Node(int rank, byte symbol, Node leftChildNode, Node rightChildNode)
         {
-            this.rank = weight;
-            this.symbol = symbol;
-            this.leftNode = left;
-            this.rightNode = right;
-            nodeIndex = lastNodeIndex;
-            lastNodeIndex++;
+            Rank = rank;
+            Symbol = symbol;
+            LeftChildNode = leftChildNode;
+            RightChildNode = rightChildNode;
+            _nodeIndex = _lastNodeIndex;
+            _lastNodeIndex++;
         }
 
         /// <summary>
         /// Kdyz nema jedineho syna vraci true.
         /// </summary>
-        /// <returns></returns>
-        public bool IsLeaf()
+        public bool IsLeaf
         {
-            return leftNode == null && rightNode == null;
+            get { return LeftChildNode == null && RightChildNode == null; }
         }
 
         /// <summary>
@@ -41,54 +43,51 @@ namespace HuffmanCoding
         /// </summary>
         /// <param name="rank"></param>
         /// <returns></returns>
-        public Node IncreaseWeight(int rank)
+        public Node IncreaseRank(int rank)
         {
-            rank += rank;
+            Rank += rank;
             return this;
         }
 
         /// <summary>
         /// True o sobe vrchol rekne jestli bude v Huffmanskem strome nalevo od druheho vrcholu.
         /// </summary>
-        /// <param name="druhy"></param>
+        /// <param name="otherNode"></param>
         /// <returns></returns>
         public bool IsNodeLeftward(Node otherNode)
         {
-            if (otherNode.rank > rank)
+            if (otherNode.Rank > Rank)
                 return true;
 
-            if (otherNode.rank < rank)
+            if (otherNode.Rank < Rank)
                 return false;
 
             //otherNode.rank == rank
-            if (otherNode.IsLeaf() && !(IsLeaf()))
+            if (otherNode.IsLeaf && !(IsLeaf))
                 return false;
 
-            if (IsLeaf() && !(otherNode.IsLeaf()))
+            if (IsLeaf && !(otherNode.IsLeaf))
                 return true;
 
             //otherNode.IsLeaf() == IsLeaf()
-            var nodesAreLeafs = IsLeaf () && otherNode.IsLeaf ();
+            var nodesAreLeafs = IsLeaf && otherNode.IsLeaf;
 
-            if (nodesAreLeafs && (symbol < otherNode.symbol))
+            if (nodesAreLeafs && (Symbol < otherNode.Symbol))
                 return true;
 
-            if (nodesAreLeafs && (symbol > otherNode.symbol))
+            if (nodesAreLeafs && (Symbol > otherNode.Symbol))
                 return false;
 
             //ranks are same, nodes aren't leafs (if symbols are same => algorithm/data is wrong)
-            if (nodeIndex < otherNode.nodeIndex)
+            if (_nodeIndex < otherNode._nodeIndex)
                 return true;
 
             return false;
         }
 
-
-        #region IComparable Members
-
         public int CompareTo(Node otherNode)
         {
-            if (this.Equals (otherNode))
+            if (this.Equals(otherNode))
                 return 0;
 
             if (IsNodeLeftward(otherNode))
@@ -97,18 +96,16 @@ namespace HuffmanCoding
             return 1;
         }
 
-        #endregion
-
-        public static int SumWeights(Node firstNode, Node secondNode)
+        public static int SumRanks(Node firstNode, Node secondNode)
         {
-            return firstNode.rank + secondNode.rank;
+            return firstNode.Rank + secondNode.Rank;
         }
     }
 
     class Tree
     {
-        private Node root;
-        private int treeCount = 0;
+        private Node _rootNode;
+        private int _treeCount = 0;
 
         public Tree(TreeRankedNodes rankedNodes)
         {
@@ -132,7 +129,7 @@ namespace HuffmanCoding
 
             if (remainingNodes != 1)
             {
-                treeCount = treeCount + 1;
+                _treeCount = _treeCount + 1;
             }
 
             while (remainingNodes != 1)
@@ -148,14 +145,14 @@ namespace HuffmanCoding
                         temp2 = nodes[++i];
 
                         if (temp1.IsNodeLeftward(temp2))
-                            newNode = new Node(temp1.rank + temp2.rank, temp1.symbol, temp1, temp2);
+                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Symbol, temp1, temp2);
                         else 
-                            newNode = new Node(temp1.rank + temp2.rank, temp1.symbol, temp2, temp1);
+                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Symbol, temp2, temp1);
 
-                        if (rankedNodes.ContainsKey(newNode.rank))
-                            rankedNodes[newNode.rank].Add(newNode);
+                        if (rankedNodes.ContainsKey(newNode.Rank))
+                            rankedNodes[newNode.Rank].Add(newNode);
                         else 
-                            rankedNodes.Add(newNode.rank, new List<Node>() { newNode });
+                            rankedNodes.Add(newNode.Rank, new List<Node>() { newNode });
 
                         remainingNodes--;
                     }
@@ -168,14 +165,14 @@ namespace HuffmanCoding
                 {
                     temp1 = nodes[0];
                     if (oddNode.IsNodeLeftward(temp1))
-                        newNode = new Node(oddNode.rank + temp1.rank, oddNode.symbol, oddNode, temp1);
+                        newNode = new Node(oddNode.Rank + temp1.Rank, oddNode.Symbol, oddNode, temp1);
                     else 
-                        newNode = new Node(temp1.rank + oddNode.rank, temp1.symbol, temp1, oddNode);
+                        newNode = new Node(temp1.Rank + oddNode.Rank, temp1.Symbol, temp1, oddNode);
 
-                    if (rankedNodes.ContainsKey(newNode.rank))
-                        rankedNodes[newNode.rank].Add(newNode);
+                    if (rankedNodes.ContainsKey(newNode.Rank))
+                        rankedNodes[newNode.Rank].Add(newNode);
                     else 
-                        rankedNodes.Add(newNode.rank, new List<Node>() { newNode });
+                        rankedNodes.Add(newNode.Rank, new List<Node>() { newNode });
 
                     remainingNodes--;
 
@@ -185,15 +182,15 @@ namespace HuffmanCoding
                         temp2 = nodes[++i];
 
                         if (temp1.IsNodeLeftward(temp2))
-                            newNode = new Node(temp1.rank + temp2.rank, temp1.symbol, temp1, temp2);
+                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Symbol, temp1, temp2);
                         else 
-                            newNode = new Node(temp1.rank + temp2.rank, temp1.symbol, temp2, temp1);
+                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Symbol, temp2, temp1);
 
-                        if (rankedNodes.ContainsKey(newNode.rank))
+                        if (rankedNodes.ContainsKey(newNode.Rank))
                         {
-                            rankedNodes[newNode.rank].Add(newNode);
+                            rankedNodes[newNode.Rank].Add(newNode);
                         }
-                        else rankedNodes.Add(newNode.rank, new List<Node>() { newNode });
+                        else rankedNodes.Add(newNode.Rank, new List<Node>() { newNode });
 
                         remainingNodes--;
                     }
@@ -204,7 +201,7 @@ namespace HuffmanCoding
                 }
                 rankedNodes.Remove(rank);
             }
-            root = rankedNodes[rankedNodes.Keys.ElementAt(0)][0];
+            _rootNode = rankedNodes[rankedNodes.Keys.ElementAt(0)][0];
         }
 
         public void PrintTree()
@@ -214,26 +211,26 @@ namespace HuffmanCoding
 
         public void PrintTreePrefixed()
         {
-            PrintTreePrefixed(this.root, "");
+            PrintTreePrefixed(this._rootNode, "");
         }
 
         public void PrintTreePrefixed(Node node, string prefix)
         {
-            if (node.IsLeaf ()) {
+            if (node.IsLeaf) {
                 //if (!Char.IsControl (Convert.ToChar (node.symbol))) //We cannot use it, because it uses UTF-16
                 //32 - first printable char
                 //126 - last printable char
-                if ((node.symbol >= 32) && (node.symbol <= 126))//printable condition
-                    Console.Write (" ['{0}':{1}]\n", (char)node.symbol, node.rank);
+                if ((node.Symbol >= 32) && (node.Symbol <= 126))//printable condition
+                    Console.Write (" ['{0}':{1}]\n", (char)node.Symbol, node.Rank);
                 else
-                    Console.Write (" [{0}:{1}]\n", node.symbol, node.rank);
+                    Console.Write (" [{0}:{1}]\n", node.Symbol, node.Rank);
             } else {
-                Console.Write ("{0,4} -+- ", node.rank);
+                Console.Write ("{0,4} -+- ", node.Rank);
                 prefix += "      ";
-                PrintTreePrefixed (node.rightNode, prefix + "|  ");
+                PrintTreePrefixed (node.RightChildNode, prefix + "|  ");
                 Console.Write ("{0}|\n", prefix);
                 Console.Write ("{0}`- ", prefix);
-                PrintTreePrefixed (node.leftNode, prefix + "   ");
+                PrintTreePrefixed (node.LeftChildNode, prefix + "   ");
             }
         }
     }
@@ -265,17 +262,17 @@ namespace HuffmanCoding
                         if (nodes [symbol] == null)
                             nodes [symbol] = new Node (1, (byte)symbol, null, null);
                         else
-                            nodes [symbol].rank++;
+                            nodes [symbol].Rank++;
                     }
                 }
 
                 //merge nodes
                 for (var i = 0; i < nodes.Length; i++) {
                     if (nodes [i] != null) {
-                        if (rankedNodes.ContainsKey (nodes [i].rank))
-                            rankedNodes [nodes [i].rank].Add (nodes [i]);
+                        if (rankedNodes.ContainsKey (nodes [i].Rank))
+                            rankedNodes [nodes [i].Rank].Add (nodes [i]);
                         else
-                            rankedNodes.Add (nodes [i].rank, new List<Node> () { nodes [i] });
+                            rankedNodes.Add (nodes [i].Rank, new List<Node> () { nodes [i] });
                     }
                 }
 
