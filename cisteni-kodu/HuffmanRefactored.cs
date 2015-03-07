@@ -12,7 +12,7 @@ namespace HuffmanCoding
     class Node : IComparable<Node>
     {
         public int Rank { get; set; }
-        public byte Symbol { get; private set; }
+        public byte Character { get; private set; }
         public Node LeftChildNode { get; private set; }
         public Node RightChildNode { get; private set; }
         
@@ -20,10 +20,10 @@ namespace HuffmanCoding
 
         private static int _lastNodeIndex;
 
-        public Node(int rank, byte symbol, Node leftChildNode, Node rightChildNode)
+        public Node(int rank, byte character, Node leftChildNode, Node rightChildNode)
         {
             Rank = rank;
-            Symbol = symbol;
+            Character = character;
             LeftChildNode = leftChildNode;
             RightChildNode = rightChildNode;
             _nodeIndex = _lastNodeIndex;
@@ -72,10 +72,10 @@ namespace HuffmanCoding
             //otherNode.IsLeaf() == IsLeaf()
             var nodesAreLeafs = IsLeaf && otherNode.IsLeaf;
 
-            if (nodesAreLeafs && (Symbol < otherNode.Symbol))
+            if (nodesAreLeafs && (Character < otherNode.Character))
                 return true;
 
-            if (nodesAreLeafs && (Symbol > otherNode.Symbol))
+            if (nodesAreLeafs && (Character > otherNode.Character))
                 return false;
 
             //ranks are same, nodes aren't leafs (if symbols are same => algorithm/data is wrong)
@@ -145,9 +145,9 @@ namespace HuffmanCoding
                         temp2 = nodes[++i];
 
                         if (temp1.IsNodeLeftward(temp2))
-                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Symbol, temp1, temp2);
+                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp1, temp2);
                         else 
-                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Symbol, temp2, temp1);
+                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp2, temp1);
 
                         if (rankedNodes.ContainsKey(newNode.Rank))
                             rankedNodes[newNode.Rank].Add(newNode);
@@ -165,9 +165,9 @@ namespace HuffmanCoding
                 {
                     temp1 = nodes[0];
                     if (oddNode.IsNodeLeftward(temp1))
-                        newNode = new Node(oddNode.Rank + temp1.Rank, oddNode.Symbol, oddNode, temp1);
+                        newNode = new Node(oddNode.Rank + temp1.Rank, oddNode.Character, oddNode, temp1);
                     else 
-                        newNode = new Node(temp1.Rank + oddNode.Rank, temp1.Symbol, temp1, oddNode);
+                        newNode = new Node(temp1.Rank + oddNode.Rank, temp1.Character, temp1, oddNode);
 
                     if (rankedNodes.ContainsKey(newNode.Rank))
                         rankedNodes[newNode.Rank].Add(newNode);
@@ -182,9 +182,9 @@ namespace HuffmanCoding
                         temp2 = nodes[++i];
 
                         if (temp1.IsNodeLeftward(temp2))
-                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Symbol, temp1, temp2);
+                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp1, temp2);
                         else 
-                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Symbol, temp2, temp1);
+                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp2, temp1);
 
                         if (rankedNodes.ContainsKey(newNode.Rank))
                         {
@@ -217,13 +217,13 @@ namespace HuffmanCoding
         public void PrintTreePrefixed(Node node, string prefix)
         {
             if (node.IsLeaf) {
-                //if (!Char.IsControl (Convert.ToChar (node.symbol))) //We cannot use it, because it uses UTF-16
+                //if (!Char.IsControl (Convert.ToChar (node.Character))) //We cannot use it, because it uses UTF-16
                 //32 - first printable char
                 //126 - last printable char
-                if ((node.Symbol >= 32) && (node.Symbol <= 126))//printable condition
-                    Console.Write (" ['{0}':{1}]\n", (char)node.Symbol, node.Rank);
+                if ((node.Character >= 32) && (node.Character <= 126))//printable condition
+                    Console.Write (" ['{0}':{1}]\n", (char)node.Character, node.Rank);
                 else
-                    Console.Write (" [{0}:{1}]\n", node.Symbol, node.Rank);
+                    Console.Write (" [{0}:{1}]\n", node.Character, node.Rank);
             } else {
                 Console.Write ("{0,4} -+- ", node.Rank);
                 prefix += "      ";
@@ -284,6 +284,7 @@ namespace HuffmanCoding
             }
         }
     }
+
 }
 
 namespace MFFUK
@@ -311,6 +312,8 @@ namespace MFFUK
                 huffmanTree.PrintTreePrefixed();
                 Console.Write("\n");
             }
+
+            Console.ReadKey(true);
 
             /*      sw.Stop();
                   string ExecutionTimeTaken = string.Format("Minutes :{0}\nSeconds :{1}\n Mili seconds :{2}", sw.Elapsed.Minutes, sw.Elapsed.Seconds, sw.Elapsed.TotalMilliseconds);

@@ -10,7 +10,7 @@
 		- lokalni, promenne, parametry: lowerCamelCase
 		- konstanty: UPPER_CASE (odchyleni od naming guidelines)
 		- private fields: _lowerCamelCase
-	- uprava API - nahrazeni public fields pouzitim C# properties
+	- uprava API - nahrazeni public fields pouzitim C# properties s asymetrickym pristupem
 
 2) Konkretni zmeny
 	- rozdeleni do namespaces HuffmanCoding a MFFUK

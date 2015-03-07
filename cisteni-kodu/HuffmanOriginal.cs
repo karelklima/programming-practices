@@ -381,7 +381,7 @@ namespace HuffmanskeKapkyOriginal
         static strom Huffman;
         //   static Stopwatch sw = new Stopwatch();
 
-        static void Main(string[] args)
+        static void _Main(string[] args)
         {
             //     sw.Start();
 
