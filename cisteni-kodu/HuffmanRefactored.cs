@@ -16,9 +16,22 @@ namespace HuffmanCoding
         public Node LeftChildNode { get; private set; }
         public Node RightChildNode { get; private set; }
         
+        /// <summary>
+        /// Holds an order number of an instance beginning with zero
+        /// </summary>
         private readonly int _nodeIndex;
+        /// <summary>
+        /// Holds total number of instances created
+        /// </summary>
         private static int _nodeInstancesCount;
 
+        /// <summary>
+        /// Default constructor, constructs Huffman tree node
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="rank"></param>
+        /// <param name="leftChildNode"></param>
+        /// <param name="rightChildNode"></param>
         public Node(byte character, int rank, Node leftChildNode, Node rightChildNode)
         {
             Character = character;
@@ -28,6 +41,10 @@ namespace HuffmanCoding
             _nodeIndex = _nodeInstancesCount++;
         }
 
+        /// <summary>
+        /// Special constructor to construct leaves in Huffman tree
+        /// </summary>
+        /// <param name="character"></param>
         public Node(byte character) : this(character, 1, null, null)
         {
         }
@@ -53,16 +70,21 @@ namespace HuffmanCoding
         }
 
         /// <summary>
+        /// Calculates the position of current node in Huffman tree relative to a node passed as a parameter.
+        /// Returns true if current node is left of the one in the argument.
         /// True o sobe vrchol rekne jestli bude v Huffmanskem strome nalevo od druheho vrcholu.
         /// </summary>
         /// <param name="otherNode"></param>
         /// <returns></returns>
         public bool IsLeftOf(Node otherNode)
         {
+            if (otherNode == null)
+                throw new ArgumentNullException("otherNode");
+
             if (Character == otherNode.Character)
             {
                 // Characters must differ (if the algorithm is correct)
-                throw new ArgumentException("Characters of both Huffman tree nodes must differ");
+                throw new ArgumentException("Characters of both Huffman tree nodes must differ", "otherNode");
             }
 
             if (Rank != otherNode.Rank)
@@ -89,6 +111,9 @@ namespace HuffmanCoding
 
         public int CompareTo(Node otherNode)
         {
+            if (otherNode == null)
+                throw new ArgumentNullException("otherNode");
+
             if (Equals(otherNode))
                 return 0;
 
