@@ -137,7 +137,30 @@ namespace HuffmanCoding
         private Node _rootNode;
         private int _treeCount;
 
-        public Tree(RankedNodesDictionary rankedNodes)
+        /// <summary>
+        /// Constructs Huffman tree from given file and returns it.
+        /// Throws exceptions associated with IO operations! See Reader.ReadFile() for details.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>Huffman tree or null if the file is empty</returns>
+        public static Tree FromFile(string fileName)
+        {
+            if (fileName == null)
+                throw new ArgumentNullException("fileName");
+
+            var charCounts = Reader.GetCharCountsFromFile(fileName);
+
+            var rankedNodes = BuildRankedNodes(charCounts);
+
+            foreach (var rankedNode in rankedNodes)
+            {
+                rankedNode.Value.Sort();
+            }
+
+            return rankedNodes.Count > 0 ? new Tree(rankedNodes) : null;
+        }
+
+        private Tree(RankedNodesDictionary rankedNodes)
         {
             BuildTree(rankedNodes);
         }
@@ -242,6 +265,18 @@ namespace HuffmanCoding
                 : new Node(character, rank, evenNode, oddNode);
         }
 
+        private static RankedNodesDictionary BuildRankedNodes(IEnumerable<int> charCounts)
+        {
+            var rankedNodes = new RankedNodesDictionary();
+            foreach (var newNode in charCounts
+                .Select((rank, character) => new Node((byte)character, rank, null, null))
+                .Where(newNode => newNode.Rank > 0))
+            {
+                InsertNodeToRankedNodes(rankedNodes, newNode);
+            }
+            return rankedNodes;
+        }
+
         public void PrintTree()
         {
             // VypisStrom(this.koren);
@@ -258,6 +293,7 @@ namespace HuffmanCoding
                 //if (!Char.IsControl (Convert.ToChar (node.Character))) //We cannot use it, because it uses UTF-16
                 //32 - first printable char
                 //126 - last printable char
+                // TODO neslo by tohle zkratit?
                 if ((node.Character >= MIN_PRINT_CHAR) && (node.Character <= MAX_PRINT_CHAR)) //printable condition
                     Console.Write(" ['{0}':{1}]\n", (char)node.Character, node.Rank);
                 else
@@ -270,23 +306,29 @@ namespace HuffmanCoding
                 PrintTreePrefixed(node.LeftChildNode, prefix + "   ");
             }
         }
+
+        
     }
 
     class Reader
     {
         private const int READ_FILE_BUFFER_SIZE = 16384;//16KB
-        private const int SYMBOLS_COUNT = 256;//ascii
+        private const int CHARS_COUNT = 256;//ascii
 
-        //TODO Maybe divide this methods into two? Data reading + frequency calculation AND node merging into result
-        public static RankedNodesDictionary ReadFile(string fileName)
+        /// <summary>
+        /// Reads given file and returns numbers of characters' occurrences inside it.
+        /// Throws exceptions!
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static List<int> GetCharCountsFromFile(string fileName)
         {
             using (var sourceFileStream = new FileStream (fileName, FileMode.Open, FileAccess.Read)) {
 
                 //result
-                var rankedNodes = new RankedNodesDictionary ();
+                var charCounts = new int[CHARS_COUNT];
 
                 //read data & calculate ranks
-                var nodes = new Node[SYMBOLS_COUNT];
                 var buffer = new byte[READ_FILE_BUFFER_SIZE];
 
                 var remainingBytes = sourceFileStream.Length;
@@ -295,33 +337,14 @@ namespace HuffmanCoding
                     remainingBytes -= readBytes;
 
                     for (var i = 0; i < readBytes; i++) {
-                        var symbol = buffer [i];
-                        if (nodes [symbol] == null)
-                            nodes [symbol] = new Node ((byte)symbol, 1, null, null);
-                        else
-                            nodes [symbol].Rank++;
+                        charCounts[buffer[i]]++;
                     }
                 }
 
-                //merge nodes
-                for (var i = 0; i < nodes.Length; i++) {
-                    if (nodes [i] != null) {
-                        if (rankedNodes.ContainsKey (nodes [i].Rank))
-                            rankedNodes [nodes [i].Rank].Add (nodes [i]);
-                        else
-                            rankedNodes.Add (nodes [i].Rank, new List<Node> () { nodes [i] });
-                    }
-                }
-
-                foreach (var rankedNode in rankedNodes) {
-                    rankedNode.Value.Sort ();
-                }
-
-                return rankedNodes;
+                return new List<int>(charCounts);
             }
         }
     }
-
 }
 
 namespace MFFUK
@@ -339,16 +362,20 @@ namespace MFFUK
                 Console.Write("Argument Error");
                 Environment.Exit(0);
             }
+
+            var tree = HuffmanCoding.Tree.FromFile(args[0]);
+            tree.PrintTreePrefixed();
+            Console.Write("\n");
+
             var rankedNodes = HuffmanCoding.Reader.ReadFile(args[0]);
 
-            if (rankedNodes.Count != 0)
+            /*if (rankedNodes.Count != 0)
             {
                 var huffmanTree = new HuffmanCoding.Tree(rankedNodes);
                 huffmanTree.PrintTree();
-                //Console.Write("\n");
                 huffmanTree.PrintTreePrefixed();
                 Console.Write("\n");
-            }
+            }*/
 
             Console.ReadKey(true);
 

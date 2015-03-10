@@ -40,7 +40,8 @@ namespace cisteni_kodu_test
 
                 if (rankedNodes.Count != 0)
                 {
-                    var huffmanTree = new HuffmanCoding.Tree(rankedNodes);
+                    //var huffmanTree = new HuffmanCoding.Tree(rankedNodes);
+                    var huffmanTree = Tree.FromFile("test.txt");
                     huffmanTree.PrintTree();
                     //Console.Write("\n");
                     huffmanTree.PrintTreePrefixed();

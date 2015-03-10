@@ -49,6 +49,12 @@
 				- CreateParentNode
 		- vypisStrom2 -> PrintTreePrefixed
 			 - extrakce cisel v kodu do konstantnich poli
+		- konstruktor - privatni + Tree.FromFile(fileName)
+			- BuildRankedNoder - spocita ranked nodes z poctu vyskytu znaku
+
+		- Nacitacka -> Reader
+			- presun casti kodu do Tree.FromFile kvuli architekture
+			- GetCharCountsFromFile - vraci pocet vyskytu pro vsechny znaky
 				
 
  - Translating
