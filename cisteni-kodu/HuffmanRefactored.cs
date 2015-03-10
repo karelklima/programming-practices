@@ -11,23 +11,25 @@ namespace HuffmanCoding
     // TODO comment
     class Node : IComparable<Node>
     {
-        public int Rank { get; set; }
         public byte Character { get; private set; }
+        public int Rank { get; set; }
         public Node LeftChildNode { get; private set; }
         public Node RightChildNode { get; private set; }
         
-        private int _nodeIndex;
+        private readonly int _nodeIndex;
+        private static int _nodeInstancesCount;
 
-        private static int _lastNodeIndex;
-
-        public Node(int rank, byte character, Node leftChildNode, Node rightChildNode)
+        public Node(byte character, int rank, Node leftChildNode, Node rightChildNode)
         {
-            Rank = rank;
             Character = character;
+            Rank = rank;
             LeftChildNode = leftChildNode;
             RightChildNode = rightChildNode;
-            _nodeIndex = _lastNodeIndex;
-            _lastNodeIndex++;
+            _nodeIndex = _nodeInstancesCount++;
+        }
+
+        public Node(byte character) : this(character, 1, null, null)
+        {
         }
 
         /// <summary>
@@ -145,9 +147,9 @@ namespace HuffmanCoding
                         temp2 = nodes[++i];
 
                         if (temp1.IsLeftOf(temp2))
-                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp1, temp2);
+                            newNode = new Node(temp1.Character, temp1.Rank + temp2.Rank, temp1, temp2);
                         else 
-                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp2, temp1);
+                            newNode = new Node(temp1.Character, temp1.Rank + temp2.Rank, temp2, temp1);
 
                         if (rankedNodes.ContainsKey(newNode.Rank))
                             rankedNodes[newNode.Rank].Add(newNode);
@@ -165,9 +167,9 @@ namespace HuffmanCoding
                 {
                     temp1 = nodes[0];
                     if (oddNode.IsLeftOf(temp1))
-                        newNode = new Node(oddNode.Rank + temp1.Rank, oddNode.Character, oddNode, temp1);
+                        newNode = new Node(oddNode.Character, oddNode.Rank + temp1.Rank, oddNode, temp1);
                     else 
-                        newNode = new Node(temp1.Rank + oddNode.Rank, temp1.Character, temp1, oddNode);
+                        newNode = new Node(temp1.Character, temp1.Rank + oddNode.Rank, temp1, oddNode);
 
                     if (rankedNodes.ContainsKey(newNode.Rank))
                         rankedNodes[newNode.Rank].Add(newNode);
@@ -182,9 +184,9 @@ namespace HuffmanCoding
                         temp2 = nodes[++i];
 
                         if (temp1.IsLeftOf(temp2))
-                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp1, temp2);
+                            newNode = new Node(temp1.Character, temp1.Rank + temp2.Rank, temp1, temp2);
                         else 
-                            newNode = new Node(temp1.Rank + temp2.Rank, temp1.Character, temp2, temp1);
+                            newNode = new Node(temp1.Character, temp1.Rank + temp2.Rank, temp2, temp1);
 
                         if (rankedNodes.ContainsKey(newNode.Rank))
                         {
@@ -260,7 +262,7 @@ namespace HuffmanCoding
                     for (var i = 0; i < readBytes; i++) {
                         var symbol = buffer [i];
                         if (nodes [symbol] == null)
-                            nodes [symbol] = new Node (1, (byte)symbol, null, null);
+                            nodes [symbol] = new Node ((byte)symbol, 1, null, null);
                         else
                             nodes [symbol].Rank++;
                     }

@@ -18,11 +18,17 @@
 	- prejmenovani trid vrchol -> Node, strom -> Tree, Nacitacka -> Reader
 
 	- vrchol -> Node
+		- konstruktor
+			- zmena poradi parametru - character, rank, leftChildNode, rightChildNode
+			- druhy pomocny konstruktor pouze pro jeden parametr character
 		- vrchol.JeList() > bool property Node.IsLeaf
 		- odebrani #region pro IComparable Members - zbytecny
 		- vrchol.BudeVrcholVlevo -> Node.IsLeftOf(Node otherNode)
 			- refactoring metody
 			- pridani vyjimky ArgumentException, pokud maji obe Node stejny znak
+		- counter instanci
+			- readonly int _nodeIndex, static int _nodeInstancesCount
+				- readonly - lze zmenit pouze v konstruktoru
 
  - Translating
  - if conditions simplifying
