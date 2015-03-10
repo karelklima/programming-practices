@@ -36,6 +36,8 @@
 		- counter instanci
 			- readonly int _nodeIndex, static int _nodeInstancesCount
 				- readonly - lze zmenit pouze v konstruktoru
+		- IncreaseRank
+			- nevraci this, je to zbytecny
 
 	- strom -> Tree
 		- postavStrom -> Build
@@ -52,9 +54,13 @@
 		- konstruktor - privatni + Tree.FromFile(fileName)
 			- BuildRankedNoder - spocita ranked nodes z poctu vyskytu znaku
 
-		- Nacitacka -> Reader
-			- presun casti kodu do Tree.FromFile kvuli architekture
-			- GetCharCountsFromFile - vraci pocet vyskytu pro vsechny znaky
+	- Nacitacka -> Reader
+		- presun casti kodu do Tree.FromFile kvuli architekture
+		- GetCharCountsFromFile - vraci pocet vyskytu pro vsechny znaky
+
+	- Program
+		- osetreni vstupniho argumentu, vhodna poznamka do konzole
+		- vypsani stromu, osetreni vyjimek pro FileNotFoundException a generic Exception
 				
 
  - Translating

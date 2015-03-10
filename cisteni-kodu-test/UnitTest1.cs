@@ -36,17 +36,17 @@ namespace cisteni_kodu_test
 
             using (ConsoleRedirector cr = new ConsoleRedirector())
             {
-                var rankedNodes = HuffmanCoding.Reader.ReadFile("test.txt");
+                //var rankedNodes = HuffmanCoding.Reader.ReadFile("test.txt");
 
-                if (rankedNodes.Count != 0)
-                {
+                //if (rankedNodes.Count != 0)
+                //{
                     //var huffmanTree = new HuffmanCoding.Tree(rankedNodes);
                     var huffmanTree = Tree.FromFile("test.txt");
                     huffmanTree.PrintTree();
                     //Console.Write("\n");
                     huffmanTree.PrintTreePrefixed();
                     Console.Write("\n");
-                }
+                //}
                 refactoredOutput = cr.ToString();
             }
 

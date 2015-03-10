@@ -6,13 +6,13 @@ using System.Linq;
 namespace HuffmanCoding
 {
     // TODO comment
-    using RankedNodesDictionary = System.Collections.Generic.SortedDictionary<int, List<Node>>;
+    using RankedNodesDictionary = SortedDictionary<int, List<Node>>;
 
     // TODO comment
     class Node : IComparable<Node>
     {
         public byte Character { get; private set; }
-        public int Rank { get; set; }
+        public int Rank { get; private set; }
         public Node LeftChildNode { get; private set; }
         public Node RightChildNode { get; private set; }
         
@@ -58,15 +58,13 @@ namespace HuffmanCoding
         }
 
         /// <summary>
-        /// TODO proc to vraci this? blby API
         /// Zvetsi vahu vrcholu o zadany int, vraci upraveny vrchol.
         /// </summary>
         /// <param name="rank"></param>
         /// <returns></returns>
-        public Node IncreaseRank(int rank)
+        public void IncreaseRank(int rank)
         {
             Rank += rank;
-            return this;
         }
 
         /// <summary>
@@ -351,40 +349,35 @@ namespace MFFUK
 {
     class Program
     {
-        //   static Stopwatch sw = new Stopwatch();
-
         static void Main(string[] args)
         {
-            //     sw.Start();
-
             if (args.Length != 1)
             {
-                Console.Write("Argument Error");
-                Environment.Exit(0);
+                Console.WriteLine("This program expects exactly one argument - an input file name");
             }
-
-            var tree = HuffmanCoding.Tree.FromFile(args[0]);
-            tree.PrintTreePrefixed();
-            Console.Write("\n");
-
-            var rankedNodes = HuffmanCoding.Reader.ReadFile(args[0]);
-
-            /*if (rankedNodes.Count != 0)
+            else
             {
-                var huffmanTree = new HuffmanCoding.Tree(rankedNodes);
-                huffmanTree.PrintTree();
-                huffmanTree.PrintTreePrefixed();
-                Console.Write("\n");
-            }*/
+                try
+                {
+                    var tree = HuffmanCoding.Tree.FromFile(args[0]);
+                    if (tree != null)
+                    {
+                        tree.PrintTreePrefixed();
+                        Console.Write("\n");
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                    Console.WriteLine("An error occurred, input file was not found!");
+                }
+                catch (Exception)
+                {
+                    Console.Write("An error occurred, possibly a problem with input file!");
+                }
+            }
 
             Console.ReadKey(true);
 
-            /*      sw.Stop();
-                  string ExecutionTimeTaken = string.Format("Minutes :{0}\nSeconds :{1}\n Mili seconds :{2}", sw.Elapsed.Minutes, sw.Elapsed.Seconds, sw.Elapsed.TotalMilliseconds);
-                  Console.Write(ExecutionTimeTaken);
-                  Console.ReadKey();
-
-                  Console.ReadKey(); */
         }
     }
 }
