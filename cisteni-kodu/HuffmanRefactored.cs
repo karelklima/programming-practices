@@ -132,103 +132,111 @@ namespace HuffmanCoding
     class Tree
     {
         private Node _rootNode;
-        private int _treeCount = 0;
+        private int _treeCount;
 
         public Tree(RankedNodesDictionary rankedNodes)
         {
-            Build(rankedNodes);
+            BuildTree(rankedNodes);
         }
 
-        private void Build(RankedNodesDictionary rankedNodes)
+        /// <summary>
+        /// Builds Huffman tree from given ranked nodes lists.
+        /// </summary>
+        /// <param name="rankedNodes"></param>
+        private void BuildTree(RankedNodesDictionary rankedNodes)
         {
-            List<Node> nodes;
-            Node temp1;
-            Node temp2;
-            Node newNode;
-            Node oddNode = null;
-            var remainingNodes = 0;
-            int rank;
+            if (rankedNodes == null)
+                throw new ArgumentNullException("rankedNodes");
 
-            foreach (var rankedNode in rankedNodes)
+            var remainingNodesCount = rankedNodes.Sum(rankedNodesPair => rankedNodesPair.Value.Count);
+
+            if (remainingNodesCount != 1)
+                _treeCount++; // TODO nema to byt nula?
+
+            Node oddNodePlaceholder = null;
+
+            while (remainingNodesCount > 1)
             {
-                remainingNodes += rankedNode.Value.Count;
-            }
+                var rank = rankedNodes.Keys.ElementAt(0);
+                var nodes = rankedNodes[rank];
+                
+                if (oddNodePlaceholder != null)
+                    nodes.Insert(0, oddNodePlaceholder);
 
-            if (remainingNodes != 1)
-            {
-                _treeCount = _treeCount + 1;
-            }
+                oddNodePlaceholder = InsertNodePairsToRankedNodes(rankedNodes, nodes, oddNodePlaceholder != null);
+                remainingNodesCount -= nodes.Count / 2;
 
-            while (remainingNodes != 1)
-            {
-                nodes = rankedNodes[rankedNodes.Keys.ElementAt(0)];
-                rank = rankedNodes.Keys.ElementAt(0);
-
-                if (oddNode == null)
-                {
-                    for (int i = 0; i < nodes.Count - 1; i++)
-                    {
-                        temp1 = nodes[i];
-                        temp2 = nodes[++i];
-
-                        if (temp1.IsLeftOf(temp2))
-                            newNode = new Node(temp1.Character, temp1.Rank + temp2.Rank, temp1, temp2);
-                        else 
-                            newNode = new Node(temp1.Character, temp1.Rank + temp2.Rank, temp2, temp1);
-
-                        if (rankedNodes.ContainsKey(newNode.Rank))
-                            rankedNodes[newNode.Rank].Add(newNode);
-                        else 
-                            rankedNodes.Add(newNode.Rank, new List<Node>() { newNode });
-
-                        remainingNodes--;
-                    }
-                    if (nodes.Count % 2 == 1)
-                        oddNode = nodes[nodes.Count - 1];
-                    else
-                        oddNode = null;
-                }
-                else
-                {
-                    temp1 = nodes[0];
-                    if (oddNode.IsLeftOf(temp1))
-                        newNode = new Node(oddNode.Character, oddNode.Rank + temp1.Rank, oddNode, temp1);
-                    else 
-                        newNode = new Node(temp1.Character, temp1.Rank + oddNode.Rank, temp1, oddNode);
-
-                    if (rankedNodes.ContainsKey(newNode.Rank))
-                        rankedNodes[newNode.Rank].Add(newNode);
-                    else 
-                        rankedNodes.Add(newNode.Rank, new List<Node>() { newNode });
-
-                    remainingNodes--;
-
-                    for (var i = 1; i < nodes.Count - 1; i++)
-                    {
-                        temp1 = nodes[i];
-                        temp2 = nodes[++i];
-
-                        if (temp1.IsLeftOf(temp2))
-                            newNode = new Node(temp1.Character, temp1.Rank + temp2.Rank, temp1, temp2);
-                        else 
-                            newNode = new Node(temp1.Character, temp1.Rank + temp2.Rank, temp2, temp1);
-
-                        if (rankedNodes.ContainsKey(newNode.Rank))
-                        {
-                            rankedNodes[newNode.Rank].Add(newNode);
-                        }
-                        else rankedNodes.Add(newNode.Rank, new List<Node>() { newNode });
-
-                        remainingNodes--;
-                    }
-                    if (nodes.Count % 2 == 0)
-                        oddNode = nodes[nodes.Count - 1];
-                    else 
-                        oddNode = null;
-                }
                 rankedNodes.Remove(rank);
             }
+
             _rootNode = rankedNodes[rankedNodes.Keys.ElementAt(0)][0];
+        }
+
+        /// <summary>
+        /// TODO prejmenovat na InsertNodesToRankedNodes???
+        /// Takes pairs of nodes from input list, creates their parent node and inserts it
+        /// to the Huffman tree. Returns last node if number of nodes in list is odd.
+        /// </summary>
+        /// <param name="rankedNodes"></param>
+        /// <param name="nodes"></param>
+        /// <param name="previousOddNodeIndicator"></param>
+        /// <returns>Last odd node or null</returns>
+        private static Node InsertNodePairsToRankedNodes(RankedNodesDictionary rankedNodes, IList<Node> nodes, bool previousOddNodeIndicator)
+        {
+            if (rankedNodes == null)
+                throw new ArgumentNullException("rankedNodes");
+            if (nodes == null)
+                throw new ArgumentNullException("nodes");
+
+            // Iterates over pairs of nodes
+            for (var i = 0; i < nodes.Count - 1; i += 2)
+            {
+                var newNode = CreateParentNode(nodes[i], nodes[i + 1], !previousOddNodeIndicator);
+                InsertNodeToRankedNodes(rankedNodes, newNode);
+            }
+
+            // Returns last odd node if the count is not even
+            return nodes.Count % 2 == 1 ? nodes.Last() : null;
+        }
+
+        /// <summary>
+        /// Inserts node to ranked dictionary with its rank as a key.
+        /// </summary>
+        /// <param name="rankedNodes"></param>
+        /// <param name="newNode"></param>
+        private static void InsertNodeToRankedNodes(RankedNodesDictionary rankedNodes, Node newNode)
+        {
+            if (rankedNodes == null)
+                throw new ArgumentNullException("rankedNodes");
+            if (newNode == null)
+                throw new ArgumentNullException("newNode");
+
+            if (rankedNodes.ContainsKey(newNode.Rank))
+                rankedNodes[newNode.Rank].Add(newNode);
+            else
+                rankedNodes.Add(newNode.Rank, new List<Node> { newNode });
+        }
+
+        /// <summary>
+        /// Creates parent node in Huffman tree with two input nodes as children.
+        /// </summary>
+        /// <param name="oddNode"></param>
+        /// <param name="evenNode"></param>
+        /// <param name="forceOddCharacter">Force use of the character of the odd node.</param>
+        /// <returns></returns>
+        private static Node CreateParentNode(Node oddNode, Node evenNode, bool forceOddCharacter)
+        {
+            if (oddNode == null)
+                throw new ArgumentNullException("oddNode");
+            if (evenNode == null)
+                throw new ArgumentNullException("evenNode");
+
+            var character = (oddNode.IsLeftOf(evenNode) || forceOddCharacter)  ? oddNode.Character : evenNode.Character;
+            var rank = Node.SumRanks(oddNode, evenNode);
+            
+            return oddNode.IsLeftOf(evenNode)
+                ? new Node(character, rank, oddNode, evenNode)
+                : new Node(character, rank, evenNode, oddNode);
         }
 
         public void PrintTree()

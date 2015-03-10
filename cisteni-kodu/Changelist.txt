@@ -12,6 +12,12 @@
 		- private fields: _lowerCamelCase
 	- uprava API - nahrazeni public fields pouzitim C# properties s asymetrickym pristupem
 	- typedef RankedNodesDictionary pro System.Collections.Generic.SortedDictionary<int, List<Node>>
+	- metody kontroluji validitu parametru a pripadne vyhazuji ArgumentException nebo ArgumentNullException
+	- prepsani nekterych for cyklu pomoci while
+	- prepsani nekterych foreach cyklu pomoci LINQ
+	- podminky a cykly typu "x != 1" => "x > 1", pokud ocekavam hodnoty jedna a vice
+	- zapouzdreni promennych v cyklech - presunuti deklarace do cyklu, aby nebyly videt vne
+	- odebrani redundanci z kodu - inicializace promennych defaultni hodnotou, zbytecne pretypovani
 
 2) Konkretni zmeny
 	- rozdeleni do namespaces HuffmanCoding a MFFUK
@@ -29,6 +35,18 @@
 		- counter instanci
 			- readonly int _nodeIndex, static int _nodeInstancesCount
 				- readonly - lze zmenit pouze v konstruktoru
+
+	- strom -> Tree
+		- postavStrom -> Build
+			- refactoring
+			- rozdeleni do nekolika funkci, odebrani redundandniho kodu
+			- LINQ expression pro sumu zbyvajicich vrcholu
+			- while cyklus plus pomocne metody
+				- while cyklus komplikovany, protoze obsahuje cely algoritmus
+				- InsertNodePairsToRankedNodes
+				- InsertNodeToRankedNodes
+				- CreateParentNode
+				
 
  - Translating
  - if conditions simplifying
