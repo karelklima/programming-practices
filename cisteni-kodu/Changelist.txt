@@ -2,6 +2,7 @@
 ==========
 
 1) Obecne zmeny
+	- konzistence formatovani
 	- preklad nazvu promennych a metod do anglictiny
 	- TODO vyuziti C# property namisto public hodnot
 	- pouziti obecneho typu "var" pro promenne vsude, kde to jde - typova inference
@@ -17,7 +18,7 @@
 	- prepsani nekterych foreach cyklu pomoci LINQ
 	- podminky a cykly typu "x != 1" => "x > 1", pokud ocekavam hodnoty jedna a vice
 	- zapouzdreni promennych v cyklech - presunuti deklarace do cyklu, aby nebyly videt vne
-	- odebrani redundanci z kodu - inicializace promennych defaultni hodnotou, zbytecne pretypovani
+	- odebrani redundanci z kodu - inicializace promennych defaultni hodnotou, zbytecne pretypovani, zbytecna this.
 
 2) Konkretni zmeny
 	- rozdeleni do namespaces HuffmanCoding a MFFUK
@@ -46,6 +47,8 @@
 				- InsertNodePairsToRankedNodes
 				- InsertNodeToRankedNodes
 				- CreateParentNode
+		- vypisStrom2 -> PrintTreePrefixed
+			 - extrakce cisel v kodu do konstantnich poli
 				
 
  - Translating

@@ -131,6 +131,9 @@ namespace HuffmanCoding
 
     class Tree
     {
+        private const int MIN_PRINT_CHAR = 32;
+        private const int MAX_PRINT_CHAR = 126;
+
         private Node _rootNode;
         private int _treeCount;
 
@@ -246,7 +249,7 @@ namespace HuffmanCoding
 
         public void PrintTreePrefixed()
         {
-            PrintTreePrefixed(this._rootNode, "");
+            PrintTreePrefixed(_rootNode, "");
         }
 
         public void PrintTreePrefixed(Node node, string prefix)
@@ -255,17 +258,16 @@ namespace HuffmanCoding
                 //if (!Char.IsControl (Convert.ToChar (node.Character))) //We cannot use it, because it uses UTF-16
                 //32 - first printable char
                 //126 - last printable char
-                if ((node.Character >= 32) && (node.Character <= 126))//printable condition
-                    Console.Write (" ['{0}':{1}]\n", (char)node.Character, node.Rank);
+                if ((node.Character >= MIN_PRINT_CHAR) && (node.Character <= MAX_PRINT_CHAR)) //printable condition
+                    Console.Write(" ['{0}':{1}]\n", (char)node.Character, node.Rank);
                 else
-                    Console.Write (" [{0}:{1}]\n", node.Character, node.Rank);
+                    Console.Write(" [{0}:{1}]\n", node.Character, node.Rank);
             } else {
-                Console.Write ("{0,4} -+- ", node.Rank);
+                Console.Write("{0,4} -+- ", node.Rank);
                 prefix += "      ";
-                PrintTreePrefixed (node.RightChildNode, prefix + "|  ");
-                Console.Write ("{0}|\n", prefix);
-                Console.Write ("{0}`- ", prefix);
-                PrintTreePrefixed (node.LeftChildNode, prefix + "   ");
+                PrintTreePrefixed(node.RightChildNode, prefix + "|  ");
+                Console.Write("{0}|\n{0}`- ", prefix);
+                PrintTreePrefixed(node.LeftChildNode, prefix + "   ");
             }
         }
     }
