@@ -37,7 +37,7 @@ namespace HuffmanCoding
             Node leftChildNode, Node rightChildNode)
         {
             if (rank < 1)
-                throw new ArgumentException("Rank must be > one", "rank");
+                throw new ArgumentException("Rank must be > 0", "rank");
             Character = character;
             Rank = rank;
             LeftChildNode = leftChildNode;
@@ -155,7 +155,7 @@ namespace HuffmanCoding
         /// <summary>
         /// Constructs Huffman tree from given file and returns it.
         /// Throws exceptions associated with IO operations!
-        /// See Reader.ReadFile() for details.
+        /// See Reader.GetCharCountsFromFile() for details.
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns>Huffman tree or null if the file is empty</returns>
@@ -294,6 +294,12 @@ namespace HuffmanCoding
             charCounts)
         {
             var rankedNodes = new RankedNodesDictionary();
+
+            // Foreach explanation: 
+            // [...,'a','b','c','d',...] - indexes
+            // [..., 9,  3,  0,  7,...] - values
+            // Convert to struct {Rank = value, Character = index}
+            // Filter list by Rank > 0
             foreach (var it in charCounts
                 .Select((rank, character) =>
                     new { Rank = rank, Character = character})
