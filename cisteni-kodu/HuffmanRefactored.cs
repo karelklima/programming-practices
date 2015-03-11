@@ -33,10 +33,11 @@ namespace HuffmanCoding
         /// <param name="rank"></param>
         /// <param name="leftChildNode"></param>
         /// <param name="rightChildNode"></param>
-        public Node(byte character, int rank, Node leftChildNode, Node rightChildNode)
+        public Node(byte character, int rank,
+            Node leftChildNode, Node rightChildNode)
         {
             if (rank < 1)
-                throw new ArgumentException("Rank must be greater than one", "rank");
+                throw new ArgumentException("Rank must be > one", "rank");
             Character = character;
             Rank = rank;
             LeftChildNode = leftChildNode;
@@ -61,9 +62,9 @@ namespace HuffmanCoding
         }
 
         /// <summary>
-        /// Calculates the position of current node in Huffman tree relative to a node passed as a parameter.
+        /// Calculates the position of current node in Huffman tree relative
+        /// to a node passed as a parameter.
         /// Returns true if current node is left of the one in the argument.
-        /// True o sobe vrchol rekne jestli bude v Huffmanskem strome nalevo od druheho vrcholu.
         /// </summary>
         /// <param name="otherNode"></param>
         /// <returns></returns>
@@ -75,7 +76,8 @@ namespace HuffmanCoding
             if (Character == otherNode.Character)
             {
                 // Characters must differ (if the algorithm is correct)
-                throw new ArgumentException("Characters of both Huffman tree nodes must differ", "otherNode");
+                throw new ArgumentException("Characters of both Huffman tree"
+                    + " nodes must differ", "otherNode");
             }
 
             if (Rank != otherNode.Rank)
@@ -122,7 +124,7 @@ namespace HuffmanCoding
         public void IncreaseRank(int rankIncrease)
         {
             if (rankIncrease < 1)
-                throw new ArgumentException("Rank increase must not be negative", "rankIncrease");
+                throw new ArgumentException("Rank increase < 1", "rankIncrease");
             
             Rank += rankIncrease;
         }
@@ -152,7 +154,8 @@ namespace HuffmanCoding
 
         /// <summary>
         /// Constructs Huffman tree from given file and returns it.
-        /// Throws exceptions associated with IO operations! See Reader.ReadFile() for details.
+        /// Throws exceptions associated with IO operations!
+        /// See Reader.ReadFile() for details.
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns>Huffman tree or null if the file is empty</returns>
@@ -187,7 +190,8 @@ namespace HuffmanCoding
             if (rankedNodes == null)
                 throw new ArgumentNullException("rankedNodes");
 
-            var remainingNodesCount = rankedNodes.Sum(rankedNodesPair => rankedNodesPair.Value.Count);
+            var remainingNodesCount = rankedNodes
+                .Sum(rankedNodesPair => rankedNodesPair.Value.Count);
 
             if (remainingNodesCount != 1)
                 _treeCount++;
@@ -202,7 +206,8 @@ namespace HuffmanCoding
                 if (oddNodePlaceholder != null)
                     nodes.Insert(0, oddNodePlaceholder);
 
-                oddNodePlaceholder = InsertNodesToRankedNodes(rankedNodes, nodes, oddNodePlaceholder != null);
+                oddNodePlaceholder = InsertNodesToRankedNodes(rankedNodes,
+                    nodes, oddNodePlaceholder != null);
                 remainingNodesCount -= nodes.Count / 2;
 
                 rankedNodes.Remove(rank);
@@ -212,14 +217,16 @@ namespace HuffmanCoding
         }
 
         /// <summary>
-        /// Takes pairs of nodes from input list, creates their parent node and inserts it
-        /// to the Huffman tree. Returns last node if number of nodes in list is odd.
+        /// Takes pairs of nodes from input list, creates their parent node
+        /// and inserts it to the Huffman tree. Returns last node if number
+        /// of nodes in list is odd.
         /// </summary>
         /// <param name="rankedNodes"></param>
         /// <param name="nodes"></param>
         /// <param name="previousOddNodeIndicator"></param>
         /// <returns>Last odd node or null</returns>
-        private static Node InsertNodesToRankedNodes(RankedNodesDictionary rankedNodes, IList<Node> nodes, bool previousOddNodeIndicator)
+        private static Node InsertNodesToRankedNodes(RankedNodesDictionary
+            rankedNodes, IList<Node> nodes, bool previousOddNodeIndicator)
         {
             if (rankedNodes == null)
                 throw new ArgumentNullException("rankedNodes");
@@ -229,7 +236,8 @@ namespace HuffmanCoding
             // Iterates over pairs of nodes
             for (var i = 0; i < nodes.Count - 1; i += 2)
             {
-                var newNode = CreateParentNode(nodes[i], nodes[i + 1], !previousOddNodeIndicator);
+                var newNode = CreateParentNode(nodes[i], nodes[i + 1],
+                    !previousOddNodeIndicator);
                 InsertNodeToRankedNodes(rankedNodes, newNode);
             }
 
@@ -242,7 +250,8 @@ namespace HuffmanCoding
         /// </summary>
         /// <param name="rankedNodes"></param>
         /// <param name="newNode"></param>
-        private static void InsertNodeToRankedNodes(RankedNodesDictionary rankedNodes, Node newNode)
+        private static void InsertNodeToRankedNodes(RankedNodesDictionary
+            rankedNodes, Node newNode)
         {
             if (rankedNodes == null)
                 throw new ArgumentNullException("rankedNodes");
@@ -256,20 +265,24 @@ namespace HuffmanCoding
         }
 
         /// <summary>
-        /// Creates parent node in Huffman tree with two input nodes as children.
+        /// Creates parent node in Huffman tree with two input nodes as
+        /// children.
         /// </summary>
         /// <param name="oddNode"></param>
         /// <param name="evenNode"></param>
-        /// <param name="forceOddCharacter">Force use of the character of the odd node.</param>
+        /// <param name="forceOddCharacter">Force use of the character of
+        /// the odd node.</param>
         /// <returns></returns>
-        private static Node CreateParentNode(Node oddNode, Node evenNode, bool forceOddCharacter)
+        private static Node CreateParentNode(Node oddNode, Node evenNode,
+            bool forceOddCharacter)
         {
             if (oddNode == null)
                 throw new ArgumentNullException("oddNode");
             if (evenNode == null)
                 throw new ArgumentNullException("evenNode");
 
-            var character = (oddNode.IsLeftOf(evenNode) || forceOddCharacter)  ? oddNode.Character : evenNode.Character;
+            var character = (oddNode.IsLeftOf(evenNode) || forceOddCharacter)
+                ? oddNode.Character : evenNode.Character;
             var rank = Node.SumRanks(oddNode, evenNode);
             
             return oddNode.IsLeftOf(evenNode)
@@ -277,14 +290,17 @@ namespace HuffmanCoding
                 : new Node(character, rank, evenNode, oddNode);
         }
 
-        private static RankedNodesDictionary BuildRankedNodes(IEnumerable<int> charCounts)
+        private static RankedNodesDictionary BuildRankedNodes(IEnumerable<int>
+            charCounts)
         {
             var rankedNodes = new RankedNodesDictionary();
             foreach (var it in charCounts
-                .Select((rank, character) => new { Rank = rank, Character = character})
+                .Select((rank, character) =>
+                    new { Rank = rank, Character = character})
                 .Where(it => it.Rank > 0))
             {
-                var newNode = new Node((byte) it.Character, it.Rank, null, null);
+                var newNode = new Node((byte) it.Character, it.Rank,
+                    null, null);
                 InsertNodeToRankedNodes(rankedNodes, newNode);
             }
             return rankedNodes;
@@ -303,8 +319,10 @@ namespace HuffmanCoding
         public void PrintTreePrefixed(Node node, string prefix)
         {
             if (node.IsLeaf) {
-                if ((node.Character >= MIN_PRINT_CHAR) && (node.Character <= MAX_PRINT_CHAR)) //printable condition
-                    Console.Write(" ['{0}':{1}]\n", (char)node.Character, node.Rank);
+                if ((node.Character >= MIN_PRINT_CHAR)
+                    && (node.Character <= MAX_PRINT_CHAR))
+                    Console.Write(" ['{0}':{1}]\n", (char)node.Character,
+                        node.Rank);
                 else
                     Console.Write(" [{0}:{1}]\n", node.Character, node.Rank);
             } else {
@@ -327,14 +345,16 @@ namespace HuffmanCoding
         private const int CHARS_COUNT = 256; //ascii
 
         /// <summary>
-        /// Reads given file and returns numbers of character occurrences inside it.
+        /// Reads given file and returns numbers of character occurrences
+        /// inside it.
         /// Throws exceptions!
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
         public static List<int> GetCharCountsFromFile(string fileName)
         {
-            using (var sourceFileStream = new FileStream (fileName, FileMode.Open, FileAccess.Read)) {
+            using (var sourceFileStream = new FileStream (fileName,
+                FileMode.Open, FileAccess.Read)) {
 
                 //result
                 var charCounts = new int[CHARS_COUNT];
@@ -344,7 +364,8 @@ namespace HuffmanCoding
 
                 var remainingBytes = sourceFileStream.Length;
                 while (remainingBytes > 0) {
-                    var readBytes = sourceFileStream.Read (buffer, 0, READ_FILE_BUFFER_SIZE);
+                    var readBytes = sourceFileStream.Read(buffer, 0,
+                        READ_FILE_BUFFER_SIZE);
                     remainingBytes -= readBytes;
 
                     for (var i = 0; i < readBytes; i++) {
@@ -366,7 +387,8 @@ namespace HuffmanCodingProgram
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("This program expects exactly one argument - an input file name");
+                Console.WriteLine("This program expects exactly one argument"
+                    + " - an input file name");
             }
             else
             {
@@ -381,11 +403,13 @@ namespace HuffmanCodingProgram
                 }
                 catch (FileNotFoundException)
                 {
-                    Console.WriteLine("An error occurred, input file was not found!");
+                    Console.WriteLine("An error occurred, input file was"
+                        + " not found!");
                 }
                 catch (FileLoadException)
                 {
-                    Console.Write("An error occurred, possibly a problem with input file!");
+                    Console.Write("An error occurred, possibly a problem"
+                        + " with input file!");
                 }
             }
 
