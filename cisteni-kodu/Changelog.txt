@@ -1,0 +1,150 @@
+﻿DPP ukol #1 - cisteni kodu
+Autori: Karel Klima, Yan Zaytsev
+
+1) OBECNE ZMENY V KODU
+V puvodnim kodu jsme provedli radu zmen, ktere se tykaly plosne celeho kodu.
+Predevsim jsme cely program prelozili do anglictiny, a to vcetne komentaru.
+Kod je zformatovany podle standardu MSDN, podle MSDN naming guidelines jsme
+taky volili nazvy artefaktu:
+	- tridy, metody, properties, namespaces: UpperCamelCase
+	- lokalni, promenne, parametry: lowerCamelCase
+	- konstanty: UPPER_CASE (odchyleni od naming guidelines)
+	- private fields: _lowerCamelCase
+V pripade konstant jsme se cilene odchylili od MSDN konvenci ve prospech DPP
+principu. Dle MSDN by konstantni pole mela byt UpperCamelCase, coz se nam moc
+nelibi.
+
+V kodu jsme se snazili vyuzit maximum vlastnosti C#. Public fields jsme
+nahradili za C# properties s asymetrickym pristupem (public get, private set),
+jen touto zmenou jsme vyrazne vylepsili zapouzdreni puvodniho navrhu. Dale jsme
+vsude (kde to bylo mozne) vyuzili typovou inferenci pomoci "var". Hodne zmen
+doznaly cykly nebo obecne bloky kodu - ridici a pomocne promenne jsme jsou
+deklarovane vzdy uvnitr cyklu, pokud to z principu jde, vyrazne se tak
+minimalizuje riziko nechteneho prepsani. Nektere for-cykly jsme zmenili na
+while-cykly, nektere foreach jsme prepsali pomoci LINQ na jednoradkove vyrazy.
+Vsechny pomocne promenne s nazvem typu "temp" jsme pojmenovali vhodne. Z kodu
+jsme odebrali veskere redundance, napriklad inicializaci promennych defaultni
+hodnotou, zbytecna pretypovani nebo zbytecna "this.". Vsechny metody kontroluji
+vstupni parametry a vyhazuji odpovidajici vyjimky, zejmena ArgumentException
+a ArgumentNullException. V kodu jsme vyuzivali ternarni operatory, pokud se
+jednalo o prirazeni do promenne nebo return statement.
+
+Pro komentovani kodu jsme vyuzili standardni komentare ve stylu MS Visual 
+Studio zacinajici znaky "///".
+
+2) KONKRETNI ZMENY V KODU
+Kod jsme rozdelili do dvou namespaces - HuffmanCoding a HuffmanCodingProgram.
+Hlavni tridy jsme prejmenovali nasledovne: vrchol = Node, strom = Tree,
+Nacitacka = Reader
+
+Pro jednoduchos jsme zavedli datovy typ
+RankedNodesDictionary = SortedDictionary<int, List<Node>>;
+
+2a) NODE
+Parametry znak, vaha, levy a pravy syn byly v puvodnim kodu obsazeny jako
+public fields - z toho jsme udelali C# properties Character, Rank,
+LeftChildNode a RightChildNode s asymetrickym pristupem (public get, private
+set), coz znamena, ze se daji cist odkudkoliv, ale zmenit je lze pouze ve tride
+Node. V konstruktoru jsme zmenili poradi parametru tak, aby byl prvni znak,
+protoze to je jiste nejdulezitejsi parametr. Zaroven jsme pridali druhy pomocny
+konstruktor, ktery akceptuje pouze znak a automaticky doplnuje vychozi hodnoty
+do ostatnich properties. Trida obsahuje dale "citac" instanci - nove k tomu
+vyuziva pole readonly int _nodeIndex a static int _nodeInstancesCount. Prvni
+je readonly, protoze se nastavuje jenom v konstruktoru, odpada tak riziko
+nechtene zmeny.
+
+Metodu JeList() jsme nahradili bool property Node.IsLeaf.
+Metodu BudeVrcholVlevo jsme prejmenovali na Node.IsLeftOf(Node otherNode)
+a kompletne jsme ji refaktorovali. Pocet return statementu jsme zmensili na
+polovinu a vyrazne jsme zjednodusili IF podminky (tudiz i citelnost kodu).
+Zaroven jsme pridali kontrolu, zda oba porovnavane vrcholy neobsahuji stejny
+znak - pokud ano, pak se vyhodi ArgumentException.
+
+Trida dale obsahuje metodu IncreaseRank (puvodne ZvecVahu), ktera neni nikde
+pouzita. V puvodnim navrhu vracela "this", coz je zjevne v danem pripade
+naprosto zbytecne, pridali jsme navic kontrolu nezapornosti ranku. Trida dale
+definuje metodu SumRanks (puvodne SectiVahy), na kterou se puvodni autor nikde
+neodkazal, ale my jsme ji vyuzili.
+
+Ve tride byl jeden #region pro IComparable members (jednu metodu), ten jsme
+odebrali, protoze to tam bylo v tomto pripade zbytecne, jine regiony kod
+neobsahoval.
+
+2b) TREE
+API teto tridy jsme upravili - z public constructoru jsme udelali privatni
+a pridali jsme public static metodu Tree.FromFile(string fileName), ktera
+pomoci tridy Reader nacte soubor a vrati instanci tridy Tree. Tim jsme dosahli
+toho, ze trida Tree je nejdulezitejsi (logicky) a uzivatel nemusi pristupovat
+k souboru pomoci Readeru (Nacitacka). Puvodni navrh byl v tomto smeru dost
+nekonzistentni, protoze postradal jakoukoliv hierarchii v ramci vsech trech
+implementovanych trid. Nas navrh stavi do popredi tridu Tree, ktera nasledne
+vyuziva tridy Reader a Node, ktere jsou na sobe nove nezavisle.
+
+Metoda BuildTree (postavStrom) obsahovala velke mnozstvi redundantniho kodu,
+coz se nam podarilo odbourat diky rozdeleni do nekolika ruznych metod,
+konkretne pribyly InsertNodesToRankedNodes, InsertNodeToRankedNodes a 
+CreateParentNode. Metoda BuildTree obsahuje jeden while cyklus, kterym vola
+metodu InsertNodesToRankedNodes. Ta vlozi sudy pocet vrcholu do stromu a
+pripadne vrati posledni lichy. Metoda BuildTree si v prubehu provadeni while
+cyklu udrzuje promenne oddNodePlaceholder (posledni lichy vrchol) a 
+remainingNodesCount (kolik vrcholu zbyva zpracovat), diky nim ridi cely
+algoritmus. Uvazovali jsme o extrakci tela while cyklu do separatni funkce,
+ale nakonec jsme od toho upustili, protoze by to znamenalo pouzivani referenci
+a roztrzeni logiky algoritmu do dvou metod. Mezi vsemi metodami se parametry
+predavaji primo, v ramci instance neni ulozeno nic. Metody maji lehce delsi
+nazvy, nez by bylo idealni, ale za to jsou samovysvetlujici, coz povazujeme
+za rozumny duvod pro prolomeni 20 znakove delky. Sumu remainingNodesCount
+jsme oproti puvodnimu foreach cyklu nahradili vyrazem LINQ. Na zaver jeste
+poznamenavame, ze jsme podminku ve while cyklu typu "x != 1" nahradili vyrazem
+"x > 1", protoze je to dle naseho nazoru bezpecnejsi, nehrozi tak preskoceni
+tohoto "checkpointu" a pripadny nekonecny cyklus.
+
+Staticky "konstruktor" Tree.FromFile(string fileName) funguje nasledovne:
+pomoci Readeru nacte vstupni soubor a ziska mapu znaku a jejich vyskytu. Zbytek
+logiky kodu z puvodni "Nacitacky" jsme presunuli do Tree. Tree z vyskytu znaku
+vytvori instanci RankedNodesDictionary metodou BuildRankedNodes, v kodu
+puvodniho programu jsme zde for cyklus nahradili kombinaci foreach + LINQ.
+Nakonec metoda vrati instanci tridy Tree, ktere jako parametr pro konstruktor
+zada prave tato data.
+
+Puvodni metody vypisStrom a vypisStrom2 jsme prejmenovali na PrintTree a
+PrintTreePrefixed. Z metod jsme extrahovali konstanty MIN_PRINT_CHAR a 
+MAX_PRINT_CHAR a dali jsme je do uvodu tridy, v puvodnim kodu byly napsane 
+"natvrdo". Jedno z cisel jsme prepsali z hex formatu do desitkoveho.Metodu
+PrintTreePrefixed jsme refaktorovali - odebrali jsme zbytecne pouzivane
+promenne a zjednodusili jsme if / else rizeni.
+
+2c) READER
+Trida Reader, puvodne Nacitacka, ma nove jenom jednu metodu -
+GetCharCountsFromFile (nazev je opet trochu delsi, ale opet samovysvetlujici).
+Tato metoda kombinuje puvodni metodu OtevrSoubor s casti metody PrectiSoubor.
+Na rozdil od prve zminene metoda pristupuje k souboru pomoci konstrukce
+using(new FileStream(...)) { }, ktera usetri spoustu kodu a jasne definuje
+oblast, ve ktere se ke streamu pristupuje. Reader zaroven nezachytava vyjimky
+a nechava je bublat vyse. V puvodnim kodu byl dokonce Environment.Exit(0), coz
+povazujeme za hrubou chybu.
+
+Puvodni implementace de facto pocitala cast prace algoritmu pro stavbu
+Huffmanova stromu, cast kodu byla stejna jako ve tride "strom" a vytvarela
+rovnou implementace trid "vrchol", coz z hlediska navrhu hodnotime negativne.
+Proto jsme funkcionalitu teto tridy omezili na precteni souboru a vraceni pole
+znaku s pocty jejich vyskytu. Jakakoliv dalsi programova logika zde nema misto.
+
+2d) PROGRAM
+Vlastni program - konzolova aplikace, Main, doznal dvou vyznamnych zmen.
+
+V prvni rade bylo treba prizpusobit program novemu API, nove se misto Nacitacky
+a tridy strom vola pouze Tree.FromFile(string fileName), ktery odvede veskerou
+praci.
+
+Druhou zmenou je osetreni chybovych stavu - pokud program nedostane prave
+jeden parametr, tak to uzivateli rozumnym zpusobem napise. Tree.FromFile
+vyhazuje vyjimky - specialne je osetrena FileNotFoundException a uzival 
+informovan o tom, ze zadany soubor neexistuje, dale program odchytava
+genericky vsechny Exceptions a poskytuje obecnou chybovou hlasku. Toto
+by se samozrejme dalo dale rozsirit o dalsi specialni chybove hlasky pro
+specialni exceptions.
+
+Program puvodne obsahoval deklaraci statickych promennych, bez kterych jsme
+se nakonec v klidu obesli.
+

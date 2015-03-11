@@ -2,81 +2,82 @@
 ==========
 
 1) Obecne zmeny
-	- konzistence formatovani
-	- preklad nazvu promennych a metod do anglictiny
-	- TODO vyuziti C# property namisto public hodnot
-	- pouziti obecneho typu "var" pro promenne vsude, kde to jde - typova inference
-	- jmenne konvence dle MSDN naming guidelines:
-		- tridy, metody, properties, namespaces: UpperCamelCase
-		- lokalni, promenne, parametry: lowerCamelCase
-		- konstanty: UPPER_CASE (odchyleni od naming guidelines)
-		- private fields: _lowerCamelCase
-	- uprava API - nahrazeni public fields pouzitim C# properties s asymetrickym pristupem
-	- typedef RankedNodesDictionary pro System.Collections.Generic.SortedDictionary<int, List<Node>>
-	- metody kontroluji validitu parametru a pripadne vyhazuji ArgumentException nebo ArgumentNullException
-	- prepsani nekterych for cyklu pomoci while
-	- prepsani nekterych foreach cyklu pomoci LINQ
+x	- konzistence formatovani
+x	- preklad nazvu promennych a metod do anglictiny
+x	- TODO vyuziti C# property namisto public hodnot
+x	- pouziti obecneho typu "var" pro promenne vsude, kde to jde - typova inference
+x	- jmenne konvence dle MSDN naming guidelines:
+x		- tridy, metody, properties, namespaces: UpperCamelCase
+x		- lokalni, promenne, parametry: lowerCamelCase
+x		- konstanty: UPPER_CASE (odchyleni od naming guidelines)
+x		- private fields: _lowerCamelCase
+x	- uprava API - nahrazeni public fields pouzitim C# properties s asymetrickym pristupem
+x	- typedef RankedNodesDictionary pro System.Collections.Generic.SortedDictionary<int, List<Node>>
+x	- metody kontroluji validitu parametru a pripadne vyhazuji ArgumentException nebo ArgumentNullException
+x	- prepsani nekterych for cyklu pomoci while
+x	- prepsani nekterych foreach cyklu pomoci LINQ
 	- podminky a cykly typu "x != 1" => "x > 1", pokud ocekavam hodnoty jedna a vice
-	- zapouzdreni promennych v cyklech - presunuti deklarace do cyklu, aby nebyly videt vne
-	- odebrani redundanci z kodu - inicializace promennych defaultni hodnotou, zbytecne pretypovani, zbytecna this.
+x	- zapouzdreni promennych v cyklech - presunuti deklarace do cyklu, aby nebyly videt vne
+x	- odebrani redundanci z kodu - inicializace promennych defaultni hodnotou, zbytecne pretypovani, zbytecna this.
 
 2) Konkretni zmeny
-	- rozdeleni do namespaces HuffmanCoding a MFFUK
-	- prejmenovani trid vrchol -> Node, strom -> Tree, Nacitacka -> Reader
+x	- rozdeleni do namespaces HuffmanCoding a HuffmanCodingProblem
+x	- prejmenovani trid vrchol -> Node, strom -> Tree, Nacitacka -> Reader
 
-	- vrchol -> Node
-		- konstruktor
-			- zmena poradi parametru - character, rank, leftChildNode, rightChildNode
-			- druhy pomocny konstruktor pouze pro jeden parametr character
-		- vrchol.JeList() > bool property Node.IsLeaf
-		- odebrani #region pro IComparable Members - zbytecny
-		- vrchol.BudeVrcholVlevo -> Node.IsLeftOf(Node otherNode)
-			- refactoring metody
-			- pridani vyjimky ArgumentException, pokud maji obe Node stejny znak
-		- counter instanci
-			- readonly int _nodeIndex, static int _nodeInstancesCount
-				- readonly - lze zmenit pouze v konstruktoru
-		- IncreaseRank
-			- nevraci this, je to zbytecny
+x	- vrchol -> Node
+x		- konstruktor
+x			- zmena poradi parametru - character, rank, leftChildNode, rightChildNode
+x			- druhy pomocny konstruktor pouze pro jeden parametr character
+x		- vrchol.JeList() > bool property Node.IsLeaf
+x		- odebrani #region pro IComparable Members - zbytecny
+x		- vrchol.BudeVrcholVlevo -> Node.IsLeftOf(Node otherNode)
+x			- refactoring metody
+x			- pridani vyjimky ArgumentException, pokud maji obe Node stejny znak
+	x	- counter instanci
+	x		- readonly int _nodeIndex, static int _nodeInstancesCount
+	x			- readonly - lze zmenit pouze v konstruktoru
+	x	- IncreaseRank
+	x		- nevraci this, je to zbytecny
 
-	- strom -> Tree
-		- postavStrom -> Build
-			- refactoring
-			- rozdeleni do nekolika funkci, odebrani redundandniho kodu
-			- LINQ expression pro sumu zbyvajicich vrcholu
-			- while cyklus plus pomocne metody
-				- while cyklus komplikovany, protoze obsahuje cely algoritmus
-				- InsertNodePairsToRankedNodes
-				- InsertNodeToRankedNodes
-				- CreateParentNode
-		- vypisStrom2 -> PrintTreePrefixed
-			 - extrakce cisel v kodu do konstantnich poli
-		- konstruktor - privatni + Tree.FromFile(fileName)
-			- BuildRankedNoder - spocita ranked nodes z poctu vyskytu znaku
+	x- strom -> Tree
+	x	- postavStrom -> BuildTree
+	x		- refactoring
+	x		- rozdeleni do nekolika funkci, odebrani redundandniho kodu
+	x		- LINQ expression pro sumu zbyvajicich vrcholu
+	x		- while cyklus plus pomocne metody
+	x			- while cyklus komplikovany, protoze obsahuje cely algoritmus
+	x			- InsertNodesToRankedNodes
+	x			- InsertNodeToRankedNodes
+	x			- CreateParentNode
+	x		- _treeCount - divny, asi chybne
+	x	- vypisStrom2 -> PrintTreePrefixed
+	x		 - extrakce cisel v kodu do konstantnich poli
+	x	- konstruktor - privatni + Tree.FromFile(fileName)
+	x		- BuildRankedNoder - spocita ranked nodes z poctu vyskytu znaku
 
-	- Nacitacka -> Reader
-		- presun casti kodu do Tree.FromFile kvuli architekture
-		- GetCharCountsFromFile - vraci pocet vyskytu pro vsechny znaky
+	x- Nacitacka -> Reader
+	x	- presun casti kodu do Tree.FromFile kvuli architekture
+	x	- GetCharCountsFromFile - vraci pocet vyskytu pro vsechny znaky
 
-	- Program
-		- osetreni vstupniho argumentu, vhodna poznamka do konzole
-		- vypsani stromu, osetreni vyjimek pro FileNotFoundException a generic Exception
+	x- Program
+	x	- osetreni vstupniho argumentu, vhodna poznamka do konzole
+	x	- vypsani stromu, osetreni vyjimek pro FileNotFoundException a generic Exception
 				
 
- - Translating
- - if conditions simplifying
- - divide into namespaces
- - class variables & methods rearrangement
- - PrintTreePrefixed refractoring:
-   - remove unnessary variable & conditions
-   - replace hex number with decimal
- - HuffmanCoding.Reader.OpenFile: deleted, refractored code moved into ReadFile method
- - HuffmanCoding.Reader.ReadFile:
-   - magic numbers -> class constants
-   - magic numbers -> class methods (256 -> .Length in for cycle)
-   - for -> while cycle replacement
-   - merge two cycles (main cycle + last chunk cycle)
- - Program:
-   - static variables moved into methods 
- - replace datatypes with "var" keywork
- - typedef for System.Collections.Generic.SortedDictionary<int, List<Node>>
+ x- Translating
+ x- if conditions simplifying
+x - divide into namespaces
+x - class variables & methods rearrangement
+x - PrintTreePrefixed refractoring:
+x   - remove unnessary variable & conditions
+x   - replace hex number with decimal
+x - HuffmanCoding.Reader.OpenFile: deleted, refractored code moved into ReadFile method
+x - HuffmanCoding.Reader.ReadFile:
+x   - magic numbers -> class constants
+x   - magic numbers -> class methods (256 -> .Length in for cycle)
+x   - for -> while cycle replacement
+x   - merge two cycles (main cycle + last chunk cycle)
+x - Program:
+x   - static variables moved into methods 
+x - replace datatypes with "var" keywork
+x - typedef for System.Collections.Generic.SortedDictionary<int, List<Node>>

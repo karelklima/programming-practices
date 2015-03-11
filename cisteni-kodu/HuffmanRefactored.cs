@@ -5,10 +5,11 @@ using System.Linq;
 
 namespace HuffmanCoding
 {
-    // TODO comment
     using RankedNodesDictionary = SortedDictionary<int, List<Node>>;
 
-    // TODO comment
+    /// <summary>
+    /// A node in huffman tree
+    /// </summary>
     class Node : IComparable<Node>
     {
         public byte Character { get; private set; }
@@ -34,6 +35,8 @@ namespace HuffmanCoding
         /// <param name="rightChildNode"></param>
         public Node(byte character, int rank, Node leftChildNode, Node rightChildNode)
         {
+            if (rank < 1)
+                throw new ArgumentException("Rank must be greater than one", "rank");
             Character = character;
             Rank = rank;
             LeftChildNode = leftChildNode;
@@ -50,21 +53,11 @@ namespace HuffmanCoding
         }
 
         /// <summary>
-        /// TODO Kdyz nema jedineho syna vraci true.
+        /// True if the node does not have any children.
         /// </summary>
         public bool IsLeaf
         {
             get { return LeftChildNode == null && RightChildNode == null; }
-        }
-
-        /// <summary>
-        /// Zvetsi vahu vrcholu o zadany int, vraci upraveny vrchol.
-        /// </summary>
-        /// <param name="rank"></param>
-        /// <returns></returns>
-        public void IncreaseRank(int rank)
-        {
-            Rank += rank;
         }
 
         /// <summary>
@@ -125,8 +118,24 @@ namespace HuffmanCoding
         {
             return firstNode.Rank + secondNode.Rank;
         }
+     
+        /// <summary>
+        /// Increases node's rank by the given number
+        /// </summary>
+        /// <param name="rankIncrease"></param>
+        /// <returns></returns>
+        public void IncreaseRank(int rankIncrease)
+        {
+            if (rankIncrease < 1)
+                throw new ArgumentException("Rank increase must not be negative", "rankIncrease");
+            
+            Rank += rankIncrease;
+        }
     }
 
+    /// <summary>
+    /// Huffman tree
+    /// </summary>
     class Tree
     {
         private const int MIN_PRINT_CHAR = 32;
@@ -175,7 +184,7 @@ namespace HuffmanCoding
             var remainingNodesCount = rankedNodes.Sum(rankedNodesPair => rankedNodesPair.Value.Count);
 
             if (remainingNodesCount != 1)
-                _treeCount++; // TODO nema to byt nula?
+                _treeCount++;
 
             Node oddNodePlaceholder = null;
 
@@ -187,7 +196,7 @@ namespace HuffmanCoding
                 if (oddNodePlaceholder != null)
                     nodes.Insert(0, oddNodePlaceholder);
 
-                oddNodePlaceholder = InsertNodePairsToRankedNodes(rankedNodes, nodes, oddNodePlaceholder != null);
+                oddNodePlaceholder = InsertNodesToRankedNodes(rankedNodes, nodes, oddNodePlaceholder != null);
                 remainingNodesCount -= nodes.Count / 2;
 
                 rankedNodes.Remove(rank);
@@ -197,7 +206,6 @@ namespace HuffmanCoding
         }
 
         /// <summary>
-        /// TODO prejmenovat na InsertNodesToRankedNodes???
         /// Takes pairs of nodes from input list, creates their parent node and inserts it
         /// to the Huffman tree. Returns last node if number of nodes in list is odd.
         /// </summary>
@@ -205,7 +213,7 @@ namespace HuffmanCoding
         /// <param name="nodes"></param>
         /// <param name="previousOddNodeIndicator"></param>
         /// <returns>Last odd node or null</returns>
-        private static Node InsertNodePairsToRankedNodes(RankedNodesDictionary rankedNodes, IList<Node> nodes, bool previousOddNodeIndicator)
+        private static Node InsertNodesToRankedNodes(RankedNodesDictionary rankedNodes, IList<Node> nodes, bool previousOddNodeIndicator)
         {
             if (rankedNodes == null)
                 throw new ArgumentNullException("rankedNodes");
@@ -266,10 +274,11 @@ namespace HuffmanCoding
         private static RankedNodesDictionary BuildRankedNodes(IEnumerable<int> charCounts)
         {
             var rankedNodes = new RankedNodesDictionary();
-            foreach (var newNode in charCounts
-                .Select((rank, character) => new Node((byte)character, rank, null, null))
-                .Where(newNode => newNode.Rank > 0))
+            foreach (var it in charCounts
+                .Select((rank, character) => new { Rank = rank, Character = character})
+                .Where(it => it.Rank > 0))
             {
+                var newNode = new Node((byte) it.Character, it.Rank, null, null);
                 InsertNodeToRankedNodes(rankedNodes, newNode);
             }
             return rankedNodes;
@@ -288,10 +297,6 @@ namespace HuffmanCoding
         public void PrintTreePrefixed(Node node, string prefix)
         {
             if (node.IsLeaf) {
-                //if (!Char.IsControl (Convert.ToChar (node.Character))) //We cannot use it, because it uses UTF-16
-                //32 - first printable char
-                //126 - last printable char
-                // TODO neslo by tohle zkratit?
                 if ((node.Character >= MIN_PRINT_CHAR) && (node.Character <= MAX_PRINT_CHAR)) //printable condition
                     Console.Write(" ['{0}':{1}]\n", (char)node.Character, node.Rank);
                 else
@@ -308,13 +313,16 @@ namespace HuffmanCoding
         
     }
 
+    /// <summary>
+    /// Reader for Huffman tree. Reads character occurrences in a file.
+    /// </summary>
     class Reader
     {
-        private const int READ_FILE_BUFFER_SIZE = 16384;//16KB
-        private const int CHARS_COUNT = 256;//ascii
+        private const int READ_FILE_BUFFER_SIZE = 16384; //16KB
+        private const int CHARS_COUNT = 256; //ascii
 
         /// <summary>
-        /// Reads given file and returns numbers of characters' occurrences inside it.
+        /// Reads given file and returns numbers of character occurrences inside it.
         /// Throws exceptions!
         /// </summary>
         /// <param name="fileName"></param>
@@ -345,7 +353,7 @@ namespace HuffmanCoding
     }
 }
 
-namespace MFFUK
+namespace HuffmanCodingProgram
 {
     class Program
     {
@@ -370,7 +378,7 @@ namespace MFFUK
                 {
                     Console.WriteLine("An error occurred, input file was not found!");
                 }
-                catch (Exception)
+                catch (FileLoadException)
                 {
                     Console.Write("An error occurred, possibly a problem with input file!");
                 }
