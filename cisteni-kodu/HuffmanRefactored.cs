@@ -113,11 +113,6 @@ namespace HuffmanCoding
 
             return 1;
         }
-
-        public static int SumRanks(Node firstNode, Node secondNode)
-        {
-            return firstNode.Rank + secondNode.Rank;
-        }
      
         /// <summary>
         /// Increases node's rank by the given number
@@ -130,6 +125,17 @@ namespace HuffmanCoding
                 throw new ArgumentException("Rank increase must not be negative", "rankIncrease");
             
             Rank += rankIncrease;
+        }
+
+        /// <summary>
+        /// Sums ranks of two nodes.
+        /// </summary>
+        /// <param name="firstNode"></param>
+        /// <param name="secondNode"></param>
+        /// <returns></returns>
+        public static int SumRanks(Node firstNode, Node secondNode)
+        {
+            return firstNode.Rank + secondNode.Rank;
         }
     }
 
@@ -310,7 +316,6 @@ namespace HuffmanCoding
             }
         }
 
-        
     }
 
     /// <summary>
