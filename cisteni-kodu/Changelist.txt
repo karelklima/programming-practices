@@ -1,6 +1,19 @@
 ﻿Changelist
 ==========
 
+0) Doplnkove zmeny
+	- Node.Character - byte??? proc ne char?
+	- Node.IsLeftOf - odebrani checku pro stejny char - blbost
+	- Node konstruktory pro parent a leaf
+	- Reader -> FileReader
+		- prejmenovani GetCharCountsFromFile -> GetCharacterCounts
+	- PrintTree - dela vsechno, hlavni metoda
+	- PrintTreePrefixed -> PrintBranchPrefixed
+	- komentare
+	- _treeCount??? - prevod na static
+	- GetCharacterCounts - prepsani bufferovaciho cyklu do do/while cyklu, odebrani 
+		jedne ridici promenne
+
 1) Obecne zmeny
 x	- konzistence formatovani
 x	- preklad nazvu promennych a metod do anglictiny

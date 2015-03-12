@@ -42,9 +42,9 @@ namespace cisteni_kodu_test
                 //{
                     //var huffmanTree = new HuffmanCoding.Tree(rankedNodes);
                     var huffmanTree = Tree.FromFile("test.txt");
-                    huffmanTree.PrintTree();
+                    //huffmanTree.PrintTree();
                     //Console.Write("\n");
-                    huffmanTree.PrintTreePrefixed();
+                    huffmanTree.PrintTree();
                     Console.Write("\n");
                 //}
                 refactoredOutput = cr.ToString();
