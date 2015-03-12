@@ -467,8 +467,16 @@ namespace HuffmanCoding
 
 namespace HuffmanCodingProgram
 {
+    /// <summary>
+    /// Huffman coding console application
+    /// </summary>
     class Program
     {
+        /// <summary>
+        /// Application entry point
+        /// </summary>
+        /// <param name="args">Expects one parameter - a name of a file to
+        /// read and construct and print the Huffman tree from</param>
         static void Main(string[] args)
         {
             if (args.Length != 1)
@@ -492,8 +500,9 @@ namespace HuffmanCodingProgram
                     Console.WriteLine("An error occurred, input file was"
                         + " not found!");
                 }
-                catch (FileLoadException)
+                catch (Exception)
                 {
+                    // Catch all other possible exceptions
                     Console.Write("An error occurred, possibly a problem"
                         + " with input file!");
                 }
