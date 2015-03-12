@@ -29,7 +29,7 @@ vstupni parametry a vyhazuji odpovidajici vyjimky, zejmena ArgumentException
 a ArgumentNullException. V kodu jsme vyuzivali ternarni operatory, pokud se
 jednalo o prirazeni do promenne nebo return statement.
 
-Pro komentovani kodu jsme vyuzili standardni komentare ve stylu MS Visual 
+Pro komentovani kodu jsme vyuzili standardni XML komentare ve stylu MS Visual 
 Studio zacinajici znaky "///".
 
 2) KONKRETNI ZMENY V KODU
@@ -45,10 +45,21 @@ Parametry znak, vaha, levy a pravy syn byly v puvodnim kodu obsazeny jako
 public fields - z toho jsme udelali C# properties Character, Rank,
 LeftChildNode a RightChildNode s asymetrickym pristupem (public get, private
 set), coz znamena, ze se daji cist odkudkoliv, ale zmenit je lze pouze ve tride
-Node. V konstruktoru jsme zmenili poradi parametru tak, aby byl prvni znak,
-protoze to je jiste nejdulezitejsi parametr. Zaroven jsme pridali druhy pomocny
-konstruktor, ktery akceptuje pouze znak a automaticky doplnuje vychozi hodnoty
-do ostatnich properties. Trida obsahuje dale "citac" instanci - nove k tomu
+Node. Zmenili jsme datovy typ pro Character na "char" misto puvodniho "byte",
+coz lepe vystihuje danou funkci.
+
+Primo do Node jsme pridali integritni omezeni vyplyvajici z manipulace a
+vytvareni stromu - puvodni hlavni konstruktor jsme udelali private a pridali
+jsme dva specialni konstruktory pro list a vnitrni uzel. Konstruktor pro list
+prijma jako parametry znak a rank a zaroven osetruje nepozitivni rank,
+konstruktor pro vnitrni vrchol pak prijima jako parametry leveho a praveho
+syna, u kterych kontroluje nenullovost. Konstruktor doplni defaultni symbol
+pro rodice (ten je udelany jako konstanta) a spocita vysledny rank jako soucet
+ranku synu. Oba specialni konstruktory volaji defaultni private konstruktor.
+V private konstruktoru jsme zmenili poradi parametru tak, aby byl prvni znak,
+protoze to je jiste nejdulezitejsi parametr. 
+
+Trida obsahuje dale "citac" instanci - nove k tomu
 vyuziva pole readonly int _nodeIndex a static int _nodeInstancesCount. Prvni
 je readonly, protoze se nastavuje jenom v konstruktoru, odpada tak riziko
 nechtene zmeny.
@@ -57,14 +68,17 @@ Metodu JeList() jsme nahradili bool property Node.IsLeaf.
 Metodu BudeVrcholVlevo jsme prejmenovali na Node.IsLeftOf(Node otherNode)
 a kompletne jsme ji refaktorovali. Pocet return statementu jsme zmensili na
 polovinu a vyrazne jsme zjednodusili IF podminky (tudiz i citelnost kodu).
-Zaroven jsme pridali kontrolu, zda oba porovnavane vrcholy neobsahuji stejny
-znak - pokud ano, pak se vyhodi ArgumentException.
 
 Trida dale obsahuje metodu IncreaseRank (puvodne ZvecVahu), ktera neni nikde
 pouzita. V puvodnim navrhu vracela "this", coz je zjevne v danem pripade
-naprosto zbytecne, pridali jsme navic kontrolu nezapornosti ranku. Trida dale
-definuje metodu SumRanks (puvodne SectiVahy), na kterou se puvodni autor nikde
-neodkazal, ale my jsme ji vyuzili.
+naprosto zbytecne, pridali jsme navic kontrolu nezapornosti ranku. Chteli
+bychom podotknout, ze samotna existence teto metody potencialne ohrozuje
+integritu postaveneho stromu - kdyz se u vysledneho stromu u kterehokoliv
+vrcholu zmeni rank, tak jiz nepujde o Huffmanuv strom. Smysl metoda ma pouze
+v pripade, vytvorim-li list, ke kteremu pak pricitam rank (nez list vlozim
+do stromu). Otazkou je, zda to ale neni zbytecne. Trida dale definuje metodu
+SumRanks (puvodne SectiVahy), na kterou se puvodni autor nikde neodkazal,
+ale my jsme ji vyuzili.
 
 Ve tride byl jeden #region pro IComparable members (jednu metodu), ten jsme
 odebrali, protoze to tam bylo v tomto pripade zbytecne, jine regiony kod
@@ -73,12 +87,12 @@ neobsahoval.
 2b) TREE
 API teto tridy jsme upravili - z public constructoru jsme udelali privatni
 a pridali jsme public static metodu Tree.FromFile(string fileName), ktera
-pomoci tridy Reader nacte soubor a vrati instanci tridy Tree. Tim jsme dosahli
-toho, ze trida Tree je nejdulezitejsi (logicky) a uzivatel nemusi pristupovat
-k souboru pomoci Readeru (Nacitacka). Puvodni navrh byl v tomto smeru dost
-nekonzistentni, protoze postradal jakoukoliv hierarchii v ramci vsech trech
-implementovanych trid. Nas navrh stavi do popredi tridu Tree, ktera nasledne
-vyuziva tridy Reader a Node, ktere jsou na sobe nove nezavisle.
+pomoci tridy FileReader nacte soubor a vrati instanci tridy Tree. Tim jsme
+dosahli toho, ze trida Tree je nejdulezitejsi (logicky) a uzivatel nemusi
+pristupovat k souboru pomoci FileReaderu (Nacitacka). Puvodni navrh byl v tomto
+smeru dost nekonzistentni, protoze postradal jakoukoliv hierarchii v ramci
+vsech trech implementovanych trid. Nas navrh stavi do popredi tridu Tree, ktera
+nasledne vyuziva tridy FileReader a Node, ktere jsou na sobe nove nezavisle.
 
 Metoda BuildTree (postavStrom) obsahovala velke mnozstvi redundantniho kodu,
 coz se nam podarilo odbourat diky rozdeleni do nekolika ruznych metod,
@@ -86,43 +100,71 @@ konkretne pribyly InsertNodesToRankedNodes, InsertNodeToRankedNodes a
 CreateParentNode. Metoda BuildTree obsahuje jeden while cyklus, kterym vola
 metodu InsertNodesToRankedNodes. Ta vlozi sudy pocet vrcholu do stromu a
 pripadne vrati posledni lichy. Metoda BuildTree si v prubehu provadeni while
-cyklu udrzuje promenne oddNodePlaceholder (posledni lichy vrchol) a 
-remainingNodesCount (kolik vrcholu zbyva zpracovat), diky nim ridi cely
+cyklu udrzuje promenne "oddNode" (posledni lichy vrchol) a
+"remainingNodesCount" (kolik vrcholu zbyva zpracovat), diky nim ridi cely
 algoritmus. Uvazovali jsme o extrakci tela while cyklu do separatni funkce,
 ale nakonec jsme od toho upustili, protoze by to znamenalo pouzivani referenci
 a roztrzeni logiky algoritmu do dvou metod. Mezi vsemi metodami se parametry
 predavaji primo, v ramci instance neni ulozeno nic. Metody maji lehce delsi
 nazvy, nez by bylo idealni, ale za to jsou samovysvetlujici, coz povazujeme
 za rozumny duvod pro prolomeni 20 znakove delky. Sumu remainingNodesCount
-jsme oproti puvodnimu foreach cyklu nahradili vyrazem LINQ. Na zaver jeste
-poznamenavame, ze jsme podminku ve while cyklu typu "x != 1" nahradili vyrazem
-"x > 1", protoze je to dle naseho nazoru bezpecnejsi, nehrozi tak preskoceni
-tohoto "checkpointu" a pripadny nekonecny cyklus.
+jsme oproti puvodnimu foreach cyklu nahradili vyrazem LINQ.
+
+Ackoliv jsme neupravovali autoruv puvodni algoritmus, upravili jsme generovani
+novych vrcholu - nejvetsi "chybou" puvodniho navrhu byl fakt, ze autor do
+vnitrnich vrcholu Huffmanova stromu prirazoval znaky ze synu, a to zcela
+nahodne. Tohle chovani jsme odstranili a kazdy vnitrni vrchol ma nyni stejny
+specialni znak definovany konstantne v Node. Tree pri konstrukci uzlu vyuziva
+pro listy i rodice specialni konstruktory Node, takze odpada urcita rezie na
+teto urovni (napriklad rank rodice si pocita Node samo), overovani integrity
+se rovnez posunulo o uroven nize primo do Node. Vysledek je ten, ze se nyni
+diky Node prakticky neda vytvorit nevalidni Huffmanuv strom, krome pripadu
+metody Node.IncreaseRank popsane vyse. 
+
+Zaverem k metode BuildTree jeste poznamenavame, ze jsme podminku ve while cyklu
+typu "x != 1" nahradili vyrazem "x > 1", protoze je to dle naseho nazoru
+bezpecnejsi, nehrozi tak preskoceni tohoto "checkpointu" a pripadny nekonecny
+cyklus. Podobne jsme upravili i podminku pro citac stromu "_treeCount"
+(puvodne pocetStromu), ktery jsme zmenili na staticky, aby opravdu fungoval,
+puvodni totiz chybne pocital pouze do jednicky, jelikoz se promenna vazala
+k instanci tridy Tree.
 
 Staticky "konstruktor" Tree.FromFile(string fileName) funguje nasledovne:
-pomoci Readeru nacte vstupni soubor a ziska mapu znaku a jejich vyskytu. Zbytek
-logiky kodu z puvodni "Nacitacky" jsme presunuli do Tree. Tree z vyskytu znaku
-vytvori instanci RankedNodesDictionary metodou BuildRankedNodes, v kodu
+pomoci FileReaderu nacte vstupni soubor a ziska mapu znaku a jejich vyskytu.
+Zbytek logiky kodu z puvodni "Nacitacky" jsme presunuli do Tree. Tree z vyskytu
+znaku vytvori instanci RankedNodesDictionary metodou BuildRankedNodes, v kodu
 puvodniho programu jsme zde for cyklus nahradili kombinaci foreach + LINQ.
 Nakonec metoda vrati instanci tridy Tree, ktere jako parametr pro konstruktor
 zada prave tato data.
 
-Puvodni metody vypisStrom a vypisStrom2 jsme prejmenovali na PrintTree a
-PrintTreePrefixed. Z metod jsme extrahovali konstanty MIN_PRINT_CHAR a 
-MAX_PRINT_CHAR a dali jsme je do uvodu tridy, v puvodnim kodu byly napsane 
-"natvrdo". Jedno z cisel jsme prepsali z hex formatu do desitkoveho.Metodu
-PrintTreePrefixed jsme refaktorovali - odebrali jsme zbytecne pouzivane
-promenne a zjednodusili jsme if / else rizeni.
+Puvodni metody vypisStrom a vypisStrom2 jsme sloucili do jedne - respektive
+prvni jsme zcela smazali a druhou jsme prejmenovali na PrintTree. Z puvodniho
+navrhu a ocislovani je zrejme, ze autor chtel implementovat pouze jednu metodu,
+prvni pokus zrejme nefungoval, tak naprogramoval druhy (proto asi tak dvojka),
+ktery v kodu nechal. Proto smazani metody vypisStrom povazujeme za legitimni.
+Puvodni API odhalovalo variantu metody vypisStrom2, ktera slouzila ocividne
+pouze vnitrnim ucelum - z teto metody jsme udelali private static metodu
+PrintBranchPrefixed, ktera prijma jako parametr uzel a prefix od rodice, jeji
+nazev navic lepe vystihuje praci, kterou skutecne dela. Z metod jsme extrahovali
+konstanty MIN_PRINT_CHAR a MAX_PRINT_CHAR a dali jsme je do uvodu tridy,
+v puvodnim kodu byly napsane "natvrdo". Jedno z cisel jsme prepsali z hex
+formatu do desitkoveho. Kod v puvodni metode vypisStrom2 jsme refaktorovali -
+odebrali jsme zbytecne pouzivane promenne a zjednodusili jsme if / else rizeni.
 
-2c) READER
-Trida Reader, puvodne Nacitacka, ma nove jenom jednu metodu -
-GetCharCountsFromFile (nazev je opet trochu delsi, ale opet samovysvetlujici).
+2c) FileREADER
+Trida Reader, puvodne Nacitacka, ma nove jenom jednu metodu - GetCharCounts.
 Tato metoda kombinuje puvodni metodu OtevrSoubor s casti metody PrectiSoubor.
 Na rozdil od prve zminene metoda pristupuje k souboru pomoci konstrukce
 using(new FileStream(...)) { }, ktera usetri spoustu kodu a jasne definuje
-oblast, ve ktere se ke streamu pristupuje. Reader zaroven nezachytava vyjimky
-a nechava je bublat vyse. V puvodnim kodu byl dokonce Environment.Exit(0), coz
-povazujeme za hrubou chybu.
+oblast, ve ktere se ke streamu pristupuje. Upravili jsme taky cyklus pro
+nacitani do bufferu, ktery je nyni do / while namisto puvodniho while cyklu,
+cimz se nam podarilo zbavit se jedne pomocne promenne. Kod lze zapsat i jinak
+while cyklem s prirazenim v podmince, to by bylo ale na ujmu citelnosti kodu.
+
+FileReader zaroven nezachytava vyjimky a nechava je bublat vyse. Veskere
+osetrovani vyjimek jsme presunuli na uroven tridy Program, aby nedochazelo
+k "zamaskovani" a zjednodusovani chyb na nizsi urovni. Environment.Exit(0)
+z puvodniho kodu jsme odebrali, misto toho se vyhazuje vyjimka.
 
 Puvodni implementace de facto pocitala cast prace algoritmu pro stavbu
 Huffmanova stromu, cast kodu byla stejna jako ve tride "strom" a vytvarela
@@ -146,5 +188,5 @@ by se samozrejme dalo dale rozsirit o dalsi specialni chybove hlasky pro
 specialni exceptions.
 
 Program puvodne obsahoval deklaraci statickych promennych, bez kterych jsme
-se nakonec v klidu obesli.
+se nakonec obesli.
 
