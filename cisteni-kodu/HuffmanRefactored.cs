@@ -167,7 +167,8 @@ namespace HuffmanCoding
         public void IncreaseRank(int rankIncrease)
         {
             if (rankIncrease < 1)
-                throw new ArgumentException("Rank increase < 1", "rankIncrease");
+                throw new ArgumentException("Rank increase < 1",
+                    "rankIncrease");
             
             Rank += rankIncrease;
         }
@@ -401,7 +402,8 @@ namespace HuffmanCoding
                     Console.Write(" ['{0}':{1}]\n", node.Character,
                         node.Rank);
                 else
-                    Console.Write(" [{0}:{1}]\n", (int)node.Character, node.Rank);
+                    Console.Write(" [{0}:{1}]\n", (int)node.Character,
+                        node.Rank);
             } else {
                 Console.Write("{0,4} -+- ", node.Rank);
                 prefix += "      ";

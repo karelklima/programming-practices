@@ -145,11 +145,12 @@ ktery v kodu nechal. Proto smazani metody vypisStrom povazujeme za legitimni.
 Puvodni API odhalovalo variantu metody vypisStrom2, ktera slouzila ocividne
 pouze vnitrnim ucelum - z teto metody jsme udelali private static metodu
 PrintBranchPrefixed, ktera prijma jako parametr uzel a prefix od rodice, jeji
-nazev navic lepe vystihuje praci, kterou skutecne dela. Z metod jsme extrahovali
-konstanty MIN_PRINT_CHAR a MAX_PRINT_CHAR a dali jsme je do uvodu tridy,
-v puvodnim kodu byly napsane "natvrdo". Jedno z cisel jsme prepsali z hex
-formatu do desitkoveho. Kod v puvodni metode vypisStrom2 jsme refaktorovali -
-odebrali jsme zbytecne pouzivane promenne a zjednodusili jsme if / else rizeni.
+nazev navic lepe vystihuje praci, kterou skutecne dela. Z metod jsme
+extrahovali konstanty MIN_PRINT_CHAR a MAX_PRINT_CHAR a dali jsme je do uvodu
+tridy, v puvodnim kodu byly napsane "natvrdo". Jedno z cisel jsme prepsali
+z hex formatu do desitkoveho. Kod v puvodni metode vypisStrom2 jsme
+refaktorovali - odebrali jsme zbytecne pouzivane promenne a zjednodusili jsme
+if / else rizeni.
 
 2c) FileREADER
 Trida Reader, puvodne Nacitacka, ma nove jenom jednu metodu - GetCharCounts.
