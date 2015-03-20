@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Arguments
+namespace ArgumentsLibrary
 {
-    public class Class1
+    public class Arguments
     {
     }
 }
