@@ -7,7 +7,15 @@ namespace ArgumentsProgram
     {
         static void Main(string[] args)
         {
-            var arguments = new Arguments();
+            Arguments.AddOption("v")
+                .WithAlias("verbose")
+                .WithAlias("--v")
+                .WithAlias("-verbose")
+                .WithDescription("This is a help message")
+                .WithRequiredArgument("some")
+                .WithOptionalArgument("some")
+                .WithArgumentType(ArgumentType.Integer)
+
 
         }
     }
