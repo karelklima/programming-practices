@@ -1,10 +1,16 @@
-﻿namespace ArgumentsLibrary
+﻿using System;
+using System.Collections.Generic;
+
+namespace ArgumentsLibrary
 {
-    internal class Argument
+    public class Argument<T>
     {
-         public enum Type
-         {
-             Boolean
-         }
+
+        public Argument<T> WithTest(Func<T, bool> test)
+        {
+            return this;
+        }
+
     }
+
 }
