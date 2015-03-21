@@ -8,11 +8,19 @@ namespace ArgumentsLibrary
 {
     public sealed class Arguments
     {
-        private static readonly List<Option> _options = new List<Option>();  
+        private static readonly List<Option> _options = new List<Option>();
+        private static Dictionary<Type, object> _typeConverters = new Dictionary<Type, object>();
 
-        private Arguments()
+        static Arguments()
         {
-            
+            RegisterTypeConverter(string.Copy);
+            RegisterTypeConverter(int.Parse);
+            RegisterTypeConverter(bool.Parse);
+        }
+
+        public static void RegisterTypeConverter<T>(Func<string, T> converterFunc)
+        {
+            _typeConverters.Add(typeof(T), converterFunc);
         }
 
         public static OptionBuilder AddOption(string alias)

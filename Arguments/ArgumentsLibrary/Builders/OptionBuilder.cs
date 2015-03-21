@@ -5,6 +5,7 @@ namespace ArgumentsLibrary.Builders
     public class OptionBuilder
     {
         private Option _option;
+
         internal OptionBuilder(Option option)
         {
             _option = option;
@@ -16,6 +17,11 @@ namespace ArgumentsLibrary.Builders
         }
 
         public OptionBuilder WithDescription(string help)
+        {
+            return this;
+        }
+
+        public OptionBuilder WithDelegate(Action delegateAction)
         {
             return this;
         }

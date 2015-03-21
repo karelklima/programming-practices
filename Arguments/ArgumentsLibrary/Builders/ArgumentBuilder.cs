@@ -14,7 +14,7 @@ namespace ArgumentsLibrary.Builders
             return this;
         }
 
-        public ArgumentBuilder<T> WithEnumeratedValue(T[] valuesList)
+        public ArgumentBuilder<T> WithEnumeratedValue(params T[] valuesList)
         {
             return this;
         }
