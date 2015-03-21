@@ -6,9 +6,8 @@ namespace ArgumentsLibrary
     public class Argument<T>
     {
 
-        public Argument<T> WithTest(Func<T, bool> test)
+        internal Argument()
         {
-            return this;
         }
 
     }

@@ -18,10 +18,10 @@ namespace ArgumentsProgram
                 .WithAlias("--v")
                 .WithAlias("-verbose")
                 .WithDescription("This is a description of this option")
-                .WithDelegate(() => someActionValue = "Verbose option was detected")
+                .WithAction(() => someActionValue = "Verbose option was detected")
                 .WithOptionalArgument("some")
                 .WithPredicate( v => v.Contains("x") )
-                .WithDelegate( v => someStringValue = v );
+                .WithAction( v => someStringValue = v );
 
             Arguments.AddOption("i|integer|--i")
                 .WithDescription("This is a description of an integer option")
@@ -29,7 +29,7 @@ namespace ArgumentsProgram
                 .WithPredicate(i => i > 0 && i <= 100)
                 .WithEnumeratedValue(someInts)
                 .WithEnumeratedValue(1, 2, 3)
-                .WithDelegate(i => someIntValue = i);
+                .WithAction(i => someIntValue = i);
 
             Arguments.Parse(args);
 
