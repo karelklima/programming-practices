@@ -41,11 +41,11 @@
   <ItemGroup>
     <Compile Include="Argument.cs" />
     <Compile Include="Arguments.cs" />
-    <Compile Include="ArgumentType.cs" />
+    <Compile Include="Builders\ArgumentBuilder.cs" />
     <Compile Include="Exceptions\ArgumentsException.cs" />
     <Compile Include="Exceptions\ArgumentsSetupException.cs" />
     <Compile Include="Option.cs" />
-    <Compile Include="OptionBuilder.cs" />
+    <Compile Include="Builders\OptionBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

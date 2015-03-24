@@ -6,6 +6,8 @@ namespace ArgumentsLibrary
     public class Argument<T>
     {
 
+        public T Value { get; set; }
+
         internal Argument()
         {
         }

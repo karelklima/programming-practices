@@ -33,8 +33,8 @@ namespace ArgumentsProgram
 
             Arguments.Parse(args);
 
-
-
+            var x = Arguments.GetOptionValue("test");
+            var y = Arguments.GetOptionValue<int>("test2");
         }
     }
 }
