@@ -79,6 +79,16 @@ namespace ArgumentsLibrary
             return GetOptionValue<string>(alias);
         }
 
+        public static IEnumerable<T> GetPlainArguments<T>()
+        {
+            return new List<T>();
+        }
+
+        public static IEnumerable<string> GetPlainArguments()
+        {
+            return GetPlainArguments<string>();
+        }
+
         public static void Reset()
         {
             // TODO implement

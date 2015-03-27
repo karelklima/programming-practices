@@ -26,7 +26,7 @@ namespace ArgumentsLibrary.Builders
             return this;
         }
 
-        public ArgumentBuilder<T> WithPredicate(Func<T, bool> predicateFunc)
+        public ArgumentBuilder<T> WithCondition(Func<T, bool> conditionFunc)
         {
             // TODO implement
             return this;
