@@ -81,16 +81,16 @@ namespace ArgumentsLibrary.Builders
         /// Number of required values can be specified.
         /// </summary>
         /// <param name="name">Name of the argument to be used in hel</param>
-        /// <param name="minimalCount">Minimum count of required values</param>
-        /// <param name="maximalCount">Maximum acceptable count of values. 
+        /// <param name="minimumCount">Minimum count of required values</param>
+        /// <param name="maximumCount">Maximum acceptable count of values. 
         /// Could be specified as uint.MaxValue</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithArguments<T>(string name, uint minimumCount, uint maximalCount)
+        public ArgumentBuilder<T> WithArguments<T>(string name, uint minimumCount, uint maximumCount)
         {
             // TODO
             var builder = new ArgumentBuilder<T>()
-                .SetMinimalCount(minimumCount)
-                .SetMaximalCount(maximalCount);
+                .SetMinimumCount(minimumCount)
+                .SetMaximumCount(maximumCount);
             return builder;
         }
 

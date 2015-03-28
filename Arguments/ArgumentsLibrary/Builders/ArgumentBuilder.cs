@@ -88,7 +88,7 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         /// <param name="count">Count of required values</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> SetMinimalCount(uint count)
+        public ArgumentBuilder<T> SetMinimumCount(uint count)
         {
             // TODO implement
             return this;
@@ -99,7 +99,7 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         /// <param name="count">Count of values</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> SetMaximalCount(uint count)
+        public ArgumentBuilder<T> SetMaximumCount(uint count)
         {
             // TODO implement
             return this;
