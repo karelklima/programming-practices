@@ -282,17 +282,6 @@ namespace ArgumentsLibrary
             // TODO implement
             return new String[]{""};
         }
-
-        /// <summary>
-        /// Build help text for all defined options with their descriptions
-        /// with custom text builder.
-        /// Builder can return null object to remove option from help text.
-        /// </summary>
-        public static IList<String> BuildHelpText(Func<Option, String> builder)
-        {
-            // TODO implement
-            return new String[]{builder(new Option())};
-        }
         #endregion
 
     }
