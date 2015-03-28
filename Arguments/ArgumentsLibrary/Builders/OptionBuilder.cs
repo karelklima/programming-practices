@@ -77,6 +77,36 @@ namespace ArgumentsLibrary.Builders
         }
 
         /// <summary>
+        /// Defines the Option Arguments with specific type and name.
+        /// Number of required values can be specified.
+        /// </summary>
+        /// <param name="name">Name of the argument to be used in hel</param>
+        /// <param name="minimalCount">Minimum count of required values</param>
+        /// <param name="maximalCount">Maximum acceptable count of values. 
+        /// Could be specified as uint.MaxValue</param>
+        /// <returns>ArgumentBuilder{T} fluent interface</returns>
+        public ArgumentBuilder<T> WithArguments<T>(string name, uint minimumCount, uint maximalCount)
+        {
+            // TODO
+            var builder = new ArgumentBuilder<T>()
+                .SetMinimalCount(minimumCount)
+                .SetMaximalCount(maximalCount);
+            return builder;
+        }
+
+        /// <summary>
+        /// Defines the Option Arguments with specific type and name.
+        /// Number of required values can be specified.
+        /// </summary>
+        /// <param name="name">Name of the argument to be used in hel</param>
+        /// <param name="requiredCount">Count of required values</param>
+        /// <returns>ArgumentBuilder{T} fluent interface</returns>
+        public ArgumentBuilder<T> WithArguments<T>(string name, uint requiredCount)
+        {
+            return WithArguments<T>(name, requiredCount, requiredCount);
+        }
+
+        /// <summary>
         /// Defines the Option Argument with specific type and name.
         /// </summary>
         /// <typeparam name="T">Type of the Option Argument</typeparam>

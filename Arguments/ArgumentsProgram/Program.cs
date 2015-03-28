@@ -27,6 +27,10 @@ namespace ArgumentsProgram
                 // U zadane hodnoty se overi, zda splnuje nasledujici podminku
                 .WithCondition(v => v > 0);
 
+            Arguments.AddOption("filenames")
+                .WithDescription("Filenames to process")
+                .WithArguments<string>("FILENAMES", 1, uint.MaxValue);
+
             // Program zpracuje argumenty ze vstupu - od teto chvile jiz nelze menit konfiguraci
             Arguments.Parse(args);
 

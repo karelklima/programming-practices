@@ -83,6 +83,28 @@ namespace ArgumentsLibrary.Builders
             return this;
         }
 
+        /// <summary>
+        /// Sets minimal count of required values
+        /// </summary>
+        /// <param name="count">Count of required values</param>
+        /// <returns>ArgumentBuilder{T} fluent interface</returns>
+        public ArgumentBuilder<T> SetMinimalCount(uint count)
+        {
+            // TODO implement
+            return this;
+        }
+
+        /// <summary>
+        /// Sets maximum acceptable count of required values
+        /// </summary>
+        /// <param name="count">Count of values</param>
+        /// <returns>ArgumentBuilder{T} fluent interface</returns>
+        public ArgumentBuilder<T> SetMaximalCount(uint count)
+        {
+            // TODO implement
+            return this;
+        }
+
         #endregion
     }
 }
