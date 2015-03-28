@@ -37,6 +37,10 @@ namespace ArgumentsProgram
             Console.WriteLine("arguments = {0}", Arguments.GetPlainArguments()
                 .Aggregate((i, j) => i + " " + j));
 
+            Arguments.AddOption("?|h|help|--h")
+                     .WithDescription("Show help text")
+                     .WithAction(() => Console.WriteLine(Arguments.BuildHelpText()));
+
             // KONEC UKAZKOVEHO KODU
 
             Arguments.Reset();
@@ -63,6 +67,13 @@ namespace ArgumentsProgram
                 .WithEnumeratedValue(someInts)
                 .WithEnumeratedValue(1, 2, 3)
                 .WithAction(i => someIntValue = i);
+
+            Arguments.AddOption("?|h|help|--h")
+                     .WithDescription("Show help text")
+                     .WithAction(() => Console.WriteLine(Arguments.BuildHelpText(
+                         option => "Option: "+option.ToString()
+                         )));
+
 
             Arguments.Parse(args);
 
