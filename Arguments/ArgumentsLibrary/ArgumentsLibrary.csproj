@@ -45,8 +45,11 @@
     <Compile Include="Builders\ArgumentBuilder.cs" />
     <Compile Include="Exceptions\ArgumentsException.cs" />
     <Compile Include="Exceptions\ArgumentsSetupException.cs" />
+    <Compile Include="Exceptions\ArgumentsParseException.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Builders\OptionBuilder.cs" />
+    <Compile Include="OptionAlias.cs" />
+    <Compile Include="OptionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

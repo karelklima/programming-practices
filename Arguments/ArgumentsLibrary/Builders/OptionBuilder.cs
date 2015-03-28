@@ -7,12 +7,16 @@ namespace ArgumentsLibrary.Builders
     /// </summary>
     public class OptionBuilder
     {
+        #region Internals
+
         internal Option Option { get; private set; }
 
         internal OptionBuilder()
         {
             Option = new Option();
         }
+
+        #endregion
 
         #region API
 
@@ -34,7 +38,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>OptionBuilder fluent interface</returns>
         public OptionBuilder WithAliases(string aliases)
         {
-            Arguments.RegisterOptionAlias(Option, aliases);
+            Arguments.RegisterOptionAliases(Option, aliases);
             return this;
         }
 
@@ -118,5 +122,6 @@ namespace ArgumentsLibrary.Builders
         }
 
         #endregion
+
     }
 }

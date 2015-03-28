@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Linq;
 
 namespace ArgumentsLibrary.Builders
 {
+    /// <summary>
+    /// Fluent interface provider for building Arguments
+    /// </summary>
+    /// <typeparam name="T">Type of the Argument</typeparam>
     public class ArgumentBuilder<T>
     {
+        #region Internals
 
         internal Argument<T> Argument { get; private set; }
 
@@ -11,6 +17,8 @@ namespace ArgumentsLibrary.Builders
         {
             Argument = new Argument<T>();
         }
+
+        #endregion
 
         #region API
 
@@ -37,7 +45,9 @@ namespace ArgumentsLibrary.Builders
         }
 
         /// <summary>
-        /// Specifies a condition that the Argument value must satisfy
+        /// Specifies a condition that the Argument value must satisfy.
+        /// Multiple conditions may be defined; if so, the Argument value
+        /// must satisfy all conditions.
         /// </summary>
         /// <param name="conditionFunc">Condition function (predicate)</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
@@ -49,13 +59,15 @@ namespace ArgumentsLibrary.Builders
 
         /// <summary>
         /// Specifies a list of possible values of the Argument
+        /// Only one set of values should be defined. If there are more sets
+        /// defined, the Argument value will be accepted only if it is
+        /// present in all enumerations.
         /// </summary>
-        /// <param name="valuesList">Enumeration of possible values</param>
+        /// <param name="valuesEnumeration">Enumeration of possible values</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithEnumeratedValue(params T[] valuesList)
+        public ArgumentBuilder<T> WithEnumeratedValue(params T[] valuesEnumeration)
         {
-            // TODO implement
-            return this;
+            return WithCondition(valuesEnumeration.Contains);
         }
 
         /// <summary>

@@ -5,11 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using ArgumentsLibrary.Builders;
+using ArgumentsLibrary.Exceptions;
 
 namespace ArgumentsLibrary
 {
     public static class Arguments
     {
+
+        #region Internals
 
         private const string SHORT_OPTION_PREFIX = "-";
         private const string SHORT_OPTION_REGEX = "^-([a-zA-Z][a-zA-Z-_]*)$";
@@ -23,11 +26,11 @@ namespace ArgumentsLibrary
         private const string OPTION_ALIAS_SEPARATOR = "|";
         private const string PLAIN_ARGUMENTS_SEPARATOR = "--";
 
-        private static Regex _shortOptionRegex = new Regex(SHORT_OPTION_REGEX);
-        private static Regex _shortOptionAliasRegex = new Regex(SHORT_OPTION_ALIAS_REGEX);
+        private static readonly Regex _shortOptionRegex = new Regex(SHORT_OPTION_REGEX);
+        private static readonly Regex _shortOptionAliasRegex = new Regex(SHORT_OPTION_ALIAS_REGEX);
 
-        private static Regex _longOptionRegex = new Regex(LONG_OPTION_REGEX);
-        private static Regex _longOptionAliasRegex = new Regex(LONG_OPTION_ALIAS_REGEX);
+        private static readonly Regex _longOptionRegex = new Regex(LONG_OPTION_REGEX);
+        private static readonly Regex _longOptionAliasRegex = new Regex(LONG_OPTION_ALIAS_REGEX);
 
 
         private static List<Option> Options { get; set; }
@@ -39,6 +42,103 @@ namespace ArgumentsLibrary
             TypeConverters = new Dictionary<Type, object>();
             PerformDefaultSetup();
         }
+
+        private static void PerformDefaultSetup()
+        {
+            RegisterTypeConverter(string.Copy);
+            RegisterTypeConverter(int.Parse);
+            RegisterTypeConverter(float.Parse);
+            RegisterTypeConverter(double.Parse);
+            RegisterTypeConverter(bool.Parse);
+        }
+
+        private static IEnumerable<OptionAlias> ParseAliases(string aliases)
+        {
+            if (aliases == null)
+                throw new ArgumentNullException("aliases");
+            return aliases
+                .Split(OPTION_ALIAS_SEPARATOR.ToCharArray())
+                .Select(ParseAlias);
+        }
+
+        /// <summary>
+        /// Detects type of the Option alias and removes its prefix if present.
+        /// </summary>
+        /// <example>
+        /// Alias = "v", OptionType = Short:
+        /// <code>
+        /// var optionAlias1 = Arguments.ParseAlias("v");
+        /// var optionAlias2 = Arguments.ParseAlias("-v");
+        /// </code>
+        /// Alias = "verbose", OptionType = Long:
+        /// <code>
+        /// var optionAlias3 = Arguments.ParseAlias("verbose");
+        /// var optionAlias4 = Arguments.ParseAlias("--verbose");
+        /// </code>
+        /// Alias = "v", OptionType = Long:
+        /// <code>
+        /// var optionAlias5 = Arguments.ParseAlias("--v");
+        /// </code>
+        /// Alias = "verbose", OptionType = Short:
+        /// <code>
+        /// var optionAlias6 = Arguments.ParseAlias("-verbose");
+        /// </code>
+        /// </example>
+        /// <param name="alias">User specified alias</param>
+        /// <returns>OptionAlias with alias and its type</returns>
+        private static OptionAlias ParseAlias(string alias)
+        {
+            OptionType type;
+            string realAlias;
+            if (_shortOptionAliasRegex.IsMatch(alias))
+            {
+                type = OptionType.Short;
+                realAlias = RemoveOptionalPrefix(alias, SHORT_OPTION_PREFIX);
+            }
+            else if (_longOptionAliasRegex.IsMatch(alias))
+            {
+                type = OptionType.Long;
+                realAlias = RemoveOptionalPrefix(alias, LONG_OPTION_PREFIX);
+            }
+            else
+            {
+                throw new ArgumentsSetupException("Invalid Option alias: {0}", alias);
+            }
+
+            return new OptionAlias(realAlias, type);
+        }
+
+        private static string RemoveOptionalPrefix(string value, string prefix)
+        {
+            return value.StartsWith(prefix)
+                ? value.Remove(0, prefix.Length)
+                : value;
+        }
+
+        internal static void RegisterOptionAliases(Option option, string aliases)
+        {
+            foreach (var alias in ParseAliases(aliases))
+            {
+                RegisterOptionAlias(option, alias);
+            }
+        }
+
+        private static void RegisterOptionAlias(Option option, OptionAlias alias)
+        {
+
+        }
+
+        internal static T Convert<T>(string value)
+        {
+            // TODO
+            if (!TypeConverters.ContainsKey(typeof(T)))
+            {
+                // TODO throw an exception
+            }
+            return ((Func<string, T>)TypeConverters[typeof(T)]).Invoke(value);
+        }
+
+        #endregion
 
         #region API
 
@@ -98,9 +198,14 @@ namespace ArgumentsLibrary
         /// Processes the command line input arguments.
         /// </summary>
         /// <param name="args">Arguments as passed to the Main</param>
+        /// <exception cref="ArgumentsParseException">Arguments do not satisfy
+        /// the definition</exception>
         public static void Parse(string[] args)
         {
             // TODO implement
+            if (false)
+                throw new ArgumentsParseException("Something went terribly wrong", true);
+
         }
 
         /// <summary>
@@ -171,43 +276,5 @@ namespace ArgumentsLibrary
 
         #endregion
 
-        private static IEnumerable<string> ParseAliases(string aliases)
-        {
-            if (aliases == null)
-                throw new ArgumentNullException("aliases");
-            return aliases.Split(OPTION_ALIAS_SEPARATOR.ToCharArray());
-        }
-
-        private static void PerformDefaultSetup()
-        {
-            RegisterTypeConverter(string.Copy);
-            RegisterTypeConverter(int.Parse);
-            RegisterTypeConverter(float.Parse);
-            RegisterTypeConverter(double.Parse);
-            RegisterTypeConverter(bool.Parse);
-        }
-
-        internal static void RegisterOptionAliases(Option option, string aliases)
-        {
-            foreach (var alias in ParseAliases(aliases))
-            {
-                RegisterOptionAlias(option, alias);
-            }
-        }
-
-        internal static void RegisterOptionAlias(Option option, string alias)
-        {
-
-        }
-
-        internal static T Convert<T>(string value)
-        {
-            // TODO
-            if (!TypeConverters.ContainsKey(typeof (T)))
-            {
-                // TODO throw an exception
-            }
-            return ((Func<string, T>) TypeConverters[typeof(T)]).Invoke(value);
-        }
     }
 }
