@@ -9,7 +9,7 @@ using ArgumentsLibrary.Exceptions;
 
 namespace ArgumentsLibrary
 {
-    public static class Arguments
+    public class Arguments
     {
 
         #region Internals
@@ -33,17 +33,17 @@ namespace ArgumentsLibrary
         private static readonly Regex _longOptionAliasRegex = new Regex(LONG_OPTION_ALIAS_REGEX);
 
 
-        private static List<Option> Options { get; set; }
-        private static Dictionary<Type, object> TypeConverters { get; set; }
+        private List<Option> Options { get; set; }
+        private Dictionary<Type, object> TypeConverters { get; set; }
 
-        static Arguments()
+        public Arguments()
         {
             Options = new List<Option>();
             TypeConverters = new Dictionary<Type, object>();
             PerformDefaultSetup();
         }
 
-        private static void PerformDefaultSetup()
+        private void PerformDefaultSetup()
         {
             RegisterTypeConverter(string.Copy);
             RegisterTypeConverter(int.Parse);
@@ -52,7 +52,7 @@ namespace ArgumentsLibrary
             RegisterTypeConverter(bool.Parse);
         }
 
-        private static IEnumerable<OptionAlias> ParseAliases(string aliases)
+        private IEnumerable<OptionAlias> ParseAliases(string aliases)
         {
             if (aliases == null)
                 throw new ArgumentNullException("aliases");
@@ -86,7 +86,7 @@ namespace ArgumentsLibrary
         /// </example>
         /// <param name="alias">User specified alias</param>
         /// <returns>OptionAlias with alias and its type</returns>
-        private static OptionAlias ParseAlias(string alias)
+        private OptionAlias ParseAlias(string alias)
         {
             OptionType type;
             string realAlias;
@@ -108,14 +108,14 @@ namespace ArgumentsLibrary
             return new OptionAlias(realAlias, type);
         }
 
-        private static string RemoveOptionalPrefix(string value, string prefix)
+        private string RemoveOptionalPrefix(string value, string prefix)
         {
             return value.StartsWith(prefix)
                 ? value.Remove(0, prefix.Length)
                 : value;
         }
 
-        internal static void RegisterOptionAliases(Option option, string aliases)
+        internal void RegisterOptionAliases(Option option, string aliases)
         {
             foreach (var alias in ParseAliases(aliases))
             {
@@ -123,12 +123,12 @@ namespace ArgumentsLibrary
             }
         }
 
-        private static void RegisterOptionAlias(Option option, OptionAlias alias)
+        private void RegisterOptionAlias(Option option, OptionAlias alias)
         {
 
         }
 
-        internal static T Convert<T>(string value)
+        internal T Convert<T>(string value)
         {
             // TODO
             if (!TypeConverters.ContainsKey(typeof(T)))
@@ -149,7 +149,7 @@ namespace ArgumentsLibrary
         /// </summary>
         /// <typeparam name="T">Target converted type</typeparam>
         /// <param name="converterFunc">Function to convert string to type T</param>
-        public static void RegisterTypeConverter<T>(Func<string, T> converterFunc)
+        public void RegisterTypeConverter<T>(Func<string, T> converterFunc)
         {
             TypeConverters.Add(typeof (T), converterFunc);
         }
@@ -178,9 +178,9 @@ namespace ArgumentsLibrary
         /// </example>
         /// <param name="aliases">One or more option aliases</param>
         /// <returns>OptionBuilder instance</returns>
-        public static OptionBuilder AddOption(string aliases)
+        public OptionBuilder AddOption(string aliases)
         {
-            return new OptionBuilder().WithAliases(aliases);
+            return new OptionBuilder(this).WithAliases(aliases);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace ArgumentsLibrary
         /// </summary>
         /// <param name="aliases"></param>
         /// <returns></returns>
-        public static OptionBuilder AddMandatoryOption(string aliases)
+        public OptionBuilder AddMandatoryOption(string aliases)
         {
             return AddOption(aliases).SetMandatory(true);
         }
@@ -200,7 +200,7 @@ namespace ArgumentsLibrary
         /// <param name="args">Arguments as passed to the Main</param>
         /// <exception cref="ArgumentsParseException">Arguments do not satisfy
         /// the definition</exception>
-        public static void Parse(string[] args)
+        public void Parse(string[] args)
         {
             // TODO implement
             if (false)
@@ -214,7 +214,7 @@ namespace ArgumentsLibrary
         /// <param name="alias"></param>
         /// <returns>True if user specified an option or if a default
         /// value is defined</returns>
-        public static bool IsOptionSet(string alias)
+        public bool IsOptionSet(string alias)
         {
             // TODO implement
             return true;
@@ -226,7 +226,7 @@ namespace ArgumentsLibrary
         /// <typeparam name="T">Return type of the value</typeparam>
         /// <param name="alias">One of the Option aliases</param>
         /// <returns>Typed Option value</returns>
-        public static T GetOptionValue<T>(string alias)
+        public T GetOptionValue<T>(string alias)
         {
             // TODO implement
             return Options.First().GetValue<T>();
@@ -238,7 +238,7 @@ namespace ArgumentsLibrary
         /// <typeparam name="T">Return type of the values</typeparam>
         /// <param name="alias">One of the Option aliases</param>
         /// <returns>Typed Option values</returns>
-        public static IList<T> GetOptionValues<T>(string alias)
+        public IEnumerable<T> GetOptionValues<T>(string alias)
         {
             // TODO implement
             return new T[]{};
@@ -250,7 +250,7 @@ namespace ArgumentsLibrary
         /// </summary>
         /// <param name="alias">One of the Option aliases</param>
         /// <returns>Option values as string</returns>
-        public static IList<string> GetOptionValues(string alias)
+        public IEnumerable<string> GetOptionValues(string alias)
         {
             return GetOptionValues<string>(alias);
         }
@@ -261,7 +261,7 @@ namespace ArgumentsLibrary
         /// </summary>
         /// <param name="alias">One of the Option aliases</param>
         /// <returns>Option value as string</returns>
-        public static string GetOptionValue(string alias)
+        public string GetOptionValue(string alias)
         {
             return GetOptionValue<string>(alias);
         }
@@ -271,7 +271,7 @@ namespace ArgumentsLibrary
         /// </summary>
         /// <typeparam name="T">Type of all arguments</typeparam>
         /// <returns>List of all plain arguments</returns>
-        public static IEnumerable<T> GetPlainArguments<T>()
+        public IEnumerable<T> GetPlainArguments<T>()
         {
             // TODO implement
             return new List<T>();
@@ -283,7 +283,7 @@ namespace ArgumentsLibrary
         /// as a list of strings.
         /// </summary>
         /// <returns>List of all plain arguments</returns>
-        public static IEnumerable<string> GetPlainArguments()
+        public IEnumerable<string> GetPlainArguments()
         {
             return GetPlainArguments<string>();
         }
@@ -292,7 +292,7 @@ namespace ArgumentsLibrary
         /// Removes all Option definitions and type converters, and resets
         /// Arguments to the default state.
         /// </summary>
-        public static void Reset()
+        public void Reset()
         {
             // TODO implement
         }
@@ -300,7 +300,7 @@ namespace ArgumentsLibrary
         /// <summary>
         /// Build help text for all defined options with their descriptions
         /// </summary>
-        public static IList<String> BuildHelpText()
+        public IEnumerable<string> BuildHelpText()
         {
             // TODO implement
             return new String[]{""};

@@ -10,10 +10,14 @@ namespace ArgumentsLibrary.Builders
         #region Internals
 
         internal Option Option { get; private set; }
+        internal Arguments Arguments { get; private set; }
 
-        internal OptionBuilder()
+        private OptionBuilder() { }
+
+        internal OptionBuilder(Arguments arguments)
         {
             Option = new Option();
+            Arguments = arguments;
         }
 
         #endregion
