@@ -233,6 +233,29 @@ namespace ArgumentsLibrary
         }
 
         /// <summary>
+        /// Gets Option arguments converted to the specified type.
+        /// </summary>
+        /// <typeparam name="T">Return type of the values</typeparam>
+        /// <param name="alias">One of the Option aliases</param>
+        /// <returns>Typed Option values</returns>
+        public static IList<T> GetOptionValues<T>(string alias)
+        {
+            // TODO implement
+            return new T[]{};
+        }
+
+        /// <summary>
+        /// Gets Option arguments as string. Same as
+        /// <see cref="GetOptionValuse{T}"/>, implicitly typed.
+        /// </summary>
+        /// <param name="alias">One of the Option aliases</param>
+        /// <returns>Option values as string</returns>
+        public static IList<string> GetOptionValues(string alias)
+        {
+            return GetOptionValues<string>(alias);
+        }
+
+        /// <summary>
         /// Gets Option argument as string. Same as
         /// <see cref="GetOptionValue{T}"/>, implicitly typed.
         /// </summary>
