@@ -9,28 +9,46 @@ using ArgumentsLibrary.Exceptions;
 
 namespace ArgumentsLibrary
 {
-    public class Arguments
+    /// <summary>
+    /// Arguments Library entry point
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// var arguments = new Arguments();
+    /// arguments.AddOption(...)
+    /// ...
+    /// arguments.parse(args)
+    /// </code>
+    /// </example>
+    public sealed class Arguments
     {
 
         #region Internals
 
         private const string SHORT_OPTION_PREFIX = "-";
         private const string SHORT_OPTION_REGEX = "^-([a-zA-Z][a-zA-Z-_]*)$";
-        private const string SHORT_OPTION_ALIAS_REGEX = "^([a-zA-Z])|-([a-zA-Z][a-zA-Z-_]*)$";
+        private const string SHORT_OPTION_ALIAS_REGEX =
+            "^([a-zA-Z])|-([a-zA-Z][a-zA-Z-_]*)$";
         
         private const string LONG_OPTION_PREFIX = "--";
         private const string LONG_OPTION_VALUE_SEPARATOR = "=";
-        private const string LONG_OPTION_REGEX = "^--([a-zA-Z][a-zA-Z-_]*)(=.+)?$";
-        private const string LONG_OPTION_ALIAS_REGEX = "^([a-zA-Z][a-zA-Z-_]+)|--([a-zA-Z][a-zA-Z-_]*)$";
+        private const string LONG_OPTION_REGEX =
+            "^--([a-zA-Z][a-zA-Z-_]*)(=.+)?$";
+        private const string LONG_OPTION_ALIAS_REGEX =
+            "^([a-zA-Z][a-zA-Z-_]+)|--([a-zA-Z][a-zA-Z-_]*)$";
 
         private const string OPTION_ALIAS_SEPARATOR = "|";
         private const string PLAIN_ARGUMENTS_SEPARATOR = "--";
 
-        private static readonly Regex _shortOptionRegex = new Regex(SHORT_OPTION_REGEX);
-        private static readonly Regex _shortOptionAliasRegex = new Regex(SHORT_OPTION_ALIAS_REGEX);
+        private static readonly Regex _shortOptionRegex =
+            new Regex(SHORT_OPTION_REGEX);
+        private static readonly Regex _shortOptionAliasRegex =
+            new Regex(SHORT_OPTION_ALIAS_REGEX);
 
-        private static readonly Regex _longOptionRegex = new Regex(LONG_OPTION_REGEX);
-        private static readonly Regex _longOptionAliasRegex = new Regex(LONG_OPTION_ALIAS_REGEX);
+        private static readonly Regex _longOptionRegex =
+            new Regex(LONG_OPTION_REGEX);
+        private static readonly Regex _longOptionAliasRegex =
+            new Regex(LONG_OPTION_ALIAS_REGEX);
 
 
         private List<Option> Options { get; set; }
@@ -102,7 +120,10 @@ namespace ArgumentsLibrary
             }
             else
             {
-                throw new ArgumentsSetupException("Invalid Option alias: {0}", alias);
+                throw new ArgumentsSetupException(
+                    "Invalid Option alias: {0}",
+                    alias
+                    );
             }
 
             return new OptionAlias(realAlias, type);
@@ -148,7 +169,8 @@ namespace ArgumentsLibrary
         /// string to the given type and returns the result.
         /// </summary>
         /// <typeparam name="T">Target converted type</typeparam>
-        /// <param name="converterFunc">Function to convert string to type T</param>
+        /// <param name="converterFunc">Function to convert string to type T
+        /// </param>
         public void RegisterTypeConverter<T>(Func<string, T> converterFunc)
         {
             TypeConverters.Add(typeof (T), converterFunc);
@@ -204,7 +226,7 @@ namespace ArgumentsLibrary
         {
             // TODO implement
             if (false)
-                throw new ArgumentsParseException("Something went terribly wrong", true);
+                throw new ArgumentsParseException("Something went wrong");
 
         }
 

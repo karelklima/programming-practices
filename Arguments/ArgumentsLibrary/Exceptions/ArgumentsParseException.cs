@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace ArgumentsLibrary.Exceptions
 {
-    class ArgumentsParseException : ArgumentsException
+    /// <summary>
+    /// Exception thrown during Arguments parse phase
+    /// </summary>
+    public class ArgumentsParseException : ArgumentsException
     {
-        internal ArgumentsParseException(string message, object args)
+        internal ArgumentsParseException(string message, object args = null)
             : base(message, args)
         {
         }

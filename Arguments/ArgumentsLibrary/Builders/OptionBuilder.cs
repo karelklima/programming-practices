@@ -89,7 +89,11 @@ namespace ArgumentsLibrary.Builders
         /// <param name="maximumCount">Maximum acceptable count of values. 
         /// Could be specified as uint.MaxValue</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithArguments<T>(string name, uint minimumCount, uint maximumCount)
+        public ArgumentBuilder<T> WithArguments<T>(
+            string name,
+            uint minimumCount,
+            uint maximumCount
+            )
         {
             // TODO
             var builder = new ArgumentBuilder<T>()
@@ -105,7 +109,8 @@ namespace ArgumentsLibrary.Builders
         /// <param name="name">Name of the argument to be used in hel</param>
         /// <param name="requiredCount">Count of required values</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithArguments<T>(string name, uint requiredCount)
+        public ArgumentBuilder<T> WithArguments<T>(string name,
+            uint requiredCount)
         {
             return WithArguments<T>(name, requiredCount, requiredCount);
         }
@@ -146,8 +151,8 @@ namespace ArgumentsLibrary.Builders
         }
 
         /// <summary>
-        /// Same as <see cref="WithOptionalArgument{T}"/>, implicitly typed as string
-        /// </summary>
+        /// Same as <see cref="WithOptionalArgument{T}"/>, implicitly typed
+        /// as string</summary>
         /// <param name="name">Name of the argument to be used in help</param>
         /// <returns>ArgumentBuilder{string} fluent interface</returns>
         public ArgumentBuilder<string> WithOptionalArgument(string name)

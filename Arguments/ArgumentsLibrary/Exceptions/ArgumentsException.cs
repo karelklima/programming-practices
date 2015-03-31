@@ -2,10 +2,13 @@
 
 namespace ArgumentsLibrary.Exceptions
 {
-    class ArgumentsException : Exception
+    /// <summary>
+    /// Exception is thrown via its descendants
+    /// </summary>
+    public abstract class ArgumentsException : Exception
     {
-        internal ArgumentsException(string message, object args)
-            : base(String.Format(message, args))
+        internal ArgumentsException(string message, object args = null)
+            : base(args == null ? message : String.Format(message, args))
         {
             
         }

@@ -63,9 +63,11 @@ namespace ArgumentsLibrary.Builders
         /// defined, the Argument value will be accepted only if it is
         /// present in all enumerations.
         /// </summary>
-        /// <param name="valuesEnumeration">Enumeration of possible values</param>
+        /// <param name="valuesEnumeration">Enumeration of possible values
+        /// </param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithEnumeratedValue(params T[] valuesEnumeration)
+        public ArgumentBuilder<T> WithEnumeratedValue(
+            params T[] valuesEnumeration)
         {
             return WithCondition(valuesEnumeration.Contains);
         }
