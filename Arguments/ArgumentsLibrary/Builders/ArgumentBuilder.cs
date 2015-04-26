@@ -13,9 +13,16 @@ namespace ArgumentsLibrary.Builders
 
         internal Argument<T> Argument { get; private set; }
 
-        internal ArgumentBuilder()
+        internal Arguments Arguments { get; private set; }
+
+        internal OptionBuilder OptionBuilder { get; private set; }
+
+        internal ArgumentBuilder(Arguments arguments, OptionBuilder optionBuilder)
         {
             Argument = new Argument<T>();
+            Arguments = arguments;
+            OptionBuilder = optionBuilder;
+            OptionBuilder.Option.Argument = Argument;
         }
 
         #endregion
@@ -29,7 +36,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> SetOptional(bool flag)
         {
-            // TODO implement
+            Argument.MinimumCount = (uint) (flag ? 0 : 1);
             return this;
         }
 
@@ -53,7 +60,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithCondition(Func<T, bool> conditionFunc)
         {
-            // TODO implement
+            Argument.Conditions.Add(conditionFunc);
             return this;
         }
 
@@ -81,7 +88,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithAction(Action<T> action)
         {
-            // TODO implement
+            Argument.Actions.Add(action);
             return this;
         }
 
@@ -92,7 +99,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> SetMinimumCount(uint count)
         {
-            // TODO implement
+            Argument.MinimumCount = count;
             return this;
         }
 
@@ -103,7 +110,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> SetMaximumCount(uint count)
         {
-            // TODO implement
+            Argument.MaximumCount = count;
             return this;
         }
 

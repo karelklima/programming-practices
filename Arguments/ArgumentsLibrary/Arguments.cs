@@ -251,7 +251,7 @@ namespace ArgumentsLibrary
         public T GetOptionValue<T>(string alias)
         {
             // TODO implement
-            return Options.First().GetValue<T>();
+            return new T[]{}.First();
         }
 
         /// <summary>

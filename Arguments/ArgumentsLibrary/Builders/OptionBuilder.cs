@@ -12,8 +12,6 @@ namespace ArgumentsLibrary.Builders
         internal Option Option { get; private set; }
         internal Arguments Arguments { get; private set; }
 
-        private OptionBuilder() { }
-
         internal OptionBuilder(Arguments arguments)
         {
             Option = new Option();
@@ -31,7 +29,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns></returns>
         public OptionBuilder SetMandatory(bool flag)
         {
-            // TODO implement
+            Option.Mandatory = flag;
             return this;
         }
 
@@ -63,7 +61,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>OptionBuilder fluent interface</returns>
         public OptionBuilder WithDescription(string description)
         {
-            // TODO implement
+            Option.Description = description;
             return this;
         }
 
@@ -76,7 +74,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>OptionBuilder fluent interface</returns>
         public OptionBuilder WithAction(Action delegateAction)
         {
-            // TODO implement
+            Option.Actions.Add(delegateAction);
             return this;
         }
 
@@ -84,7 +82,7 @@ namespace ArgumentsLibrary.Builders
         /// Defines the Option Arguments with specific type and name.
         /// Number of required values can be specified.
         /// </summary>
-        /// <param name="name">Name of the argument to be used in hel</param>
+        /// <param name="name">Name of the argument to be used in help</param>
         /// <param name="minimumCount">Minimum count of required values</param>
         /// <param name="maximumCount">Maximum acceptable count of values. 
         /// Could be specified as uint.MaxValue</param>
@@ -95,18 +93,16 @@ namespace ArgumentsLibrary.Builders
             uint maximumCount
             )
         {
-            // TODO
-            var builder = new ArgumentBuilder<T>()
+            return new ArgumentBuilder<T>(Arguments, this)
                 .SetMinimumCount(minimumCount)
                 .SetMaximumCount(maximumCount);
-            return builder;
         }
 
         /// <summary>
         /// Defines the Option Arguments with specific type and name.
         /// Number of required values can be specified.
         /// </summary>
-        /// <param name="name">Name of the argument to be used in hel</param>
+        /// <param name="name">Name of the argument to be used in help</param>
         /// <param name="requiredCount">Count of required values</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithArguments<T>(string name,
@@ -123,9 +119,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithArgument<T>(string name)
         {
-            // TODO
-            var builder = new ArgumentBuilder<T>();
-            return builder;
+            return WithArguments<T>(name, 1, 1);
         }
 
         /// <summary>

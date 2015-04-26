@@ -9,17 +9,22 @@ namespace ArgumentsLibrary
     internal class Option
     {
 
-        private object argument;  
+        internal bool Mandatory { get; set; }
+
+        internal string Description { get; set; }
+
+        internal object Argument { get; set; }
+
+        internal List<Action> Actions { get; set; } 
 
         internal Option()
         {
             // TODO
+            Mandatory = false;
+            Actions = new List<Action>();
         }
 
-        public T GetValue<T>()
-        {
-            return ((Argument<T>) argument).Value;
-        }
+        
 
     }
 }
