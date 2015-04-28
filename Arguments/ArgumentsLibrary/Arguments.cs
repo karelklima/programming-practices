@@ -137,7 +137,7 @@ namespace ArgumentsLibrary
                 : value;
         }
 
-        internal void RegisterOptionAliases(Option option, string aliases)
+        private void RegisterOptionAliases(Option option, string aliases)
         {
             foreach (var alias in ParseAliases(aliases))
             {
@@ -205,7 +205,7 @@ namespace ArgumentsLibrary
         /// <returns>OptionBuilder instance</returns>
         public OptionBuilder AddOption(string aliases)
         {
-            return new OptionBuilder(this).WithAliases(aliases);
+            return new OptionBuilder(RegisterOptionAliases).WithAliases(aliases);
         }
 
         /// <summary>

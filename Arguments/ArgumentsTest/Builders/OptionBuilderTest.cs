@@ -12,10 +12,18 @@ namespace ArgumentsTest.Builders
     public class OptionBuilderTest
     {
         [TestMethod]
-        public void Constructor_Arguments()
+        public void Constructor_RegisterAliasesAction()
         {
-            var arguments = new Arguments();
-            var optionBuilder = new OptionBuilder(arguments);
+            var registered = false;
+            var optionBuilder = new OptionBuilder((o, a) =>
+            {
+                if (o != null && a.Equals("a"))
+                {
+                    registered = true;
+                }
+            });
+            optionBuilder.WithAliases("a");
+            Assert.IsTrue(registered);
         }
 
         [TestMethod]
@@ -28,7 +36,7 @@ namespace ArgumentsTest.Builders
         [TestMethod]
         public void SetMandatory_True()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.SetMandatory(true);
             Assert.IsTrue(optionBuilder.Option.Mandatory);
         }
@@ -36,7 +44,7 @@ namespace ArgumentsTest.Builders
         [TestMethod]
         public void SetMandatory_False()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.SetMandatory(false);
             Assert.IsFalse(optionBuilder.Option.Mandatory);
         }
@@ -44,7 +52,7 @@ namespace ArgumentsTest.Builders
         [TestMethod]
         public void WithAliases_CorrectFormat()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAliases("a|aaaaa");
 
         }
@@ -53,7 +61,7 @@ namespace ArgumentsTest.Builders
         [ExpectedException(typeof(ArgumentsSetupException))]
         public void WithAliases_IncorrectFormat()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAliases("1|11111");
         }
 
@@ -61,14 +69,14 @@ namespace ArgumentsTest.Builders
         [ExpectedException(typeof(ArgumentsSetupException))]
         public void WithAliases_Null()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAlias(null);
         }
 
         [TestMethod]
         public void WithAlias_CorrectFormat()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAlias("a|aaaaa");
 
         }
@@ -77,7 +85,7 @@ namespace ArgumentsTest.Builders
         [ExpectedException(typeof(ArgumentsSetupException))]
         public void WithAlias_IncorrectFormat()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAlias("1|11111");
         }
 
@@ -85,30 +93,30 @@ namespace ArgumentsTest.Builders
         [ExpectedException(typeof(ArgumentsSetupException))]
         public void WithAlias_Null()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAliases(null);
         }
 
         [TestMethod]
         public void WithDescription_Text()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithDescription("description");
-            Assert.Equals(optionBuilder.Option.Description, "description");
+            Assert.AreEqual(optionBuilder.Option.Description, "description");
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentsSetupException))]
         public void WithDescription_Null()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithDescription(null);
         }
 
         [TestMethod]
         public void WithAction_Action()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             var actionsCount = optionBuilder.Option.Actions.Count;
             optionBuilder.WithAction(() => { });
             Assert.AreEqual(optionBuilder.Option.Actions.Count, actionsCount + 1);
@@ -118,7 +126,7 @@ namespace ArgumentsTest.Builders
         [ExpectedException(typeof(ArgumentsSetupException))]
         public void WithAction_Null()
         {
-            var optionBuilder = new OptionBuilder(new Arguments());
+            var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAction(null);
         }
 

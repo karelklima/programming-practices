@@ -1,4 +1,5 @@
 ﻿using System;
+using ArgumentsLibrary.Exceptions;
 
 namespace ArgumentsLibrary.Builders
 {
@@ -10,14 +11,21 @@ namespace ArgumentsLibrary.Builders
         #region Internals
 
         internal Option Option { get; private set; }
-        internal Arguments Arguments { get; private set; }
 
-        internal OptionBuilder(Arguments arguments)
+        internal Action<Option, String> RegisterAliasesAction { get; set; }
+
+        internal OptionBuilder(Action<Option, String> registerAliasesAction)
         {
-            if (arguments == null)
-                throw new ArgumentNullException("arguments");
+            if (registerAliasesAction == null)
+                throw new ArgumentNullException("registerAliasesAction");
             Option = new Option();
-            Arguments = arguments;
+            RegisterAliasesAction = registerAliasesAction;
+        }
+
+        internal void RegisterArgument(object argument)
+        {
+            if (argument == null)
+                throw new ArgumentNullException("argument");
         }
 
         #endregion
@@ -42,7 +50,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>OptionBuilder fluent interface</returns>
         public OptionBuilder WithAliases(string aliases)
         {
-            Arguments.RegisterOptionAliases(Option, aliases);
+            RegisterAliasesAction(Option, aliases);
             return this;
         }
 
@@ -63,6 +71,8 @@ namespace ArgumentsLibrary.Builders
         /// <returns>OptionBuilder fluent interface</returns>
         public OptionBuilder WithDescription(string description)
         {
+            if (description == null)
+                throw new ArgumentsSetupException("Option description cannot be null");
             Option.Description = description;
             return this;
         }
@@ -71,12 +81,14 @@ namespace ArgumentsLibrary.Builders
         /// Adds an Action to be called when the Option is detected
         /// among console input arguments. Multiple actions can be specified.
         /// </summary>
-        /// <param name="delegateAction">Action to be performed when
+        /// <param name="action">Action to be performed when
         /// the Option is detected among input arguments</param>
         /// <returns>OptionBuilder fluent interface</returns>
-        public OptionBuilder WithAction(Action delegateAction)
+        public OptionBuilder WithAction(Action action)
         {
-            Option.Actions.Add(delegateAction);
+            if (action == null)
+                throw new ArgumentsSetupException("Option action cannot be null");
+            Option.Actions.Add(action);
             return this;
         }
 
@@ -88,7 +100,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithArgument<T>(string name)
         {
-            return new ArgumentBuilder<T>(Arguments, Option)
+            return new ArgumentBuilder<T>(RegisterArgument)
                 .SetName(name);
         }
 
