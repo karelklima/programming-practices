@@ -14,6 +14,8 @@ namespace ArgumentsLibrary.Builders
 
         internal OptionBuilder(Arguments arguments)
         {
+            if (arguments == null)
+                throw new ArgumentNullException("arguments");
             Option = new Option();
             Arguments = arguments;
         }
@@ -89,11 +91,11 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithArguments<T>(
             string name,
-            uint minimumCount,
-            uint maximumCount
+            int minimumCount,
+            int maximumCount
             )
         {
-            return new ArgumentBuilder<T>(Arguments, this)
+            return new ArgumentBuilder<T>(Arguments, Option)
                 .SetMinimumCount(minimumCount)
                 .SetMaximumCount(maximumCount);
         }
@@ -106,7 +108,7 @@ namespace ArgumentsLibrary.Builders
         /// <param name="requiredCount">Count of required values</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithArguments<T>(string name,
-            uint requiredCount)
+            int requiredCount)
         {
             return WithArguments<T>(name, requiredCount, requiredCount);
         }

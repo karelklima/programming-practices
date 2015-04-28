@@ -15,14 +15,19 @@ namespace ArgumentsLibrary.Builders
 
         internal Arguments Arguments { get; private set; }
 
-        internal OptionBuilder OptionBuilder { get; private set; }
+        internal Option Option { get; private set; }
 
-        internal ArgumentBuilder(Arguments arguments, OptionBuilder optionBuilder)
+        internal ArgumentBuilder(Arguments arguments, Option option)
         {
+            if (arguments == null)
+                throw new ArgumentNullException("arguments");
+            if (option == null)
+                throw new ArgumentNullException("option");
+
             Argument = new Argument<T>();
             Arguments = arguments;
-            OptionBuilder = optionBuilder;
-            OptionBuilder.Option.Argument = Argument;
+            Option = option;
+            Option.Argument = Argument;
         }
 
         #endregion
@@ -36,7 +41,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> SetOptional(bool flag)
         {
-            Argument.MinimumCount = (uint) (flag ? 0 : 1);
+            Argument.MinimumCount = flag ? 0 : 1;
             return this;
         }
 
@@ -93,22 +98,22 @@ namespace ArgumentsLibrary.Builders
         }
 
         /// <summary>
-        /// Sets minimal count of required values
+        /// Sets minimum count of Option arguments
         /// </summary>
-        /// <param name="count">Count of required values</param>
+        /// <param name="count">Minimum count of values</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> SetMinimumCount(uint count)
+        public ArgumentBuilder<T> SetMinimumCount(int count)
         {
             Argument.MinimumCount = count;
             return this;
         }
 
         /// <summary>
-        /// Sets maximum acceptable count of required values
+        /// Sets maximum count of Option arguments
         /// </summary>
-        /// <param name="count">Count of values</param>
+        /// <param name="count">Maximum count of values</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> SetMaximumCount(uint count)
+        public ArgumentBuilder<T> SetMaximumCount(int count)
         {
             Argument.MaximumCount = count;
             return this;

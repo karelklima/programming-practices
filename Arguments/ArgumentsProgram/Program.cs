@@ -35,7 +35,7 @@ namespace ArgumentsProgram
 
             arguments.AddOption("filenames")
                 .WithDescription("Filenames to process")
-                .WithArguments<string>("FILENAMES", 1, uint.MaxValue);
+                .WithArguments<string>("FILENAMES", 1, int.MaxValue);
 
             // Program zpracuje argumenty ze vstupu - od teto chvile jiz nelze
             // menit konfiguraci

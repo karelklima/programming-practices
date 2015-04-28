@@ -52,6 +52,7 @@ namespace ArgumentsLibrary
 
 
         private List<Option> Options { get; set; }
+
         private Dictionary<Type, object> TypeConverters { get; set; }
 
         public Arguments()
@@ -173,6 +174,8 @@ namespace ArgumentsLibrary
         /// </param>
         public void RegisterTypeConverter<T>(Func<string, T> converterFunc)
         {
+            if (converterFunc == null)
+                throw new ArgumentsSetupException("Converter function cannot be null");
             TypeConverters.Add(typeof (T), converterFunc);
         }
 

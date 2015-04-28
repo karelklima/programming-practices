@@ -50,9 +50,20 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Builders\ArgumentBuilder.cs" />
+    <Compile Include="Builders\OptionBuilderTest.cs" />
+    <Compile Include="Builders\ArgumentBuilderTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ArgumentsTest.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ArgumentsLibrary\ArgumentsLibrary.csproj">
+      <Project>{a2f6b466-e0e2-4419-835a-8712bcab0bb6}</Project>
+      <Name>ArgumentsLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
