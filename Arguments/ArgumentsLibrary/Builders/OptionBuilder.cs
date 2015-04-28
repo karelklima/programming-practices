@@ -29,7 +29,7 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         /// <param name="flag">True if mandatory, False otherwise</param>
         /// <returns></returns>
-        public OptionBuilder SetMandatory(bool flag)
+        public OptionBuilder SetMandatory(bool flag = true)
         {
             Option.Mandatory = flag;
             return this;
@@ -81,39 +81,6 @@ namespace ArgumentsLibrary.Builders
         }
 
         /// <summary>
-        /// Defines the Option Arguments with specific type and name.
-        /// Number of required values can be specified.
-        /// </summary>
-        /// <param name="name">Name of the argument to be used in help</param>
-        /// <param name="minimumCount">Minimum count of required values</param>
-        /// <param name="maximumCount">Maximum acceptable count of values. 
-        /// Could be specified as uint.MaxValue</param>
-        /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithArguments<T>(
-            string name,
-            int minimumCount,
-            int maximumCount
-            )
-        {
-            return new ArgumentBuilder<T>(Arguments, Option)
-                .SetMinimumCount(minimumCount)
-                .SetMaximumCount(maximumCount);
-        }
-
-        /// <summary>
-        /// Defines the Option Arguments with specific type and name.
-        /// Number of required values can be specified.
-        /// </summary>
-        /// <param name="name">Name of the argument to be used in help</param>
-        /// <param name="requiredCount">Count of required values</param>
-        /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithArguments<T>(string name,
-            int requiredCount)
-        {
-            return WithArguments<T>(name, requiredCount, requiredCount);
-        }
-
-        /// <summary>
         /// Defines the Option Argument with specific type and name.
         /// </summary>
         /// <typeparam name="T">Type of the Option Argument</typeparam>
@@ -121,7 +88,8 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithArgument<T>(string name)
         {
-            return WithArguments<T>(name, 1, 1);
+            return new ArgumentBuilder<T>(Arguments, Option)
+                .SetName(name);
         }
 
         /// <summary>

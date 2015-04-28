@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ArgumentsLibrary.Builders
@@ -39,9 +40,20 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         /// <param name="flag">True if optional, False otherwise</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
+        public ArgumentBuilder<T> SetName(string name)
+        {
+            Argument.Name = name;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets an indicator whether the Argument is optional or not.
+        /// </summary>
+        /// <param name="flag">True if optional, False otherwise</param>
+        /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> SetOptional(bool flag)
         {
-            Argument.MinimumCount = flag ? 0 : 1;
+            Argument.Optional = flag;
             return this;
         }
 
@@ -52,7 +64,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithDefaultValue(T value)
         {
-            // TODO implement
+            Argument.DefaultValue = value;
             return this;
         }
 
@@ -94,28 +106,6 @@ namespace ArgumentsLibrary.Builders
         public ArgumentBuilder<T> WithAction(Action<T> action)
         {
             Argument.Actions.Add(action);
-            return this;
-        }
-
-        /// <summary>
-        /// Sets minimum count of Option arguments
-        /// </summary>
-        /// <param name="count">Minimum count of values</param>
-        /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> SetMinimumCount(int count)
-        {
-            Argument.MinimumCount = count;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets maximum count of Option arguments
-        /// </summary>
-        /// <param name="count">Maximum count of values</param>
-        /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> SetMaximumCount(int count)
-        {
-            Argument.MaximumCount = count;
             return this;
         }
 

@@ -33,9 +33,9 @@ namespace ArgumentsProgram
                 // U zadane hodnoty se overi, zda splnuje nasledujici podminku
                 .WithCondition(v => v > 0);
 
-            arguments.AddOption("filenames")
-                .WithDescription("Filenames to process")
-                .WithArguments<string>("FILENAMES", 1, int.MaxValue);
+            //arguments.AddOption("filenames")
+            //    .WithDescription("Filenames to process")
+            //    .WithArguments<string>("FILENAMES", 1, int.MaxValue);
 
             // Program zpracuje argumenty ze vstupu - od teto chvile jiz nelze
             // menit konfiguraci
@@ -114,15 +114,15 @@ namespace ArgumentsProgram
 
             
             // Custom type processing
-            arguments.RegisterTypeConverter<long>(long.Parse);
-            arguments.AddOption("l|long-list")
-                // This option takes exactly three arguments, i.e. -l 10 12 14
-                .WithArguments<long>("LONGS", 3); 
+            //arguments.RegisterTypeConverter<long>(long.Parse);
+            //arguments.AddOption("l|long-list")
+            //    // This option takes exactly three arguments, i.e. -l 10 12 14
+            //    .WithArguments<long>("LONGS", 3); 
 
-            arguments.RegisterTypeConverter<byte>(byte.Parse);
-            arguments.AddOption("b|byte-list")
+            //arguments.RegisterTypeConverter<byte>(byte.Parse);
+            //arguments.AddOption("b|byte-list")
                 // This option takes from one to ten arguments
-                .WithArguments<byte>("BYTES", 1, 10);
+             //   .WithArguments<byte>("BYTES", 1, 10);
 
             arguments.Parse(args);
 

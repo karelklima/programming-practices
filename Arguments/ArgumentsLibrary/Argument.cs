@@ -8,23 +8,25 @@ namespace ArgumentsLibrary
     {
         internal const int DEFAULT_MINIMUM_COUNT = 1;
         internal const int DEFAULT_MAXIMUM_COUNT = 1;
+        internal const string DEFAULT_NAME = "argument";
+        internal const bool DEFAULT_OPTIONAL = false;
 
-        public List<T> DefaultValues { get; set; }
+        internal string Name { get; set; }
 
-        public List<T> Values { get; set; }
+        internal bool Optional { get; set; }
 
-        internal int MinimumCount { get; set; }
-
-        internal int MaximumCount { get; set; }
+        internal T DefaultValue { get; set; }
 
         internal List<Action<T>> Actions { get; set; } 
 
-        internal List<Func<T, bool>> Conditions { get; set; } 
+        internal List<Func<T, bool>> Conditions { get; set; }
+
+        internal T Value { get; set; }
 
         internal Argument()
         {
-            MinimumCount = DEFAULT_MINIMUM_COUNT;
-            MaximumCount = DEFAULT_MAXIMUM_COUNT;
+            Name = DEFAULT_NAME;
+            Optional = DEFAULT_OPTIONAL;
             Actions = new List<Action<T>>();
             Conditions = new List<Func<T, bool>>();
         }
