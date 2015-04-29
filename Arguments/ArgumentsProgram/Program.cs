@@ -13,6 +13,10 @@ namespace ArgumentsProgram
         static void Main(string[] args)
         {
 
+            var a = new Arguments();
+            a.AddOption("x").WithArgument<int>("Test");
+            a.Parse(new string[] { "-x", "--xxx" });
+
             // UKAZKOVY KOD IMPLEMENTUJICI PRIKLAD ZE ZADANI
             var arguments = new Arguments();
             // Program implicitne rozpozna kratkou a dlouhou volbu
@@ -126,10 +130,10 @@ namespace ArgumentsProgram
 
             arguments.Parse(args);
 
-            var x = arguments.GetOptionValue("v");
-            var y = arguments.GetOptionValue<int>("--i");
-            var longList = arguments.GetOptionValues<long>("long-list");
-            var bytesList = arguments.GetOptionValues<byte>("b");
+            //var x = arguments.GetOptionValue("v");
+            //var y = arguments.GetOptionValue<int>("--i");
+            //var longList = arguments.GetOptionValues<long>("long-list");
+            //var bytesList = arguments.GetOptionValues<byte>("b");
 
 
 

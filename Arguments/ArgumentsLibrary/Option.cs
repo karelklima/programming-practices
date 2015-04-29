@@ -11,11 +11,15 @@ namespace ArgumentsLibrary
     {
         internal const bool DEFAULT_MANDATORY = false;
 
+        internal List<OptionAlias> Aliases { get; set; }
+
         internal bool Mandatory { get; set; }
 
         internal string Description { get; set; }
 
-        internal object Argument { get; set; }
+        internal Type ArgumentType { get; set; }
+
+        internal dynamic Argument { get; set; }
 
         internal List<Action> Actions { get; set; }
 
@@ -24,7 +28,9 @@ namespace ArgumentsLibrary
     internal Option()
         {
             // TODO
+            Aliases = new List<OptionAlias>();
             Mandatory = DEFAULT_MANDATORY;
+
             Actions = new List<Action>();
             IsSet = false;
         }

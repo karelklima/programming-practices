@@ -12,5 +12,12 @@
             Alias = alias;
             Type = type;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj.GetType() == typeof (OptionAlias)
+                   && ((OptionAlias) obj).Alias == Alias
+                   && ((OptionAlias) obj).Type == Type;
+        }
     }
 }

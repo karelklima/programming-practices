@@ -18,13 +18,13 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         internal Argument<T> Argument { get; private set; }
 
-        internal ArgumentBuilder(Action<object> registerArgumentAction)
+        internal ArgumentBuilder(Action<dynamic, Type> registerArgumentAction)
         {
             if (registerArgumentAction == null)
                 throw new ArgumentNullException("registerArgumentAction");
 
             Argument = new Argument<T>();
-            registerArgumentAction(Argument);
+            registerArgumentAction(Argument, typeof(T));
         }
 
         #endregion
@@ -62,6 +62,8 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithDefaultValue(T value)
         {
+            if (value == null)
+                throw new ArgumentsSetupException("Argument default value cannot be null");
             Argument.DefaultValue = value;
             return this;
         }

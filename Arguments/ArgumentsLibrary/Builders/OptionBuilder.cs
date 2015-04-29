@@ -10,9 +10,15 @@ namespace ArgumentsLibrary.Builders
     {
         #region Internals
 
+        /// <summary>
+        /// Option instance to build with this builder
+        /// </summary>
         internal Option Option { get; private set; }
 
-        internal Action<Option, String> RegisterAliasesAction { get; set; }
+        /// <summary>
+        /// Action delegate to register Option and its aliases
+        /// </summary>
+        private Action<Option, String> RegisterAliasesAction { get; set; }
 
         internal OptionBuilder(Action<Option, String> registerAliasesAction)
         {
@@ -22,10 +28,18 @@ namespace ArgumentsLibrary.Builders
             RegisterAliasesAction = registerAliasesAction;
         }
 
-        internal void RegisterArgument(object argument)
+        /// <summary>
+        /// Associates and argument with this Option instance
+        /// </summary>
+        /// <param name="argument">Argument{T} instance</param>
+        internal void RegisterArgument(dynamic argument, Type argumentType)
         {
             if (argument == null)
                 throw new ArgumentNullException("argument");
+
+            var type = argument.GetType().GetGenericTypeDefinition();
+
+            Option.Argument = argument;
         }
 
         #endregion
@@ -50,6 +64,8 @@ namespace ArgumentsLibrary.Builders
         /// <returns>OptionBuilder fluent interface</returns>
         public OptionBuilder WithAliases(string aliases)
         {
+            if (aliases == null)
+                throw new ArgumentsSetupException("Option aliases cannot be null");
             RegisterAliasesAction(Option, aliases);
             return this;
         }

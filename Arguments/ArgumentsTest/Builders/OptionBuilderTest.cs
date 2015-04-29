@@ -15,6 +15,7 @@ namespace ArgumentsTest.Builders
         public void Constructor_RegisterAliasesAction()
         {
             var registered = false;
+            // registering aliases action mock
             var optionBuilder = new OptionBuilder((o, a) =>
             {
                 if (o != null && a.Equals("a"))
@@ -50,7 +51,7 @@ namespace ArgumentsTest.Builders
         }
 
         [TestMethod]
-        public void WithAliases_CorrectFormat()
+        public void WithAliases_ValidFormat()
         {
             var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAliases("a|aaaaa");
@@ -59,9 +60,14 @@ namespace ArgumentsTest.Builders
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentsSetupException))]
-        public void WithAliases_IncorrectFormat()
+        public void WithAliases_InvalidFormat()
         {
-            var optionBuilder = new OptionBuilder((o, a) => { });
+            // registering aliases action mock that checks the alias format
+            var optionBuilder = new OptionBuilder((o, a) =>
+            {
+                if (a.Equals("1|11111"))
+                    throw new ArgumentsSetupException("Invalid alias format");
+            });
             optionBuilder.WithAliases("1|11111");
         }
 
@@ -69,12 +75,17 @@ namespace ArgumentsTest.Builders
         [ExpectedException(typeof(ArgumentsSetupException))]
         public void WithAliases_Null()
         {
-            var optionBuilder = new OptionBuilder((o, a) => { });
+            // registering aliases action mock that checks if alias is null
+            var optionBuilder = new OptionBuilder((o, a) =>
+            {
+                if (a == null)
+                    throw new ArgumentsSetupException("Alias cannot be null");
+            });
             optionBuilder.WithAlias(null);
         }
 
         [TestMethod]
-        public void WithAlias_CorrectFormat()
+        public void WithAlias_ValidFormat()
         {
             var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAlias("a|aaaaa");
@@ -83,9 +94,14 @@ namespace ArgumentsTest.Builders
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentsSetupException))]
-        public void WithAlias_IncorrectFormat()
+        public void WithAlias_InvalidFormat()
         {
-            var optionBuilder = new OptionBuilder((o, a) => { });
+            // registering aliases action mock that checks the alias format
+            var optionBuilder = new OptionBuilder((o, a) =>
+            {
+                if (a.Equals("1|11111"))
+                    throw new ArgumentsSetupException("Invalid alias format");
+            });
             optionBuilder.WithAlias("1|11111");
         }
 
@@ -93,7 +109,12 @@ namespace ArgumentsTest.Builders
         [ExpectedException(typeof(ArgumentsSetupException))]
         public void WithAlias_Null()
         {
-            var optionBuilder = new OptionBuilder((o, a) => { });
+            // registering aliases action mock that checks if alias is null
+            var optionBuilder = new OptionBuilder((o, a) =>
+            {
+                if (a == null)
+                    throw new ArgumentsSetupException("Alias cannot be null");
+            });
             optionBuilder.WithAliases(null);
         }
 

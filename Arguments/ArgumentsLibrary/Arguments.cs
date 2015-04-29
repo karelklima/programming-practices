@@ -1,6 +1,8 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -28,14 +30,14 @@ namespace ArgumentsLibrary
         private const string SHORT_OPTION_PREFIX = "-";
         private const string SHORT_OPTION_REGEX = "^-([a-zA-Z][a-zA-Z-_]*)$";
         private const string SHORT_OPTION_ALIAS_REGEX =
-            "^([a-zA-Z])|-([a-zA-Z][a-zA-Z-_]*)$";
+            "^(([a-zA-Z])|-([a-zA-Z][a-zA-Z-_]*))$";
         
         private const string LONG_OPTION_PREFIX = "--";
         private const string LONG_OPTION_VALUE_SEPARATOR = "=";
         private const string LONG_OPTION_REGEX =
             "^--([a-zA-Z][a-zA-Z-_]*)(=.+)?$";
         private const string LONG_OPTION_ALIAS_REGEX =
-            "^([a-zA-Z][a-zA-Z-_]+)|--([a-zA-Z][a-zA-Z-_]*)$";
+            "^(([a-zA-Z][a-zA-Z-_]+)|--([a-zA-Z][a-zA-Z-_]*))$";
 
         private const string OPTION_ALIAS_SEPARATOR = "|";
         private const string PLAIN_ARGUMENTS_SEPARATOR = "--";
@@ -50,15 +52,20 @@ namespace ArgumentsLibrary
         private static readonly Regex _longOptionAliasRegex =
             new Regex(LONG_OPTION_ALIAS_REGEX);
 
-
-        private List<Option> Options { get; set; }
-
         private Dictionary<Type, object> TypeConverters { get; set; }
+
+        private Dictionary<OptionAlias, Option> Options { get; set; }
+
+        private List<string> PlainArguments { get; set; } 
+
+        private bool Sealed { get; set; }
 
         public Arguments()
         {
-            Options = new List<Option>();
             TypeConverters = new Dictionary<Type, object>();
+            Options = new Dictionary<OptionAlias, Option>();
+            PlainArguments = new List<string>();
+            Sealed = false;
             PerformDefaultSetup();
         }
 
@@ -73,8 +80,6 @@ namespace ArgumentsLibrary
 
         private IEnumerable<OptionAlias> ParseAliases(string aliases)
         {
-            if (aliases == null)
-                throw new ArgumentNullException("aliases");
             return aliases
                 .Split(OPTION_ALIAS_SEPARATOR.ToCharArray())
                 .Select(ParseAlias);
@@ -147,15 +152,109 @@ namespace ArgumentsLibrary
 
         private void RegisterOptionAlias(Option option, OptionAlias alias)
         {
+            Options.Add(alias, option);
+            option.Aliases.Add(alias);
+        }
+
+        private void ParseArguments(IEnumerable<string> args)
+        {
+            var queue = new Queue<string>(args);
+            var separatorHit = false;
+
+            while (queue.Any())
+            {
+                var arg = queue.Dequeue();
+
+                if (arg.Equals(PLAIN_ARGUMENTS_SEPARATOR))
+                {
+                    separatorHit = true;
+                }
+
+                var optionAlias = DetectPotentialOption(arg);
+
+                if (optionAlias == null || !Options.ContainsKey(optionAlias) || separatorHit)
+                {
+                    PlainArguments.Add(arg);
+                    continue;
+                }
+
+                ProcessDetectedOption(optionAlias, arg, queue);
+            }
 
         }
 
-        internal T Convert<T>(string value)
+        private void ProcessDetectedOption(OptionAlias optionAlias, string arg, Queue<string> argQueue)
         {
-            // TODO
+            var option = Options[optionAlias];
+            option.IsSet = true;
+            option.Actions.ForEach(action => action.Invoke());
+
+            if (option.Argument != null)
+            {
+                var value = optionAlias.Type == OptionType.Long ? ExtractLongOptionValue(arg) : argQueue.Peek();
+                var result = ProcessPotentialOptionArgument(option, value);
+            }
+            
+        }
+
+        private bool ProcessPotentialOptionArgument(Option option, string arg)
+        {
+            dynamic argument = option.Argument;
+            if (arg == null && argument.Optional)
+                throw new ArgumentsParseException("Option {0} has a mandato");
+        }
+
+        private void ProcessLongOptionArgument(OptionAlias optionAlias, string arg)
+        {
+
+        }
+
+        private void ProcessShortOption(OptionAlias optionAlias, string arg, Queue<string> argQueue)
+        {
+
+        }
+
+        private string ExtractLongOptionValue(string arg)
+        {
+            var longMatch = _longOptionRegex.Match(arg);
+            return RemoveOptionalPrefix(longMatch.Groups[2].Value, LONG_OPTION_VALUE_SEPARATOR);
+        }
+
+        /// <summary>
+        /// Decides whether the input argument is an Option or not,
+        /// i.e. whether the input string is in format "-o" or "--option=..."
+        /// </summary>
+        /// <param name="arg">Input argument from a command line</param>
+        /// <returns>OptionAlias of detected potential Option or null</returns>
+        private OptionAlias DetectPotentialOption(string arg)
+        {
+            var longMatch = _longOptionRegex.Match(arg);
+            if (longMatch.Success)
+            {
+                return new OptionAlias(longMatch.Groups[1].Value, OptionType.Long);
+            }
+            var shortMatch = _shortOptionRegex.Match(arg);
+            if (shortMatch.Success)
+            {
+                return new OptionAlias(shortMatch.Groups[1].Value, OptionType.Short);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Converts a given string value to desired type using defined
+        /// type converters.
+        /// </summary>
+        /// <typeparam name="T">Type to be converted into</typeparam>
+        /// <param name="value">String value to be converted</param>
+        /// <returns>Converted value</returns>
+        private T Convert<T>(string value)
+        {
+            if (value == null)
+                throw new ArgumentNullException("value");
             if (!TypeConverters.ContainsKey(typeof(T)))
             {
-                // TODO throw an exception
+                throw new ArgumentsParseException("Converter for type {0} is not defined", typeof(T));
             }
             return ((Func<string, T>)TypeConverters[typeof(T)]).Invoke(value);
         }
@@ -205,6 +304,8 @@ namespace ArgumentsLibrary
         /// <returns>OptionBuilder instance</returns>
         public OptionBuilder AddOption(string aliases)
         {
+            if (Sealed)
+                throw new ArgumentsSetupException("Definition of Options is already sealed");
             return new OptionBuilder(RegisterOptionAliases).WithAliases(aliases);
         }
 
@@ -212,11 +313,11 @@ namespace ArgumentsLibrary
         /// Adds a mandatory Option to the current configuration with given
         /// aliases. Same as <see cref="AddOption">AddOption</see>
         /// </summary>
-        /// <param name="aliases"></param>
-        /// <returns></returns>
+        /// <param name="aliases">One or more option aliases</param>
+        /// <returns>OptionBuilder instance</returns>
         public OptionBuilder AddMandatoryOption(string aliases)
         {
-            return AddOption(aliases).SetMandatory(true);
+            return AddOption(aliases).SetMandatory();
         }
 
         /// <summary>
@@ -227,10 +328,14 @@ namespace ArgumentsLibrary
         /// the definition</exception>
         public void Parse(string[] args)
         {
-            // TODO implement
-            if (false)
-                throw new ArgumentsParseException("Something went wrong");
+            if (args == null)
+                throw new ArgumentsParseException("Passed arguments cannot be null");
+            if (Sealed)
+                throw new ArgumentsParseException("Arguments class is already sealed");
+            else
+                Sealed = true;
 
+            ParseArguments(args);
         }
 
         /// <summary>
@@ -311,15 +416,6 @@ namespace ArgumentsLibrary
         public IEnumerable<string> GetPlainArguments()
         {
             return GetPlainArguments<string>();
-        }
-
-        /// <summary>
-        /// Removes all Option definitions and type converters, and resets
-        /// Arguments to the default state.
-        /// </summary>
-        public void Reset()
-        {
-            // TODO implement
         }
 
         /// <summary>
