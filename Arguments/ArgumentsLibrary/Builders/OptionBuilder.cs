@@ -37,7 +37,14 @@ namespace ArgumentsLibrary.Builders
             if (argument == null)
                 throw new ArgumentNullException("argument");
 
+            var typ = argument.GetType();
+            var expectedType = Type.GetType("ArgumentsLibrary.Argument`1[" + argumentType.ToString() + "]");
+
+            if (argument.GetType() != expectedType)
+                throw new ArgumentException("Argument object and its type do not match");
+
             Option.Argument = argument;
+            Option.ArgumentType = argumentType;
         }
 
         #endregion
@@ -137,7 +144,7 @@ namespace ArgumentsLibrary.Builders
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithOptionalArgument<T>(string name)
         {
-            return WithArgument<T>(name).SetOptional(true);
+            return WithArgument<T>(name).SetOptional();
         }
 
         /// <summary>

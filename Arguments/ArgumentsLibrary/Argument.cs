@@ -36,8 +36,8 @@ namespace ArgumentsLibrary
 
         internal T Value { get; set; }
 
-        internal T Parse(string arg, Arguments arguments){
-            return arguments.Convert<T> (arg);
+        internal T Parse(string arg, Converter converter){
+            return converter.Convert<T> (arg);
         }
 
         internal Argument()

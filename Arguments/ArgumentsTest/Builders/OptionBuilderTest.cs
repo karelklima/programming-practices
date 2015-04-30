@@ -35,6 +35,32 @@ namespace ArgumentsTest.Builders
         }
 
         [TestMethod]
+        public void RegisterArgument_ValidInstanceAndType()
+        {
+            var optionBuilder = new OptionBuilder((o, a) => { });
+            var argument = new Argument<string>();
+            optionBuilder.RegisterArgument(argument, typeof(string));
+            Assert.IsTrue(optionBuilder.Option.Argument.Equals(argument));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void RegisterArgument_NullInstance()
+        {
+            var optionBuilder = new OptionBuilder((o, a) => { });
+            optionBuilder.RegisterArgument(null, typeof(string));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RegisterArgument_InvalidInstanceAndType()
+        {
+            var optionBuilder = new OptionBuilder((o, a) => { });
+            var argument = new Argument<int>();
+            optionBuilder.RegisterArgument(argument, typeof(string));
+        }
+
+        [TestMethod]
         public void SetMandatory_True()
         {
             var optionBuilder = new OptionBuilder((o, a) => { });
@@ -149,6 +175,60 @@ namespace ArgumentsTest.Builders
         {
             var optionBuilder = new OptionBuilder((o, a) => { });
             optionBuilder.WithAction(null);
+        }
+
+        [TestMethod]
+        public void WithArgument_Int_ValidName()
+        {
+            var optionBuilder = new OptionBuilder((o, a) => { });
+            var argumentBuilder = optionBuilder.WithArgument<int>("number");
+            Assert.IsTrue(optionBuilder.Option.Argument != null);
+            Assert.IsTrue(optionBuilder.Option.ArgumentType == typeof(int));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentsSetupException))]
+        public void WithArgument_Int_InvalidName()
+        {
+            var optionBuilder = new OptionBuilder((o, a) => { });
+            var argumentBuilder = optionBuilder.WithArgument<int>(null);
+        }
+
+        [TestMethod]
+        public void WithArgument_DefaultType_ValidName()
+        {
+            var optionBuilder = new OptionBuilder((o, a) => { });
+            var argumentBuilder = optionBuilder.WithArgument("text");
+            Assert.IsTrue(optionBuilder.Option.Argument != null);
+            Assert.IsTrue(optionBuilder.Option.ArgumentType == typeof(string));
+        }
+
+        [TestMethod]
+        public void WithOptionalArgument_Int_ValidName()
+        {
+            var optionBuilder = new OptionBuilder((o, a) => { });
+            var argumentBuilder = optionBuilder.WithOptionalArgument<int>("number");
+            Assert.IsTrue(optionBuilder.Option.Argument != null);
+            Assert.IsTrue(optionBuilder.Option.Argument.Optional);
+            Assert.IsTrue(optionBuilder.Option.ArgumentType == typeof(int));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentsSetupException))]
+        public void WithOptionalArgument_Int_InvalidName()
+        {
+            var optionBuilder = new OptionBuilder((o, a) => { });
+            var argumentBuilder = optionBuilder.WithOptionalArgument<int>(null);
+        }
+
+        [TestMethod]
+        public void WithOptionalArgument_DefaultType_ValidName()
+        {
+            var optionBuilder = new OptionBuilder((o, a) => { });
+            var argumentBuilder = optionBuilder.WithOptionalArgument("text");
+            Assert.IsTrue(optionBuilder.Option.Argument != null);
+            Assert.IsTrue(optionBuilder.Option.Argument.Optional);
+            Assert.IsTrue(optionBuilder.Option.ArgumentType == typeof(string));
         }
 
 

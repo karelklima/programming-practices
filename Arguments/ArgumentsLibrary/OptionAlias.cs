@@ -11,31 +11,27 @@ namespace ArgumentsLibrary
 
         internal OptionAlias(string alias, OptionType type)
         {
+            if (alias == null)
+                throw new ArgumentNullException("alias");
+            if (alias.Equals(string.Empty))
+                throw new ArgumentException("Argument alias cannot be an empty string");
             Alias = alias;
             Type = type;
         }
 
-        #region IEquatable implementation
-
-        public bool Equals (OptionAlias other){
-            return other.Alias == Alias
-                && other.Type == Type;
-        }
-
-        #endregion
-
-        public override int GetHashCode (){
-            return this.Alias.GetHashCode (); //If hash is equal (Dictionary.ContainsKey), than Equals() is used
-        }
-
-        public override bool Equals(object obj)
+        public bool Equals (OptionAlias other)
         {
-            return obj.GetType() == typeof (OptionAlias)
-                   && ((OptionAlias) obj).Alias == Alias
-                   && ((OptionAlias) obj).Type == Type;
+            return other.Alias == Alias && other.Type == Type;
+        }
+
+        public override int GetHashCode()
+        {
+            // If hash is equal (Dictionary.ContainsKey), than Equals() is used
+            return Alias.GetHashCode();
         }
 
         public override string ToString (){
+            // strings to constants
             if (Type == OptionType.Short) {
                 return "-" + Alias;
             } else {
