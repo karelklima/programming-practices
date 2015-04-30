@@ -14,8 +14,10 @@ namespace ArgumentsProgram
         {
 
             var a = new Arguments();
-            a.AddOption("x").WithArgument<int>("Test");
+            a.AddOption("x").WithArgument<int>("Test")
+                            .SetOptional ();
             a.Parse(new string[] { "-x", "--xxx" });
+            Console.WriteLine (string.Join (Environment.NewLine, a.BuildHelpText ()));
 
             // UKAZKOVY KOD IMPLEMENTUJICI PRIKLAD ZE ZADANI
             var arguments = new Arguments();
@@ -45,11 +47,11 @@ namespace ArgumentsProgram
             // menit konfiguraci
             try
             {
-                arguments.Parse(args);
+                arguments.Parse(new String[]{"-v", "--size=42","plain1", "plain2"});
             }
-            catch (ArgumentsParseException)
+            catch (ArgumentsParseException e)
             {
-                Console.WriteLine(arguments.BuildHelpText());
+                Console.WriteLine(e.StackTrace);
             }
             
 
@@ -59,8 +61,8 @@ namespace ArgumentsProgram
             
             Console.WriteLine("size = {0}",
                 arguments.GetOptionValue<int>("size"));
-            Console.WriteLine("arguments = {0}", arguments.GetPlainArguments()
-                .Aggregate((i, j) => i + " " + j));
+            Console.WriteLine("arguments = {0}", string.Join (" ", arguments.GetPlainArguments()));
+            Console.WriteLine (string.Join (Environment.NewLine, arguments.BuildHelpText ()));
 
             // KONEC UKAZKOVEHO KODU
             //////////////////////////////////////////////////////////////////
@@ -70,7 +72,7 @@ namespace ArgumentsProgram
             arguments = new Arguments();
 
             // Nasledujici priklad ukazuje navaznost API trid
-            arguments.AddOption("t|test") // OptionBuilder API
+            arguments.AddOption("t") // OptionBuilder API
                 .WithDescription("Popis") // stale OptionBuilder API
                 .WithArgument<double>("CISLO") // ArgumentBuilder<double> API
                 .WithCondition(d => d < 0.5); // stale ArgumentBuilder<double> API
@@ -129,6 +131,7 @@ namespace ArgumentsProgram
              //   .WithArguments<byte>("BYTES", 1, 10);
 
             arguments.Parse(args);
+            Console.WriteLine (string.Join (Environment.NewLine, arguments.BuildHelpText ()));
 
             //var x = arguments.GetOptionValue("v");
             //var y = arguments.GetOptionValue<int>("--i");

@@ -11,7 +11,7 @@ namespace ArgumentsLibrary.Exceptions
     /// </summary>
     public class ArgumentsParseException : ArgumentsException
     {
-        internal ArgumentsParseException(string message, object args = null)
+        internal ArgumentsParseException(string message, params object[] args)
             : base(message, args)
         {
         }

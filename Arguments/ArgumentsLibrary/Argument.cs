@@ -16,6 +16,9 @@ namespace ArgumentsLibrary
         internal bool Optional { get; set; }
 
         internal T DefaultValue { get; set; }
+        internal Type GetValueType() {
+            return typeof(T);
+        }
 
         internal List<Action<T>> Actions { get; set; } 
 
@@ -23,9 +26,14 @@ namespace ArgumentsLibrary
 
         internal T Value { get; set; }
 
+        internal T Parse(string arg, Arguments arguments){
+            return arguments.Convert<T> (arg);
+        }
+
         internal Argument()
         {
             Name = DEFAULT_NAME;
+            DefaultValue = default(T);
             Optional = DEFAULT_OPTIONAL;
             Actions = new List<Action<T>>();
             Conditions = new List<Func<T, bool>>();

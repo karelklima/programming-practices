@@ -171,10 +171,16 @@ namespace ArgumentsLibrary
                 }
 
                 var optionAlias = DetectPotentialOption(arg);
-
                 if (optionAlias == null || !Options.ContainsKey(optionAlias) || separatorHit)
                 {
                     PlainArguments.Add(arg);
+
+                    //Reason for next line:
+                    //test case: -a -unknownOption -b a b c
+                    //test case: -a -unknownOption -b -- a b c
+                    //plains: -unknownOption a b c - it is bug (probably)
+                    separatorHit = true;
+
                     continue;
                 }
 
@@ -192,26 +198,31 @@ namespace ArgumentsLibrary
             if (option.Argument != null)
             {
                 var value = optionAlias.Type == OptionType.Long ? ExtractLongOptionValue(arg) : argQueue.Peek();
-                var result = ProcessPotentialOptionArgument(option, value);
+                ProcessPotentialOptionArgument(optionAlias, option, value);
             }
             
         }
 
-        private bool ProcessPotentialOptionArgument(Option option, string arg)
+        private void ProcessPotentialOptionArgument(OptionAlias optionAlias, Option option, string arg)
         {
             dynamic argument = option.Argument;
-            if (arg == null && argument.Optional)
-                throw new ArgumentsParseException("Option {0} has a mandato");
-        }
 
-        private void ProcessLongOptionArgument(OptionAlias optionAlias, string arg)
-        {
+            var nextOptionAlias = DetectPotentialOption(arg);
+            if (nextOptionAlias != null && Options.ContainsKey (nextOptionAlias))
+                arg = null;
 
-        }
-
-        private void ProcessShortOption(OptionAlias optionAlias, string arg, Queue<string> argQueue)
-        {
-
+            if (arg == null && !argument.Optional)
+                throw new ArgumentsParseException("Option {0} has mandatory argument {1}", optionAlias.Alias, argument.Name);
+            
+            argument.Value = argument.DefaultValue;
+            if (arg != null) {
+                try{
+                    argument.Value = argument.Parse (arg, this);
+                } catch(FormatException){
+                    if (!argument.Optional)
+                        throw new ArgumentsParseException ("Cannot parse \"{0}\" as `{1}` for {2}", arg,argument.GetValueType().FullName, optionAlias);
+                }
+            }
         }
 
         private string ExtractLongOptionValue(string arg)
@@ -248,7 +259,7 @@ namespace ArgumentsLibrary
         /// <typeparam name="T">Type to be converted into</typeparam>
         /// <param name="value">String value to be converted</param>
         /// <returns>Converted value</returns>
-        private T Convert<T>(string value)
+        internal T Convert<T>(string value)
         {
             if (value == null)
                 throw new ArgumentNullException("value");
@@ -346,8 +357,12 @@ namespace ArgumentsLibrary
         /// value is defined</returns>
         public bool IsOptionSet(string alias)
         {
-            // TODO implement
-            return true;
+            OptionAlias optionAlias = ParseAlias (alias);
+            if (Options.ContainsKey (optionAlias)) {
+                return Options [optionAlias].IsSet;
+            }
+            //TODO throw exception "options is not found"?
+            return false;
         }
 
         /// <summary>
@@ -358,31 +373,15 @@ namespace ArgumentsLibrary
         /// <returns>Typed Option value</returns>
         public T GetOptionValue<T>(string alias)
         {
-            // TODO implement
-            return new T[]{}.First();
-        }
-
-        /// <summary>
-        /// Gets Option arguments converted to the specified type.
-        /// </summary>
-        /// <typeparam name="T">Return type of the values</typeparam>
-        /// <param name="alias">One of the Option aliases</param>
-        /// <returns>Typed Option values</returns>
-        public IEnumerable<T> GetOptionValues<T>(string alias)
-        {
-            // TODO implement
-            return new T[]{};
-        }
-
-        /// <summary>
-        /// Gets Option arguments as string. Same as
-        /// <see cref="GetOptionValuse{T}"/>, implicitly typed.
-        /// </summary>
-        /// <param name="alias">One of the Option aliases</param>
-        /// <returns>Option values as string</returns>
-        public IEnumerable<string> GetOptionValues(string alias)
-        {
-            return GetOptionValues<string>(alias);
+            OptionAlias optionAlias = ParseAlias (alias);
+            if (Options.ContainsKey (optionAlias)) {
+                Option option = Options [optionAlias];
+                if (option.Argument != null)
+                    return option.Argument.Value;
+                //TODO throw exception "argument is not defined"
+            }
+            //TODO throw exception "options is not found"?
+            return default(T);
         }
 
         /// <summary>
@@ -397,17 +396,6 @@ namespace ArgumentsLibrary
         }
 
         /// <summary>
-        /// Returns a list of all arguments that do not correspond to Options.
-        /// </summary>
-        /// <typeparam name="T">Type of all arguments</typeparam>
-        /// <returns>List of all plain arguments</returns>
-        public IEnumerable<T> GetPlainArguments<T>()
-        {
-            // TODO implement
-            return new List<T>();
-        }
-
-        /// <summary>
         /// Implicit alternative to <see cref="GetPlainArguments{T}"/>.
         /// Returns a list of all arguments that do not correspond to Options
         /// as a list of strings.
@@ -415,7 +403,7 @@ namespace ArgumentsLibrary
         /// <returns>List of all plain arguments</returns>
         public IEnumerable<string> GetPlainArguments()
         {
-            return GetPlainArguments<string>();
+            return PlainArguments;
         }
 
         /// <summary>
@@ -423,8 +411,66 @@ namespace ArgumentsLibrary
         /// </summary>
         public IEnumerable<string> BuildHelpText()
         {
-            // TODO implement
-            return new String[]{""};
+            var result = new List<string> ();
+            StringBuilder sb = new StringBuilder ("Help:");
+            result.Add (sb.ToString ()); sb.Clear ();
+            foreach (Option opt in Options.Values.Distinct ()) {
+                var shorts = new List<OptionAlias> ();
+                var longs = new List<OptionAlias> ();
+                foreach (OptionAlias alias in opt.Aliases) {
+                    if (alias.Type == OptionType.Short)
+                        shorts.Add (alias);
+                    else
+                        longs.Add (alias);
+                }
+
+                string argument = null;
+                if (opt.Argument != null) {
+                    if (opt.Argument.Optional) {
+                            dynamic defaultValue = opt.Argument.DefaultValue;
+                        string dValue = "";
+                        if (defaultValue != null)
+                            dValue = defaultValue.ToString ();
+                        else if(opt.Argument.GetValueType() == typeof(String))
+                            dValue="\"\"";
+                        argument = String.Format("<{0}:{1}={2}>",opt.Argument.Name,opt.Argument.GetValueType().Name, dValue);
+                    } else {
+                        argument = String.Format("<{0}:{1}>",opt.Argument.Name,opt.Argument.GetValueType().Name);
+                    }
+                }
+
+                if (shorts.Count > 0) {
+                    sb.Append ("\t");
+                    sb.Append (string.Join ("|", shorts));
+                    if (argument != null) {
+                        sb.AppendFormat (" {0}", argument);
+                    }
+                    if (longs.Count > 0) {
+                        result.Add (sb.ToString ());
+                        sb.Clear ();
+                    }
+                }
+
+                if (longs.Count > 0) {
+                    sb.Append ("\t");
+                    sb.Append (string.Join ("|", longs));
+                    if (argument != null) {
+                        sb.AppendFormat ("={0}", argument);
+                    }
+                }
+
+                sb.Append (":");
+                if (opt.Mandatory)
+                    sb.Append (" Mandatory");
+                else
+                    sb.Append (" Optional");
+                result.Add (sb.ToString ()); sb.Clear ();
+                sb.AppendFormat ("\t\t{0}",opt.Description);
+                result.Add (sb.ToString ()); sb.Clear ();
+                result.Add (sb.ToString ()); sb.Clear ();
+            }
+            result.Add (sb.ToString ()); sb.Clear ();
+            return result;
         }
         #endregion
 
