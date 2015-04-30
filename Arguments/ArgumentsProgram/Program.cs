@@ -84,9 +84,9 @@ namespace ArgumentsProgram
                      .WithAction(() =>
                          Console.WriteLine(arguments.BuildHelpText()));
 
-            string someStringValue;
-            string someActionValue;
-            int someIntValue;
+            string someStringValue = null;
+            string someActionValue = null;
+            int someIntValue = 0;
             var someInts = new[] {1, 2, 3};
 
             arguments.AddOption("v") // -v
@@ -130,8 +130,12 @@ namespace ArgumentsProgram
                 // This option takes from one to ten arguments
              //   .WithArguments<byte>("BYTES", 1, 10);
 
-            arguments.Parse(args);
+            arguments.Parse(new String[]{"--v=text","-i","1"});
             Console.WriteLine (string.Join (Environment.NewLine, arguments.BuildHelpText ()));
+
+            Console.WriteLine ("{0} = {1}","someStringValue", someStringValue);
+            Console.WriteLine ("{0} = {1}","someActionValue", someActionValue);
+            Console.WriteLine ("{0} = {1}","someIntValue", someIntValue);
 
             //var x = arguments.GetOptionValue("v");
             //var y = arguments.GetOptionValue<int>("--i");

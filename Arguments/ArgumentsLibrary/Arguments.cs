@@ -212,16 +212,25 @@ namespace ArgumentsLibrary
                 arg = null;
 
             if (arg == null && !argument.Optional)
-                throw new ArgumentsParseException("Option {0} has mandatory argument {1}", optionAlias.Alias, argument.Name);
+                throw new ArgumentsParseException("Option {0} has mandatory argument {1}", optionAlias, argument.Name);
             
-            argument.Value = argument.DefaultValue;
             if (arg != null) {
-                try{
+                try {
                     argument.Value = argument.Parse (arg, this);
-                } catch(FormatException){
+                    argument.InvokeActions();
+                    if(!argument.AssertConditions()){
+                        throw new ArgumentsParseException("Option: {1}, {0}={2}: conditions failed", argument.Name, optionAlias, argument.Value);
+                    }
+                } catch (FormatException) {
                     if (!argument.Optional)
-                        throw new ArgumentsParseException ("Cannot parse \"{0}\" as `{1}` for {2}", arg,argument.GetValueType().FullName, optionAlias);
+                        throw new ArgumentsParseException ("Cannot parse \"{0}\" as `{1}` for {2}", arg, argument.GetValueType ().FullName, optionAlias);
+                    else 
+                        argument.Value = argument.DefaultValue;
+                    //TODO conditions
                 }
+            } else {
+                argument.Value = argument.DefaultValue;
+                //TODO conditions
             }
         }
 
@@ -429,10 +438,13 @@ namespace ArgumentsLibrary
                     if (opt.Argument.Optional) {
                             dynamic defaultValue = opt.Argument.DefaultValue;
                         string dValue = "";
-                        if (defaultValue != null)
+                        if (defaultValue != null) {
                             dValue = defaultValue.ToString ();
-                        else if(opt.Argument.GetValueType() == typeof(String))
-                            dValue="\"\"";
+                            if(dValue.Length == 0)
+                                dValue = "\"\"";
+                        }
+                        else 
+                            dValue = "null";
                         argument = String.Format("<{0}:{1}={2}>",opt.Argument.Name,opt.Argument.GetValueType().Name, dValue);
                     } else {
                         argument = String.Format("<{0}:{1}>",opt.Argument.Name,opt.Argument.GetValueType().Name);

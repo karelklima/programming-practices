@@ -37,8 +37,6 @@ namespace ArgumentsLibrary.Builders
             if (argument == null)
                 throw new ArgumentNullException("argument");
 
-            var type = argument.GetType().GetGenericTypeDefinition();
-
             Option.Argument = argument;
         }
 

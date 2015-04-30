@@ -21,8 +21,18 @@ namespace ArgumentsLibrary
         }
 
         internal List<Action<T>> Actions { get; set; } 
+        internal void InvokeActions(){
+            Actions.ForEach (action => action.Invoke (Value));
+        }
 
         internal List<Func<T, bool>> Conditions { get; set; }
+        internal bool AssertConditions(){
+            foreach (var condition in Conditions) {
+                if (!condition.Invoke (Value))
+                    return false;
+            }
+            return true;
+        }
 
         internal T Value { get; set; }
 
