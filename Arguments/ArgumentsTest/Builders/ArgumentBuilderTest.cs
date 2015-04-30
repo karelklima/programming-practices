@@ -53,7 +53,7 @@ namespace ArgumentsTest.Builders
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentsSetupException))]
+        [ExpectedException(typeof(SetupException))]
         public void SetName_Null()
         {
             var builder = new ArgumentBuilder<string>((a, t) => { });
@@ -85,7 +85,7 @@ namespace ArgumentsTest.Builders
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentsSetupException))]
+        [ExpectedException(typeof(SetupException))]
         public void WithDefaultValue_Null()
         {
             var builder = new ArgumentBuilder<string>((a, t) => { });
@@ -102,7 +102,7 @@ namespace ArgumentsTest.Builders
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentsSetupException))]
+        [ExpectedException(typeof(SetupException))]
         public void WithCondition_Null()
         {
             var builder = new ArgumentBuilder<string>((a, t) => { });
@@ -119,7 +119,7 @@ namespace ArgumentsTest.Builders
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentsSetupException))]
+        [ExpectedException(typeof(SetupException))]
         public void WithEnumeratedValue_Null()
         {
             var builder = new ArgumentBuilder<string>((a, t) => { });
@@ -136,7 +136,7 @@ namespace ArgumentsTest.Builders
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentsSetupException))]
+        [ExpectedException(typeof(SetupException))]
         public void WithAction_Null()
         {
             var builder = new ArgumentBuilder<string>((a, t) => { });

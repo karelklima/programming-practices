@@ -70,7 +70,7 @@ namespace ArgumentsLibrary.Builders
         public OptionBuilder WithAliases(string aliases)
         {
             if (aliases == null)
-                throw new ArgumentsSetupException("Option aliases cannot be null");
+                throw new SetupException("Option aliases cannot be null");
             RegisterAliasesAction(Option, aliases);
             return this;
         }
@@ -93,7 +93,7 @@ namespace ArgumentsLibrary.Builders
         public OptionBuilder WithDescription(string description)
         {
             if (description == null)
-                throw new ArgumentsSetupException("Option description cannot be null");
+                throw new SetupException("Option description cannot be null");
             Option.Description = description;
             return this;
         }
@@ -108,7 +108,7 @@ namespace ArgumentsLibrary.Builders
         public OptionBuilder WithAction(Action action)
         {
             if (action == null)
-                throw new ArgumentsSetupException("Option action cannot be null");
+                throw new SetupException("Option action cannot be null");
             Option.Actions.Add(action);
             return this;
         }

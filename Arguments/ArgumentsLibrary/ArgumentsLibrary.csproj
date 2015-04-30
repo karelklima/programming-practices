@@ -44,10 +44,12 @@
     <Compile Include="Argument.cs" />
     <Compile Include="Arguments.cs" />
     <Compile Include="Builders\ArgumentBuilder.cs" />
+    <Compile Include="CommandLine.cs" />
     <Compile Include="Converter.cs" />
+    <Compile Include="Exceptions\CommandLineException.cs" />
     <Compile Include="Exceptions\ArgumentsException.cs" />
-    <Compile Include="Exceptions\ArgumentsSetupException.cs" />
-    <Compile Include="Exceptions\ArgumentsParseException.cs" />
+    <Compile Include="Exceptions\SetupException.cs" />
+    <Compile Include="Exceptions\ParseException.cs" />
     <Compile Include="HelpTextGenerator.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Builders\OptionBuilder.cs" />

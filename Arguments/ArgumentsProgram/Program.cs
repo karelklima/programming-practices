@@ -45,24 +45,25 @@ namespace ArgumentsProgram
 
             // Program zpracuje argumenty ze vstupu - od teto chvile jiz nelze
             // menit konfiguraci
+
             try
             {
-                arguments.Parse(new String[]{"-v", "--size=42","plain1", "plain2"});
+                var commandLine = arguments.Parse(new String[]{"-v", "--size=42","plain1", "plain2"});
+                // IsOptionSet testuje, zda volba existuje v ramci argumentu
+                Console.WriteLine("verbose = {0}",
+                    commandLine.IsOptionSet("verbose"));
+
+                Console.WriteLine("size = {0}",
+                    commandLine.GetOptionValue<int>("size"));
+                Console.WriteLine("arguments = {0}", string.Join(" ", commandLine.GetPlainArguments()));
+                Console.WriteLine(string.Join(Environment.NewLine, arguments.BuildHelpText()));
+
             }
-            catch (ArgumentsParseException e)
+            catch (ParseException e)
             {
                 Console.WriteLine(e.StackTrace);
             }
             
-
-            // IsOptionSet testuje, zda volba existuje v ramci argumentu
-            Console.WriteLine("verbose = {0}",
-                arguments.IsOptionSet("verbose"));
-            
-            Console.WriteLine("size = {0}",
-                arguments.GetOptionValue<int>("size"));
-            Console.WriteLine("arguments = {0}", string.Join (" ", arguments.GetPlainArguments()));
-            Console.WriteLine (string.Join (Environment.NewLine, arguments.BuildHelpText ()));
 
             // KONEC UKAZKOVEHO KODU
             //////////////////////////////////////////////////////////////////

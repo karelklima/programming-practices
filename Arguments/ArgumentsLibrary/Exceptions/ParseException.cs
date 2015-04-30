@@ -9,9 +9,9 @@ namespace ArgumentsLibrary.Exceptions
     /// <summary>
     /// Exception thrown during Arguments parse phase
     /// </summary>
-    public class ArgumentsParseException : ArgumentsException
+    public class ParseException : ArgumentsException
     {
-        internal ArgumentsParseException(string message, params object[] args)
+        internal ParseException(string message, params object[] args)
             : base(message, args)
         {
         }

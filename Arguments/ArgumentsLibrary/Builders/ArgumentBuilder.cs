@@ -39,7 +39,7 @@ namespace ArgumentsLibrary.Builders
         public ArgumentBuilder<T> SetName(string name)
         {
             if (name == null)
-                throw new ArgumentsSetupException("Argument name cannot be null");
+                throw new SetupException("Argument name cannot be null");
             Argument.Name = name;
             return this;
         }
@@ -63,7 +63,7 @@ namespace ArgumentsLibrary.Builders
         public ArgumentBuilder<T> WithDefaultValue(T value)
         {
             if (value == null)
-                throw new ArgumentsSetupException("Argument default value cannot be null");
+                throw new SetupException("Argument default value cannot be null");
             Argument.DefaultValue = value;
             return this;
         }
@@ -78,7 +78,7 @@ namespace ArgumentsLibrary.Builders
         public ArgumentBuilder<T> WithCondition(Func<T, bool> conditionFunc)
         {
             if (conditionFunc == null)
-                throw new ArgumentsSetupException("Argument condition function cannot be null");
+                throw new SetupException("Argument condition function cannot be null");
             Argument.Conditions.Add(conditionFunc);
             return this;
         }
@@ -96,7 +96,7 @@ namespace ArgumentsLibrary.Builders
             params T[] valuesEnumeration)
         {
             if (valuesEnumeration == null)
-                throw new ArgumentsSetupException("Argument values enumeration cannot be null");
+                throw new SetupException("Argument values enumeration cannot be null");
             return WithCondition(valuesEnumeration.Contains);
         }
 
@@ -110,7 +110,7 @@ namespace ArgumentsLibrary.Builders
         public ArgumentBuilder<T> WithAction(Action<T> action)
         {
             if (action == null)
-                throw new ArgumentsSetupException("Argument action cannot be null");
+                throw new SetupException("Argument action cannot be null");
             Argument.Actions.Add(action);
             return this;
         }

@@ -1,11 +1,5 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using ArgumentsLibrary.Builders;
 using ArgumentsLibrary.Exceptions;
 
@@ -31,16 +25,10 @@ namespace ArgumentsLibrary
 
         private Dictionary<OptionAlias, Option> Options { get; set; }
 
-        private List<string> PlainArguments { get; set; } 
-
-        private bool Sealed { get; set; }
-
         public Arguments()
         {
             Converter = new Converter();
             Options = new Dictionary<OptionAlias, Option>();
-            PlainArguments = new List<string>();
-            Sealed = false;
             RegisterDefaultTypeConverters();
         }
 
@@ -82,7 +70,7 @@ namespace ArgumentsLibrary
         public void RegisterTypeConverter<T>(Func<string, T> converterFunc)
         {
             if (converterFunc == null)
-                throw new ArgumentsSetupException("Converter function cannot be null");
+                throw new SetupException("Converter function cannot be null");
             Converter.RegisterTypeConverter(converterFunc);
         }
 
@@ -112,8 +100,6 @@ namespace ArgumentsLibrary
         /// <returns>OptionBuilder instance</returns>
         public OptionBuilder AddOption(string aliases)
         {
-            if (Sealed)
-                throw new ArgumentsSetupException("Definition of Options is already sealed");
             return new OptionBuilder(RegisterOptionAliases).WithAliases(aliases);
         }
 
@@ -132,75 +118,14 @@ namespace ArgumentsLibrary
         /// Processes the command line input arguments.
         /// </summary>
         /// <param name="args">Arguments as passed to the Main</param>
-        /// <exception cref="ArgumentsParseException">Arguments do not satisfy
+        /// <exception cref="ParseException">Arguments do not satisfy
         /// the definition</exception>
-        public void Parse(string[] args)
+        public CommandLine Parse(string[] args)
         {
             if (args == null)
-                throw new ArgumentsParseException("Passed arguments cannot be null");
-            if (Sealed)
-                throw new ArgumentsParseException("Arguments class is already sealed");
-            else
-                Sealed = true;
+                throw new ParseException("Passed arguments cannot be null");
 
-            Parser.ProcessArguments(args, Converter, Options, PlainArguments);
-        }
-
-        /// <summary>
-        /// Checks whether the user specified an option or not.
-        /// </summary>
-        /// <param name="alias"></param>
-        /// <returns>True if user specified an option or if a default
-        /// value is defined</returns>
-        public bool IsOptionSet(string alias)
-        {
-            OptionAlias optionAlias = Parser.ParseAlias(alias);
-            if (Options.ContainsKey (optionAlias)) {
-                return Options [optionAlias].IsSet;
-            }
-            //TODO throw exception "options is not found"?
-            return false;
-        }
-
-        /// <summary>
-        /// Gets Option argument converted to the specified type.
-        /// </summary>
-        /// <typeparam name="T">Return type of the value</typeparam>
-        /// <param name="alias">One of the Option aliases</param>
-        /// <returns>Typed Option value</returns>
-        public T GetOptionValue<T>(string alias)
-        {
-            OptionAlias optionAlias = Parser.ParseAlias (alias);
-            if (Options.ContainsKey (optionAlias)) {
-                Option option = Options [optionAlias];
-                if (option.Argument != null)
-                    return option.Argument.Value;
-                //TODO throw exception "argument is not defined"
-            }
-            //TODO throw exception "options is not found"?
-            return default(T);
-        }
-
-        /// <summary>
-        /// Gets Option argument as string. Same as
-        /// <see cref="GetOptionValue{T}"/>, implicitly typed.
-        /// </summary>
-        /// <param name="alias">One of the Option aliases</param>
-        /// <returns>Option value as string</returns>
-        public string GetOptionValue(string alias)
-        {
-            return GetOptionValue<string>(alias);
-        }
-
-        /// <summary>
-        /// Implicit alternative to <see cref="GetPlainArguments{T}"/>.
-        /// Returns a list of all arguments that do not correspond to Options
-        /// as a list of strings.
-        /// </summary>
-        /// <returns>List of all plain arguments</returns>
-        public IEnumerable<string> GetPlainArguments()
-        {
-            return PlainArguments;
+            return Parser.ParseArguments(args, Converter, Options);
         }
 
         /// <summary>
