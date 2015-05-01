@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using ArgumentsLibrary;
-using ArgumentsLibrary.Builders;
 using ArgumentsLibrary.Exceptions;
 
-namespace ArgumentsProgram
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
+namespace ArgumentsProgram {
 
+    internal class Program {
+
+        private static void Main(string[] args) {
             var a = new Arguments();
             a.AddOption("x").WithArgument<int>("Test")
-                            .SetOptional ();
-            a.Parse(new string[] { "-x", "--xxx" });
-            Console.WriteLine (string.Join (Environment.NewLine, a.BuildHelpText ()));
+                .SetOptional();
+            a.Parse(new string[] {"-x", "--xxx"});
+            Console.WriteLine(string.Join(Environment.NewLine, a.BuildHelpText()));
 
             // UKAZKOVY KOD IMPLEMENTUJICI PRIKLAD ZE ZADANI
             var arguments = new Arguments();
@@ -46,24 +40,25 @@ namespace ArgumentsProgram
             // Program zpracuje argumenty ze vstupu - od teto chvile jiz nelze
             // menit konfiguraci
 
-            try
-            {
-                var commandLine = arguments.Parse(new String[]{"-v", "--size=42","plain1", "plain2"});
+            try {
+                var commandLine =
+                    arguments.Parse(new String[]
+                    {"-v", "--size=42", "plain1", "plain2"});
                 // IsOptionSet testuje, zda volba existuje v ramci argumentu
                 Console.WriteLine("verbose = {0}",
                     commandLine.IsOptionSet("verbose"));
 
                 Console.WriteLine("size = {0}",
                     commandLine.GetOptionValue<int>("size"));
-                Console.WriteLine("arguments = {0}", string.Join(" ", commandLine.GetPlainArguments()));
-                Console.WriteLine(string.Join(Environment.NewLine, arguments.BuildHelpText()));
-
+                Console.WriteLine("arguments = {0}",
+                    string.Join(" ", commandLine.GetPlainArguments()));
+                Console.WriteLine(string.Join(Environment.NewLine,
+                    arguments.BuildHelpText()));
             }
-            catch (ParseException e)
-            {
+            catch (ParseException e) {
                 Console.WriteLine(e.StackTrace);
             }
-            
+
 
             // KONEC UKAZKOVEHO KODU
             //////////////////////////////////////////////////////////////////
@@ -76,14 +71,15 @@ namespace ArgumentsProgram
             arguments.AddOption("t") // OptionBuilder API
                 .WithDescription("Popis") // stale OptionBuilder API
                 .WithArgument<double>("CISLO") // ArgumentBuilder<double> API
-                .WithCondition(d => d < 0.5); // stale ArgumentBuilder<double> API
+                .WithCondition(d => d < 0.5);
+                // stale ArgumentBuilder<double> API
 
 
             // Vypsani help textu
             arguments.AddOption("h|help")
-                     .WithDescription("Show help text")
-                     .WithAction(() =>
-                         Console.WriteLine(arguments.BuildHelpText()));
+                .WithDescription("Show help text")
+                .WithAction(() =>
+                    Console.WriteLine(arguments.BuildHelpText()));
 
             string someStringValue = null;
             string someActionValue = null;
@@ -100,9 +96,9 @@ namespace ArgumentsProgram
                 // Optional argument of type string
                 .WithOptionalArgument("some")
                 // Argument must satisfy this condition
-                .WithCondition( v => v.Contains("x") )
+                .WithCondition(v => v.Contains("x"))
                 // Action triggered when the option argument is detected
-                .WithAction( v => someStringValue = v );
+                .WithAction(v => someStringValue = v);
 
             // Mandatory option must be present among arguments
             // Also notice alias definition
@@ -119,7 +115,7 @@ namespace ArgumentsProgram
                 // Action triggered when the option argument is detected
                 .WithAction(i => someIntValue = i);
 
-            
+
             // Custom type processing
             //arguments.RegisterTypeConverter<long>(long.Parse);
             //arguments.AddOption("l|long-list")
@@ -128,23 +124,23 @@ namespace ArgumentsProgram
 
             //arguments.RegisterTypeConverter<byte>(byte.Parse);
             //arguments.AddOption("b|byte-list")
-                // This option takes from one to ten arguments
-             //   .WithArguments<byte>("BYTES", 1, 10);
+            // This option takes from one to ten arguments
+            //   .WithArguments<byte>("BYTES", 1, 10);
 
-            arguments.Parse(new String[]{"--v=text","-i","1"});
-            Console.WriteLine (string.Join (Environment.NewLine, arguments.BuildHelpText ()));
+            arguments.Parse(new String[] {"--v=text", "-i", "1"});
+            Console.WriteLine(string.Join(Environment.NewLine,
+                arguments.BuildHelpText()));
 
-            Console.WriteLine ("{0} = {1}","someStringValue", someStringValue);
-            Console.WriteLine ("{0} = {1}","someActionValue", someActionValue);
-            Console.WriteLine ("{0} = {1}","someIntValue", someIntValue);
+            Console.WriteLine("{0} = {1}", "someStringValue", someStringValue);
+            Console.WriteLine("{0} = {1}", "someActionValue", someActionValue);
+            Console.WriteLine("{0} = {1}", "someIntValue", someIntValue);
 
             //var x = arguments.GetOptionValue("v");
             //var y = arguments.GetOptionValue<int>("--i");
             //var longList = arguments.GetOptionValues<long>("long-list");
             //var bytesList = arguments.GetOptionValues<byte>("b");
-
-
-
         }
+
     }
+
 }

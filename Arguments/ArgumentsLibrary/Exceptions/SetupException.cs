@@ -1,15 +1,14 @@
-﻿using System;
+﻿namespace ArgumentsLibrary.Exceptions {
 
-namespace ArgumentsLibrary.Exceptions
-{
     /// <summary>
     /// Exception thrown during Arguments setup phase
     /// </summary>
-    public class SetupException : ArgumentsException
-    {
+    public class SetupException : ArgumentsException {
+
         internal SetupException(string message, object args = null)
-            : base(message, args)
-        {
+            : base(message, args) {
         }
+
     }
+
 }

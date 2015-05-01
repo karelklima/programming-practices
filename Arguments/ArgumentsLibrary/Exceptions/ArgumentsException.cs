@@ -1,16 +1,16 @@
 ﻿using System;
 
-namespace ArgumentsLibrary.Exceptions
-{
+namespace ArgumentsLibrary.Exceptions {
+
     /// <summary>
-    /// Exception is thrown via its descendants
+    /// This is a base layer exception for Arguments library exceptions
     /// </summary>
-    public abstract class ArgumentsException : Exception
-    {
+    public abstract class ArgumentsException : Exception {
+
         internal ArgumentsException(string message, params object[] args)
-            : base(args == null ? message : String.Format(message, args))
-        {
-            
+            : base(args == null ? message : String.Format(message, args)) {
         }
+
     }
+
 }

@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArgumentsLibrary
-{
-    internal class Option
-    {
+namespace ArgumentsLibrary {
+
+    internal class Option {
+
         internal const bool DEFAULT_MANDATORY = false;
 
         internal List<OptionAlias> Aliases { get; set; }
@@ -25,8 +25,7 @@ namespace ArgumentsLibrary
 
         internal bool IsSet { get; set; }
 
-    internal Option()
-        {
+        internal Option() {
             // TODO
             Aliases = new List<OptionAlias>();
             Mandatory = DEFAULT_MANDATORY;
@@ -35,7 +34,6 @@ namespace ArgumentsLibrary
             IsSet = false;
         }
 
-        
-
     }
+
 }

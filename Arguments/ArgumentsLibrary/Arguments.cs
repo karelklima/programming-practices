@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using ArgumentsLibrary.Builders;
 using ArgumentsLibrary.Exceptions;
 
-namespace ArgumentsLibrary
-{
+namespace ArgumentsLibrary {
+
     /// <summary>
     /// Arguments Library entry point
     /// </summary>
@@ -16,24 +16,20 @@ namespace ArgumentsLibrary
     /// arguments.parse(args)
     /// </code>
     /// </example>
-    public sealed class Arguments
-    {
-
+    public sealed class Arguments {
         #region Internals
 
         private Converter Converter { get; set; }
 
         private Dictionary<OptionAlias, Option> Options { get; set; }
 
-        public Arguments()
-        {
+        public Arguments() {
             Converter = new Converter();
             Options = new Dictionary<OptionAlias, Option>();
             RegisterDefaultTypeConverters();
         }
 
-        private void RegisterDefaultTypeConverters()
-        {
+        private void RegisterDefaultTypeConverters() {
             RegisterTypeConverter(string.Copy);
             RegisterTypeConverter(int.Parse);
             RegisterTypeConverter(float.Parse);
@@ -41,16 +37,13 @@ namespace ArgumentsLibrary
             RegisterTypeConverter(bool.Parse);
         }
 
-        private void RegisterOptionAliases(Option option, string aliases)
-        {
-            foreach (var alias in Parser.ParseAliases(aliases))
-            {
+        private void RegisterOptionAliases(Option option, string aliases) {
+            foreach (var alias in Parser.ParseAliases(aliases)) {
                 RegisterOptionAlias(option, alias);
             }
         }
 
-        private void RegisterOptionAlias(Option option, OptionAlias alias)
-        {
+        private void RegisterOptionAlias(Option option, OptionAlias alias) {
             Options.Add(alias, option);
             option.Aliases.Add(alias);
         }
@@ -67,10 +60,10 @@ namespace ArgumentsLibrary
         /// <typeparam name="T">Target converted type</typeparam>
         /// <param name="converterFunc">Function to convert string to type T
         /// </param>
-        public void RegisterTypeConverter<T>(Func<string, T> converterFunc)
-        {
-            if (converterFunc == null)
+        public void RegisterTypeConverter<T>(Func<string, T> converterFunc) {
+            if (converterFunc == null) {
                 throw new SetupException("Converter function cannot be null");
+            }
             Converter.RegisterTypeConverter(converterFunc);
         }
 
@@ -98,9 +91,9 @@ namespace ArgumentsLibrary
         /// </example>
         /// <param name="aliases">One or more option aliases</param>
         /// <returns>OptionBuilder instance</returns>
-        public OptionBuilder AddOption(string aliases)
-        {
-            return new OptionBuilder(RegisterOptionAliases).WithAliases(aliases);
+        public OptionBuilder AddOption(string aliases) {
+            return new OptionBuilder(RegisterOptionAliases)
+                .WithAliases(aliases);
         }
 
         /// <summary>
@@ -109,8 +102,7 @@ namespace ArgumentsLibrary
         /// </summary>
         /// <param name="aliases">One or more option aliases</param>
         /// <returns>OptionBuilder instance</returns>
-        public OptionBuilder AddMandatoryOption(string aliases)
-        {
+        public OptionBuilder AddMandatoryOption(string aliases) {
             return AddOption(aliases).SetMandatory();
         }
 
@@ -120,10 +112,10 @@ namespace ArgumentsLibrary
         /// <param name="args">Arguments as passed to the Main</param>
         /// <exception cref="ParseException">Arguments do not satisfy
         /// the definition</exception>
-        public CommandLine Parse(string[] args)
-        {
-            if (args == null)
+        public CommandLine Parse(string[] args) {
+            if (args == null) {
                 throw new ParseException("Passed arguments cannot be null");
+            }
 
             return Parser.ParseArguments(args, Converter, Options);
         }
@@ -131,12 +123,11 @@ namespace ArgumentsLibrary
         /// <summary>
         /// Builds help text for all defined options with their descriptions
         /// </summary>
-        public string BuildHelpText()
-        {
+        public string BuildHelpText() {
             return HelpTextGenerator.Generate(Options);
         }
 
         #endregion
-
     }
+
 }

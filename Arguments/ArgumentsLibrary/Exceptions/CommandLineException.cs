@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArgumentsLibrary.Exceptions
-{
-    class CommandLineException: ArgumentsException
-    {
+namespace ArgumentsLibrary.Exceptions {
+
+    internal class CommandLineException : ArgumentsException {
+
         internal CommandLineException(string message, params object[] args)
-            : base(message, args)
-        {
+            : base(message, args) {
         }
+
     }
+
 }

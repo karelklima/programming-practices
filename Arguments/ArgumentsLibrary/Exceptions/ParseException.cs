@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArgumentsLibrary.Exceptions
-{
+namespace ArgumentsLibrary.Exceptions {
+
     /// <summary>
     /// Exception thrown during Arguments parse phase
     /// </summary>
-    public class ParseException : ArgumentsException
-    {
+    public class ParseException : ArgumentsException {
+
         internal ParseException(string message, params object[] args)
-            : base(message, args)
-        {
+            : base(message, args) {
         }
+
     }
+
 }

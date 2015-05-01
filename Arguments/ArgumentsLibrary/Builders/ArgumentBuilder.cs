@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using ArgumentsLibrary.Exceptions;
 
-namespace ArgumentsLibrary.Builders
-{
+namespace ArgumentsLibrary.Builders {
+
     /// <summary>
     /// Fluent interface provider for building Arguments
     /// </summary>
     /// <typeparam name="T">Type of the Argument</typeparam>
-    public class ArgumentBuilder<T>
-    {
+    public class ArgumentBuilder<T> {
         #region Internals
 
         /// <summary>
@@ -18,13 +17,13 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         internal Argument<T> Argument { get; private set; }
 
-        internal ArgumentBuilder(Action<dynamic, Type> registerArgumentAction)
-        {
-            if (registerArgumentAction == null)
+        internal ArgumentBuilder(Action<dynamic, Type> registerArgumentAction) {
+            if (registerArgumentAction == null) {
                 throw new ArgumentNullException("registerArgumentAction");
+            }
 
             Argument = new Argument<T>();
-            registerArgumentAction(Argument, typeof(T));
+            registerArgumentAction(Argument, typeof (T));
         }
 
         #endregion
@@ -36,10 +35,10 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         /// <param name="flag">True if optional, False otherwise</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> SetName(string name)
-        {
-            if (name == null)
+        public ArgumentBuilder<T> SetName(string name) {
+            if (name == null) {
                 throw new SetupException("Argument name cannot be null");
+            }
             Argument.Name = name;
             return this;
         }
@@ -49,8 +48,7 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         /// <param name="flag">True if optional, False otherwise</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> SetOptional(bool flag = true)
-        {
+        public ArgumentBuilder<T> SetOptional(bool flag = true) {
             Argument.Optional = flag;
             return this;
         }
@@ -60,10 +58,10 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         /// <param name="value">Default value of type T</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithDefaultValue(T value)
-        {
-            if (value == null)
+        public ArgumentBuilder<T> WithDefaultValue(T value) {
+            if (value == null) {
                 throw new SetupException("Argument default value cannot be null");
+            }
             Argument.DefaultValue = value;
             return this;
         }
@@ -75,10 +73,11 @@ namespace ArgumentsLibrary.Builders
         /// </summary>
         /// <param name="conditionFunc">Condition function (predicate)</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithCondition(Func<T, bool> conditionFunc)
-        {
-            if (conditionFunc == null)
-                throw new SetupException("Argument condition function cannot be null");
+        public ArgumentBuilder<T> WithCondition(Func<T, bool> conditionFunc) {
+            if (conditionFunc == null) {
+                throw new SetupException(
+                    "Argument condition function cannot be null");
+            }
             Argument.Conditions.Add(conditionFunc);
             return this;
         }
@@ -93,10 +92,11 @@ namespace ArgumentsLibrary.Builders
         /// </param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
         public ArgumentBuilder<T> WithEnumeratedValue(
-            params T[] valuesEnumeration)
-        {
-            if (valuesEnumeration == null)
-                throw new SetupException("Argument values enumeration cannot be null");
+            params T[] valuesEnumeration) {
+            if (valuesEnumeration == null) {
+                throw new SetupException(
+                    "Argument values enumeration cannot be null");
+            }
             return WithCondition(valuesEnumeration.Contains);
         }
 
@@ -107,14 +107,15 @@ namespace ArgumentsLibrary.Builders
         /// <param name="action">Action to be performed when the Argument value
         /// is detected among input parameters</param>
         /// <returns>ArgumentBuilder{T} fluent interface</returns>
-        public ArgumentBuilder<T> WithAction(Action<T> action)
-        {
-            if (action == null)
+        public ArgumentBuilder<T> WithAction(Action<T> action) {
+            if (action == null) {
                 throw new SetupException("Argument action cannot be null");
+            }
             Argument.Actions.Add(action);
             return this;
         }
 
         #endregion
     }
+
 }
