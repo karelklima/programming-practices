@@ -4,14 +4,36 @@ using ArgumentsLibrary.Exceptions;
 
 namespace ArgumentsLibrary {
 
+    /// <summary>
+    /// Arguments parse result class.
+    /// It gives access to options, which are parsed from args string.
+    /// See <see cref="Arguments.Parse"/> method;
+    /// </summary>
     public class CommandLine {
 
+        /// <summary>
+        /// Gets the converter.
+        /// </summary>
+        /// <value>Type converters</value>
         internal Converter Converter { get; private set; }
 
+        /// <summary>
+        /// Gets the options.
+        /// </summary>
+        /// <value>Option-Alias dictionary</value>
         internal Dictionary<OptionAlias, object> Options { get; private set; }
 
+        /// <summary>
+        /// Gets the plain arguments.
+        /// </summary>
+        /// <value>The plain arguments.</value>
         internal List<string> PlainArguments { get; private set; }
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ArgumentsLibrary.CommandLine"/> class.
+        /// </summary>
+        /// <param name="converter">Type converters</param>
         internal CommandLine(Converter converter) {
             Converter = converter;
             Options = new Dictionary<OptionAlias, object>();
@@ -69,6 +91,11 @@ namespace ArgumentsLibrary {
             return GetOptionValue<string>(alias);
         }
 
+        /// <summary>
+        /// Returns a list of all arguments that do not correspond to Options
+        /// as a list of {T}.
+        /// </summary>
+        /// <returns>List of all plain arguments</returns>
         public IEnumerable<T> GetPlainArguments<T>() {
             try {
                 return PlainArguments.ConvertAll(s => Converter.Convert<T>(s));

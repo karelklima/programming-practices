@@ -347,6 +347,11 @@ namespace ArgumentsLibrary {
             }
         }
 
+        /// <summary>
+        /// Parse and process long option argument.
+        /// </summary>
+        /// <param name="optionAlias">Option alias.</param>
+        /// <param name="option">Option.</param>
         private void ProcessLongOptionArgument(OptionAlias optionAlias,
             Option option) {
             var stringValue = ExtractLongOptionValue(Args.First());
@@ -394,6 +399,11 @@ namespace ArgumentsLibrary {
             Args.Dequeue();
         }
 
+        /// <summary>
+        /// Parse and process short option argument
+        /// </summary>
+        /// <param name="optionAlias">Option alias.</param>
+        /// <param name="option">Option.</param>
         private void ProcessShortOptionArgument(OptionAlias optionAlias,
             Option option) {
             // Remove processed option from arguments list
@@ -453,6 +463,11 @@ namespace ArgumentsLibrary {
             SetCommandLineOptionValue(option, value);
         }
 
+        /// <summary>
+        /// Divide string into option alias and argument value
+        /// </summary>
+        /// <returns>The long option value.</returns>
+        /// <param name="arg">Option string.</param>
         private static string ExtractLongOptionValue(string arg) {
             var longMatch = _longOptionRegex.Match(arg);
             return RemoveOptionalPrefix(longMatch.Groups[2].Value,

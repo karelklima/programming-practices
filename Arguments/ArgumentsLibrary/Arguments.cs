@@ -19,16 +19,32 @@ namespace ArgumentsLibrary {
     public sealed class Arguments {
         #region Internals
 
+        /// <summary>
+        /// Gets or sets the converter.
+        /// </summary>
+        /// <value>Type converters.</value>
         private Converter Converter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the options.
+        /// </summary>
+        /// <value>Option-Alias dictionary</value>
         private Dictionary<OptionAlias, Option> Options { get; set; }
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ArgumentsLibrary.Arguments"/> class.
+        /// </summary>
         public Arguments() {
             Converter = new Converter();
             Options = new Dictionary<OptionAlias, Option>();
             RegisterDefaultTypeConverters();
         }
 
+        /// <summary>
+        /// Registers the default type converters.
+        /// Types are: string, int, float, double, bool
+        /// </summary>
         private void RegisterDefaultTypeConverters() {
             RegisterTypeConverter(string.Copy);
             RegisterTypeConverter(int.Parse);
@@ -37,12 +53,22 @@ namespace ArgumentsLibrary {
             RegisterTypeConverter(bool.Parse);
         }
 
+        /// <summary>
+        /// Registers multiple option aliases.
+        /// </summary>
+        /// <param name="option">Option.</param>
+        /// <param name="aliases">List of aliases. See <see cref="Parser.ParseAliases"/> method.</param>
         private void RegisterOptionAliases(Option option, string aliases) {
             foreach (var alias in Parser.ParseAliases(aliases)) {
                 RegisterOptionAlias(option, alias);
             }
         }
 
+        /// <summary>
+        /// Registers one option alias.
+        /// </summary>
+        /// <param name="option">Option.</param>
+        /// <param name="alias">Alias. See <see cref="OptionAlias"/> class.</param>
         private void RegisterOptionAlias(Option option, OptionAlias alias) {
             Options.Add(alias, option);
             option.Aliases.Add(alias);

@@ -6,19 +6,33 @@ using System.Threading.Tasks;
 
 namespace ArgumentsLibrary {
 
+    /// <summary>
+    /// Help text generator.
+    /// </summary>
     internal class HelpTextGenerator {
 
-        //Help text header
+        /// <summary>
+        /// Generates the header.
+        /// </summary>
+        /// <param name="sb">String builder.</param>
         private static void GenerateHeader(StringBuilder sb) {
             sb.AppendLine ("Help:");
         }
 
-        //Help text footer
+        /// <summary>
+        /// Generates the footer.
+        /// </summary>
+        /// <param name="sb">String builder.</param>
         private static void GenerateFooter(StringBuilder sb) {
             sb.AppendLine ();
         }
-
-        //Divide aliases two groups for better formating
+            
+        /// <summary>
+        /// Divide aliases into groups for better formating
+        /// </summary>
+        /// <param name="opt">Option</param>
+        /// <param name="shorts">List of short options</param>
+        /// <param name="longs">List of long options</param>
         private static void DivideAliases(Option opt, List<OptionAlias> shorts, List<OptionAlias> longs){
             foreach (OptionAlias alias in opt.Aliases) {
                 if (alias.Type == OptionType.Short) {
@@ -30,7 +44,11 @@ namespace ArgumentsLibrary {
             }
         }
 
-        //Format argument as <Name:Type=DefaultValue>
+        /// <summary>
+        /// Formats the argument description.
+        /// </summary>
+        /// <returns>Argument representation as <Name:Type=DefaultValue></returns>
+        /// <param name="opt">Option.</param>
         private static string FormatArgumentDescription(Option opt){
             if (opt.Argument == null)
                 return null;
@@ -59,10 +77,18 @@ namespace ArgumentsLibrary {
                 defaultValue);
         }
 
-        //Output:
-        //  -ShortAlias1, -ShortAlias2, ... <ArgumentInfo>
-        //  --LongAlias1, --LongAlias2, --LongAliasN=<ArgumentInfo>: <Optional|Mandatory>
-        //          Option Description
+
+        /// <summary>
+        /// Generates the option description.
+        /// </summary>
+        /// <param name="sb">String builder.</param>
+        /// <param name="opt">Option</param>
+        /// Returns:
+        /// <example>
+        /// -ShortAlias1, -ShortAlias2, ... <ArgumentInfo>
+        /// --LongAlias1, --LongAlias2, --LongAliasN=<ArgumentInfo>: <Optional|Mandatory>
+        ///         Option Description
+        /// </example>
         private static void GenerateOptionDescription(StringBuilder sb, Option opt) {
             var shorts = new List<OptionAlias>();
             var longs = new List<OptionAlias>();
