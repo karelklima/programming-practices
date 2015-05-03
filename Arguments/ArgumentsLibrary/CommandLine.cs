@@ -7,7 +7,7 @@ namespace ArgumentsLibrary {
     /// <summary>
     /// Arguments parse result class.
     /// It gives access to options, which are parsed from args string.
-    /// See <see cref="Arguments.Parse"/> method;
+    /// See <see cref="Arguments.Parse"/> method.
     /// </summary>
     public class CommandLine {
 

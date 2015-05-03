@@ -8,9 +8,9 @@ namespace ArgumentsLibrary {
     /// </summary>
     /// <example>
     /// <code>
-    /// var converter = new Converter();
-    /// converter.RegisterTypeConverter<int>(int.Parse);
-    /// int number = converter.Convert<int>("12345");
+    /// var converter = new Converter(); <BR/>
+    /// converter.RegisterTypeConverter<int>(int.Parse); <BR/>
+    /// int number = converter.Convert<int>("12345"); <BR/>
     /// </code>
     /// </example>
     internal class Converter {
