@@ -239,7 +239,7 @@ namespace ArgumentsLibrary {
         /// <param name="value">Option value</param>
         private void SetCommandLineOptionValue(Option option, object value) {
             option.Aliases.ForEach(
-                alias => { CommandLine.Options.Add(alias, value); });
+                alias => { CommandLine.Options[alias] = value; });
         }
 
         /// <summary>
@@ -368,16 +368,16 @@ namespace ArgumentsLibrary {
             }
             else if (stringValue.Length > 0 && option.Argument != null) {
                 // An argument is expected and its value is set
+                dynamic value;
                 try {
-                    dynamic value = option.Argument.Parse(stringValue);
+                    value = option.Argument
+                        .Parse(stringValue, Converter);
                     option.Argument.AssertConditions(value);
-                    option.Argument.InvokeActions(value);
-                    SetCommandLineOptionValue(option, value);
                 }
                 catch (ArgumentOutOfRangeException) {
                     // Value does not satisfy Argument Conditions
                     throw new ParseException(
-                        "Value for option {0} does not satisfy required conditions",
+                        "Value for option {0} does not meet conditions",
                         optionAlias.ToString());
                 }
                 catch (Exception) {
@@ -386,6 +386,8 @@ namespace ArgumentsLibrary {
                         "Value for option {0} is not of required type",
                         optionAlias.ToString());
                 }
+                option.Argument.InvokeActions(value);
+                SetCommandLineOptionValue(option, value);
             }
 
             // Remove processed option from arguments list
@@ -394,6 +396,61 @@ namespace ArgumentsLibrary {
 
         private void ProcessShortOptionArgument(OptionAlias optionAlias,
             Option option) {
+            // Remove processed option from arguments list
+            Args.Dequeue();
+
+            if (option.Argument == null) {
+                // No argument specified for the Option
+                return;
+            }
+
+            var stringValue = Args.Any() ? Args.First() : "";
+
+            // An argument is expected and its value is set
+            dynamic value = null;
+            string exceptionMessage = null;
+            try {
+                if (stringValue.Length == 0) {
+                    throw new ArgumentNullException();
+                }
+                value = option.Argument
+                    .Parse(stringValue, Converter);
+                option.Argument.AssertConditions(value);
+            }
+            catch (ArgumentNullException) {
+                // Argument is mandatory and no value is provided
+                exceptionMessage =
+                    "No option value specified for option {0}";
+            }
+            catch (ArgumentOutOfRangeException) {
+                // Value does not satisfy Argument Conditions
+                exceptionMessage =
+                    "Value for option {0} does not meet conditions";
+            }
+            catch (Exception) {
+                // Value cannot be converted to specified format
+                exceptionMessage =
+                    "Value for option {0} is not of required type";
+            }
+
+            if (exceptionMessage != null) {
+                if (option.Argument.DefaultValueIsSet) {
+                    // Provided value is not valid and a default value exists
+                    value = option.Argument.DefaultValue;
+                }
+                else if (!option.Argument.Optional) {
+                    // Provided value is not valid and it is mandatory
+                    throw new ParseException(
+                        exceptionMessage, optionAlias.ToString());
+                }
+            }
+            else {
+                // Remove correct Option argument from the argument list
+                Args.Dequeue();
+            }
+
+            option.Argument.InvokeActions(value);
+            SetCommandLineOptionValue(option, value);
         }
 
         private void ProcessPotentialOptionArgument(OptionAlias optionAlias,
@@ -401,7 +458,8 @@ namespace ArgumentsLibrary {
             dynamic argument = option.Argument;
 
             var nextOptionAlias = DetectPotentialOption();
-            if (nextOptionAlias != null && Options.ContainsKey(nextOptionAlias)) {
+            if (nextOptionAlias != null
+                && Options.ContainsKey(nextOptionAlias)) {
                 arg = null;
             }
 

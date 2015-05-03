@@ -73,6 +73,7 @@ namespace ArgumentsTest.Builders {
             var builder = new ArgumentBuilder<string>((a, t) => { });
             builder.WithDefaultValue("text");
             Assert.AreEqual(builder.Argument.DefaultValue, "text");
+            Assert.IsTrue(builder.Argument.DefaultValueIsSet);
         }
 
         [TestMethod]

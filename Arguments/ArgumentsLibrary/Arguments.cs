@@ -112,7 +112,7 @@ namespace ArgumentsLibrary {
         /// <param name="args">Arguments as passed to the Main</param>
         /// <exception cref="ParseException">Arguments do not satisfy
         /// the definition</exception>
-        public CommandLine Parse(string[] args) {
+        public CommandLine Parse(IEnumerable<string> args) {
             if (args == null) {
                 throw new ParseException("Passed arguments cannot be null");
             }

@@ -17,6 +17,8 @@ namespace ArgumentsLibrary {
 
         internal T DefaultValue { get; set; }
 
+        internal bool DefaultValueIsSet { get; set; }
+
         internal List<Action<T>> Actions { get; set; }
 
         internal List<Func<T, bool>> Conditions { get; set; }

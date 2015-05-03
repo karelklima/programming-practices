@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ArgumentsLibrary;
 using ArgumentsLibrary.Exceptions;
@@ -65,24 +66,16 @@ namespace ArgumentsTest {
         }
 
         [TestMethod]
-        [ExpectedException(typeof (SetupException))]
-        public void AddMandatoryOption_SealedArguments() {
-            var arguments = new Arguments();
-            arguments.Parse(new string[] {"argument"});
-            arguments.AddMandatoryOption("t|test");
-        }
-
-        [TestMethod]
         public void Parse_PlainArguments() {
             var arguments = new Arguments();
-            arguments.Parse(new string[] {"arg1", "arg2", "arg3"});
+            arguments.Parse(new [] {"arg1", "arg2", "arg3"});
         }
 
         [TestMethod]
         public void Parse_Option() {
             var arguments = new Arguments();
             arguments.AddOption("t|test");
-            arguments.Parse(new string[] {"-t"});
+            arguments.Parse(new [] {"-t"});
         }
 
         [TestMethod]
