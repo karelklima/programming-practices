@@ -1,0 +1,127 @@
+\hypertarget{class_arguments_library_1_1_arguments}{\section{Arguments\+Library.\+Arguments Class Reference}
+\label{class_arguments_library_1_1_arguments}\index{Arguments\+Library.\+Arguments@{Arguments\+Library.\+Arguments}}
+}
+
+
+\hyperlink{class_arguments_library_1_1_arguments}{Arguments} Library entry point  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_arguments_library_1_1_arguments_a0438215f8f980643ab990c77184b3232}{Register\+Type\+Converter$<$ T $>$} (Func$<$ string, T $>$ converter\+Func)
+\begin{DoxyCompactList}\small\item\em Registers types to be used as Option or Plain \hyperlink{class_arguments_library_1_1_arguments}{Arguments}, along with their converter function. The converter function converts input string to the given type and returns the result. \end{DoxyCompactList}\item 
+\hyperlink{class_arguments_library_1_1_builders_1_1_option_builder}{Option\+Builder} \hyperlink{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{Add\+Option} (string aliases)
+\begin{DoxyCompactList}\small\item\em Adds an Option to the current configuration with given aliases. Aliases is a string comprising of aliases separated by \char`\"{}$\vert$\char`\"{}. One lettered alias is implicitly considered a short option, multiple letters indicate a long option alias. Short and long indication can be forced by prefixing the aliases with \char`\"{}-\/\char`\"{} and \char`\"{}-\/-\/\char`\"{} respectively. \end{DoxyCompactList}\item 
+\hyperlink{class_arguments_library_1_1_builders_1_1_option_builder}{Option\+Builder} \hyperlink{class_arguments_library_1_1_arguments_ac90f288cfdd0bcd396301e9206be32a5}{Add\+Mandatory\+Option} (string aliases)
+\begin{DoxyCompactList}\small\item\em Adds a mandatory Option to the current configuration with given aliases. Same as \hyperlink{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{Add\+Option} \end{DoxyCompactList}\item 
+\hyperlink{class_arguments_library_1_1_command_line}{Command\+Line} \hyperlink{class_arguments_library_1_1_arguments_a2dc7959dc35c39e29bb769744d2490ef}{Parse} (I\+Enumerable$<$ string $>$ args)
+\begin{DoxyCompactList}\small\item\em Processes the command line input arguments. \end{DoxyCompactList}\item 
+string \hyperlink{class_arguments_library_1_1_arguments_aad7c335136c1a6b0c56532fd61dad4c3}{Build\+Help\+Text} ()
+\begin{DoxyCompactList}\small\item\em Builds help text for all defined options with their descriptions \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{class_arguments_library_1_1_arguments}{Arguments} Library entry point 
+
+{\ttfamily  var arguments = new Arguments(); arguments.\+Add\+Option(...) ... arguments.\+parse(args) } 
+
+\subsection{Member Function Documentation}
+\hypertarget{class_arguments_library_1_1_arguments_ac90f288cfdd0bcd396301e9206be32a5}{\index{Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}!Add\+Mandatory\+Option@{Add\+Mandatory\+Option}}
+\index{Add\+Mandatory\+Option@{Add\+Mandatory\+Option}!Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}}
+\subsubsection[{Add\+Mandatory\+Option}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Option\+Builder} Arguments\+Library.\+Arguments.\+Add\+Mandatory\+Option (
+\begin{DoxyParamCaption}
+\item[{string}]{aliases}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_arguments_ac90f288cfdd0bcd396301e9206be32a5}
+
+
+Adds a mandatory Option to the current configuration with given aliases. Same as \hyperlink{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{Add\+Option} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em aliases} & One or more option aliases\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Option\+Builder instance
+\end{DoxyReturn}
+\hypertarget{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{\index{Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}!Add\+Option@{Add\+Option}}
+\index{Add\+Option@{Add\+Option}!Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}}
+\subsubsection[{Add\+Option}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Option\+Builder} Arguments\+Library.\+Arguments.\+Add\+Option (
+\begin{DoxyParamCaption}
+\item[{string}]{aliases}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}
+
+
+Adds an Option to the current configuration with given aliases. Aliases is a string comprising of aliases separated by \char`\"{}$\vert$\char`\"{}. One lettered alias is implicitly considered a short option, multiple letters indicate a long option alias. Short and long indication can be forced by prefixing the aliases with \char`\"{}-\/\char`\"{} and \char`\"{}-\/-\/\char`\"{} respectively. 
+
+// The following examples do exactly the same thing {\ttfamily  \hyperlink{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{Arguments.\+Add\+Option}(\char`\"{}v$\vert$verbose\char`\"{}); \hyperlink{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{Arguments.\+Add\+Option}(\char`\"{}-\/v$\vert$-\/-\/verbose\char`\"{}); \hyperlink{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{Arguments.\+Add\+Option}(\char`\"{}v\char`\"{}).With\+Alias(\char`\"{}verbose\char`\"{}); \hyperlink{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{Arguments.\+Add\+Option}(\char`\"{}-\/v\char`\"{}).With\+Alias(\char`\"{}-\/-\/verbose\char`\"{}); } The following examples present non-\/standard usage\+: {\ttfamily  \hyperlink{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{Arguments.\+Add\+Option}(\char`\"{}v$\vert$-\/verbose\char`\"{}); \hyperlink{class_arguments_library_1_1_arguments_a15fe7ed8e0abcaff16e0c0700e0b9f9e}{Arguments.\+Add\+Option}(\char`\"{}-\/-\/v\char`\"{}).With\+Alias(\char`\"{}-\/-\/verbose\char`\"{}); } 
+
+
+\begin{DoxyParams}{Parameters}
+{\em aliases} & One or more option aliases\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Option\+Builder instance
+\end{DoxyReturn}
+\hypertarget{class_arguments_library_1_1_arguments_aad7c335136c1a6b0c56532fd61dad4c3}{\index{Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}!Build\+Help\+Text@{Build\+Help\+Text}}
+\index{Build\+Help\+Text@{Build\+Help\+Text}!Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}}
+\subsubsection[{Build\+Help\+Text}]{\setlength{\rightskip}{0pt plus 5cm}string Arguments\+Library.\+Arguments.\+Build\+Help\+Text (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_arguments_aad7c335136c1a6b0c56532fd61dad4c3}
+
+
+Builds help text for all defined options with their descriptions 
+
+\hypertarget{class_arguments_library_1_1_arguments_a2dc7959dc35c39e29bb769744d2490ef}{\index{Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}!Parse@{Parse}}
+\index{Parse@{Parse}!Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}}
+\subsubsection[{Parse}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Line} Arguments\+Library.\+Arguments.\+Parse (
+\begin{DoxyParamCaption}
+\item[{I\+Enumerable$<$ string $>$}]{args}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_arguments_a2dc7959dc35c39e29bb769744d2490ef}
+
+
+Processes the command line input arguments. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em args} & \hyperlink{class_arguments_library_1_1_arguments}{Arguments} as passed to the Main\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Parse\+Exception} & \hyperlink{class_arguments_library_1_1_arguments}{Arguments} do not satisfy the definition\\
+\hline
+\end{DoxyExceptions}
+\hypertarget{class_arguments_library_1_1_arguments_a0438215f8f980643ab990c77184b3232}{\index{Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}!Register\+Type\+Converter$<$ T $>$@{Register\+Type\+Converter$<$ T $>$}}
+\index{Register\+Type\+Converter$<$ T $>$@{Register\+Type\+Converter$<$ T $>$}!Arguments\+Library\+::\+Arguments@{Arguments\+Library\+::\+Arguments}}
+\subsubsection[{Register\+Type\+Converter$<$ T $>$}]{\setlength{\rightskip}{0pt plus 5cm}void Arguments\+Library.\+Arguments.\+Register\+Type\+Converter$<$ T $>$ (
+\begin{DoxyParamCaption}
+\item[{Func$<$ string, T $>$}]{converter\+Func}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_arguments_a0438215f8f980643ab990c77184b3232}
+
+
+Registers types to be used as Option or Plain \hyperlink{class_arguments_library_1_1_arguments}{Arguments}, along with their converter function. The converter function converts input string to the given type and returns the result. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Target converted type\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em converter\+Func} & Function to convert string to type T \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Arguments\+Library/Arguments.\+cs\end{DoxyCompactItemize}

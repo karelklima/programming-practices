@@ -1,0 +1,155 @@
+\hypertarget{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4}{\section{Arguments\+Library.\+Builders.\+Argument\+Builder$<$ T $>$ Class Template Reference}
+\label{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4}\index{Arguments\+Library.\+Builders.\+Argument\+Builder$<$ T $>$@{Arguments\+Library.\+Builders.\+Argument\+Builder$<$ T $>$}}
+}
+
+
+Fluent interface provider for building \hyperlink{class_arguments_library_1_1_arguments}{Arguments}  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Argument\+Builder$<$ T $>$ \hyperlink{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_ae752f91c46fa992290bebce9e223cdb1}{Set\+Name} (string name)
+\begin{DoxyCompactList}\small\item\em Sets an indicator whether the Argument is optional or not. \end{DoxyCompactList}\item 
+Argument\+Builder$<$ T $>$ \hyperlink{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_abf30984878e453465d2ef18bb7f4e0ff}{Set\+Optional} (bool flag=true)
+\begin{DoxyCompactList}\small\item\em Sets an indicator whether the Argument is optional or not. \end{DoxyCompactList}\item 
+Argument\+Builder$<$ T $>$ \hyperlink{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_a82dd58f876ebaf56e9757f5266e75def}{With\+Default\+Value} (T value)
+\begin{DoxyCompactList}\small\item\em Specifies the default value for the Argument \end{DoxyCompactList}\item 
+Argument\+Builder$<$ T $>$ \hyperlink{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_ad2c5f072435a3224f2ee2e5bdf1430b7}{With\+Condition} (Func$<$ T, bool $>$ condition\+Func)
+\begin{DoxyCompactList}\small\item\em Specifies a condition that the Argument value must satisfy. Multiple conditions may be defined; if so, the Argument value must satisfy all conditions. \end{DoxyCompactList}\item 
+Argument\+Builder$<$ T $>$ \hyperlink{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_a3b78d6350edb843cae21790560515305}{With\+Enumerated\+Value} (params T\mbox{[}$\,$\mbox{]} values\+Enumeration)
+\begin{DoxyCompactList}\small\item\em Specifies a list of possible values of the Argument Only one set of values should be defined. If there are more sets defined, the Argument value will be accepted only if it is present in all enumerations. \end{DoxyCompactList}\item 
+Argument\+Builder$<$ T $>$ \hyperlink{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_ad68e19a6fb07e9b91835e110577669b9}{With\+Action} (Action$<$ T $>$ action)
+\begin{DoxyCompactList}\small\item\em Specifies an Action to perform when the Argument value is detected among console input parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Fluent interface provider for building \hyperlink{class_arguments_library_1_1_arguments}{Arguments} 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Type of the Argument\\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_ae752f91c46fa992290bebce9e223cdb1}{\index{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}!Set\+Name@{Set\+Name}}
+\index{Set\+Name@{Set\+Name}!Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}}
+\subsubsection[{Set\+Name}]{\setlength{\rightskip}{0pt plus 5cm}Argument\+Builder$<$T$>$ Arguments\+Library.\+Builders.\+Argument\+Builder$<$ T $>$.Set\+Name (
+\begin{DoxyParamCaption}
+\item[{string}]{name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_ae752f91c46fa992290bebce9e223cdb1}
+
+
+Sets an indicator whether the Argument is optional or not. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em flag} & True if optional, False otherwise\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Argument\+Builder\{T\} fluent interface
+\end{DoxyReturn}
+\hypertarget{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_abf30984878e453465d2ef18bb7f4e0ff}{\index{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}!Set\+Optional@{Set\+Optional}}
+\index{Set\+Optional@{Set\+Optional}!Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}}
+\subsubsection[{Set\+Optional}]{\setlength{\rightskip}{0pt plus 5cm}Argument\+Builder$<$T$>$ Arguments\+Library.\+Builders.\+Argument\+Builder$<$ T $>$.Set\+Optional (
+\begin{DoxyParamCaption}
+\item[{bool}]{flag = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_abf30984878e453465d2ef18bb7f4e0ff}
+
+
+Sets an indicator whether the Argument is optional or not. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em flag} & True if optional, False otherwise\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Argument\+Builder\{T\} fluent interface
+\end{DoxyReturn}
+\hypertarget{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_ad68e19a6fb07e9b91835e110577669b9}{\index{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}!With\+Action@{With\+Action}}
+\index{With\+Action@{With\+Action}!Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}}
+\subsubsection[{With\+Action}]{\setlength{\rightskip}{0pt plus 5cm}Argument\+Builder$<$T$>$ Arguments\+Library.\+Builders.\+Argument\+Builder$<$ T $>$.With\+Action (
+\begin{DoxyParamCaption}
+\item[{Action$<$ T $>$}]{action}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_ad68e19a6fb07e9b91835e110577669b9}
+
+
+Specifies an Action to perform when the Argument value is detected among console input parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em action} & Action to be performed when the Argument value is detected among input parameters\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Argument\+Builder\{T\} fluent interface
+\end{DoxyReturn}
+\hypertarget{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_ad2c5f072435a3224f2ee2e5bdf1430b7}{\index{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}!With\+Condition@{With\+Condition}}
+\index{With\+Condition@{With\+Condition}!Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}}
+\subsubsection[{With\+Condition}]{\setlength{\rightskip}{0pt plus 5cm}Argument\+Builder$<$T$>$ Arguments\+Library.\+Builders.\+Argument\+Builder$<$ T $>$.With\+Condition (
+\begin{DoxyParamCaption}
+\item[{Func$<$ T, bool $>$}]{condition\+Func}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_ad2c5f072435a3224f2ee2e5bdf1430b7}
+
+
+Specifies a condition that the Argument value must satisfy. Multiple conditions may be defined; if so, the Argument value must satisfy all conditions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em condition\+Func} & Condition function (predicate)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Argument\+Builder\{T\} fluent interface
+\end{DoxyReturn}
+\hypertarget{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_a82dd58f876ebaf56e9757f5266e75def}{\index{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}!With\+Default\+Value@{With\+Default\+Value}}
+\index{With\+Default\+Value@{With\+Default\+Value}!Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}}
+\subsubsection[{With\+Default\+Value}]{\setlength{\rightskip}{0pt plus 5cm}Argument\+Builder$<$T$>$ Arguments\+Library.\+Builders.\+Argument\+Builder$<$ T $>$.With\+Default\+Value (
+\begin{DoxyParamCaption}
+\item[{T}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_a82dd58f876ebaf56e9757f5266e75def}
+
+
+Specifies the default value for the Argument 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Default value of type T\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Argument\+Builder\{T\} fluent interface
+\end{DoxyReturn}
+\hypertarget{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_a3b78d6350edb843cae21790560515305}{\index{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}!With\+Enumerated\+Value@{With\+Enumerated\+Value}}
+\index{With\+Enumerated\+Value@{With\+Enumerated\+Value}!Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$@{Arguments\+Library\+::\+Builders\+::\+Argument\+Builder$<$ T $>$}}
+\subsubsection[{With\+Enumerated\+Value}]{\setlength{\rightskip}{0pt plus 5cm}Argument\+Builder$<$T$>$ Arguments\+Library.\+Builders.\+Argument\+Builder$<$ T $>$.With\+Enumerated\+Value (
+\begin{DoxyParamCaption}
+\item[{params T\mbox{[}$\,$\mbox{]}}]{values\+Enumeration}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_arguments_library_1_1_builders_1_1_argument_builder_3_01_t_01_4_a3b78d6350edb843cae21790560515305}
+
+
+Specifies a list of possible values of the Argument Only one set of values should be defined. If there are more sets defined, the Argument value will be accepted only if it is present in all enumerations. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em values\+Enumeration} & Enumeration of possible values \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Argument\+Builder\{T\} fluent interface
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Arguments\+Library/\+Builders/Argument\+Builder.\+cs\end{DoxyCompactItemize}
