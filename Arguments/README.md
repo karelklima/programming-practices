@@ -147,6 +147,6 @@ arguments.AddOption("l|long-list")
 
 arguments.RegisterTypeConverter<byte>(byte.Parse);
 arguments.AddOption("b|byte-list")
- This option takes from one to ten arguments
+    // This option takes from one to ten arguments
    .WithArguments<byte>("BYTES", 1, 10);
 ~~~
