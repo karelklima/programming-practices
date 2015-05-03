@@ -23,15 +23,12 @@ namespace ArgumentsLibrary {
 
         internal List<Func<T, bool>> Conditions { get; set; }
 
-        internal Type Type {
-            get { return typeof (T); }
-        }
-
         internal Argument()
         {
             Name = DEFAULT_NAME;
-            DefaultValue = default(T);
             Optional = DEFAULT_OPTIONAL;
+            DefaultValue = default(T);
+            DefaultValueIsSet = false;
             Actions = new List<Action<T>>();
             Conditions = new List<Func<T, bool>>();
         }

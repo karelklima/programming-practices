@@ -47,7 +47,6 @@ namespace ArgumentsLibrary.Builders {
             }
 
             Option.Argument = argument;
-            Option.ArgumentType = argumentType;
         }
 
         #endregion

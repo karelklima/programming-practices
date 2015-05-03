@@ -183,7 +183,7 @@ namespace ArgumentsTest.Builders
             var optionBuilder = new OptionBuilder((o, a) => { });
             var argumentBuilder = optionBuilder.WithArgument<int>("number");
             Assert.IsTrue(optionBuilder.Option.Argument != null);
-            Assert.IsTrue(optionBuilder.Option.ArgumentType == typeof(int));
+            Assert.IsTrue(optionBuilder.Option.Argument is Argument<int>);
         }
 
         [TestMethod]
@@ -200,7 +200,7 @@ namespace ArgumentsTest.Builders
             var optionBuilder = new OptionBuilder((o, a) => { });
             var argumentBuilder = optionBuilder.WithArgument("text");
             Assert.IsTrue(optionBuilder.Option.Argument != null);
-            Assert.IsTrue(optionBuilder.Option.ArgumentType == typeof(string));
+            Assert.IsTrue(optionBuilder.Option.Argument is Argument<string>);
         }
 
         [TestMethod]
@@ -210,7 +210,7 @@ namespace ArgumentsTest.Builders
             var argumentBuilder = optionBuilder.WithOptionalArgument<int>("number");
             Assert.IsTrue(optionBuilder.Option.Argument != null);
             Assert.IsTrue(optionBuilder.Option.Argument.Optional);
-            Assert.IsTrue(optionBuilder.Option.ArgumentType == typeof(int));
+            Assert.IsTrue(optionBuilder.Option.Argument is Argument<int>);
         }
 
         [TestMethod]
@@ -228,7 +228,7 @@ namespace ArgumentsTest.Builders
             var argumentBuilder = optionBuilder.WithOptionalArgument("text");
             Assert.IsTrue(optionBuilder.Option.Argument != null);
             Assert.IsTrue(optionBuilder.Option.Argument.Optional);
-            Assert.IsTrue(optionBuilder.Option.ArgumentType == typeof(string));
+            Assert.IsTrue(optionBuilder.Option.Argument is Argument<string>);
         }
 
 

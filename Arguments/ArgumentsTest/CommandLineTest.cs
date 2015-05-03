@@ -49,7 +49,7 @@ namespace ArgumentsTest
             var converter = new Converter();
             converter.RegisterTypeConverter<int>(int.Parse);
             var commandLine = new CommandLine(converter);
-            commandLine.Options.Add(new OptionAlias("n", OptionType.Short), "10");
+            commandLine.Options.Add(new OptionAlias("n", OptionType.Short), 10);
             Assert.AreEqual(commandLine.GetOptionValue<int>("n"), 10);
         }
 
@@ -70,18 +70,8 @@ namespace ArgumentsTest
             var converter = new Converter();
             converter.RegisterTypeConverter<int>(int.Parse);
             var commandLine = new CommandLine(converter);
-            commandLine.Options.Add(new OptionAlias("n", OptionType.Short), "10");
+            commandLine.Options.Add(new OptionAlias("n", OptionType.Short), 10);
             commandLine.GetOptionValue<int>("n*");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(CommandLineException))]
-        public void GetOptionValue_Int_MissingConverter()
-        {
-            var converter = new Converter();
-            var commandLine = new CommandLine(converter);
-            commandLine.Options.Add(new OptionAlias("n", OptionType.Short), "10");
-            commandLine.GetOptionValue<int>("n");
         }
 
         [TestMethod]

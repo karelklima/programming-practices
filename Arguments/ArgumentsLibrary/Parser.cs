@@ -453,50 +453,6 @@ namespace ArgumentsLibrary {
             SetCommandLineOptionValue(option, value);
         }
 
-        private void ProcessPotentialOptionArgument(OptionAlias optionAlias,
-            Option option, string arg) {
-            dynamic argument = option.Argument;
-
-            var nextOptionAlias = DetectPotentialOption();
-            if (nextOptionAlias != null
-                && Options.ContainsKey(nextOptionAlias)) {
-                arg = null;
-            }
-
-            if (arg == null && !argument.Optional) {
-                throw new ParseException(
-                    "Option {0} has mandatory argument {1}", optionAlias,
-                    argument.Name);
-            }
-
-            if (arg != null) {
-                try {
-                    argument.Value = argument.Parse(arg, Converter);
-                    argument.InvokeActions();
-                    if (!argument.AssertConditions()) {
-                        throw new ParseException(
-                            "Option: {1}, {0}={2}: conditions failed",
-                            argument.Name, optionAlias, argument.Value);
-                    }
-                }
-                catch (FormatException) {
-                    if (!argument.Optional) {
-                        throw new ParseException(
-                            "Cannot parse \"{0}\" as `{1}` for {2}", arg,
-                            argument.GetValueType().FullName, optionAlias);
-                    }
-                    else {
-                        argument.Value = argument.DefaultValue;
-                    }
-                    //TODO conditions
-                }
-            }
-            else {
-                argument.Value = argument.DefaultValue;
-                //TODO conditions
-            }
-        }
-
         private static string ExtractLongOptionValue(string arg) {
             var longMatch = _longOptionRegex.Match(arg);
             return RemoveOptionalPrefix(longMatch.Groups[2].Value,
