@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace ArgumentsLibrary.Exceptions {
 
     /// <summary>
-    /// Exception thrown during Arguments parse phase
+    /// Exception thrown during Arguments parse phase when invalid command line
+    /// input is detected
     /// </summary>
     public class ParseException : ArgumentsException {
 

@@ -4,6 +4,16 @@ namespace ArgumentsLibrary {
 
     internal class OptionAlias : IEquatable<OptionAlias> {
 
+        /// <summary>
+        /// Definition of a prefix for a short option, i.e. -o
+        /// </summary>
+        private const string SHORT_OPTION_PREFIX = "-";
+
+        /// <summary>
+        /// Definition of a prefix for a long option, i.e. --option
+        /// </summary>
+        private const string LONG_OPTION_PREFIX = "--";
+
         internal string Alias { get; private set; }
 
         internal OptionType Type { get; private set; }
@@ -24,18 +34,21 @@ namespace ArgumentsLibrary {
             return other.Alias == Alias && other.Type == Type;
         }
 
+        public override bool Equals(object obj) {
+            return obj is OptionAlias && Equals((OptionAlias) obj);
+        }
+
         public override int GetHashCode() {
             // If hash is equal (Dictionary.ContainsKey), than Equals() is used
             return Alias.GetHashCode();
         }
 
         public override string ToString() {
-            // strings to constants
             if (Type == OptionType.Short) {
-                return "-" + Alias;
+                return SHORT_OPTION_PREFIX + Alias;
             }
             else {
-                return "--" + Alias;
+                return LONG_OPTION_PREFIX + Alias;
             }
         }
 

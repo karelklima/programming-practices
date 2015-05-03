@@ -7,10 +7,15 @@ namespace ArgumentsProgram {
     internal class Program {
 
         private static void Main(string[] args) {
+
+
+            var ax = new Arguments();
+            ax.AddOption("*");
+
             var a = new Arguments();
-            a.AddOption("x").WithArgument<int>("Test")
-                .SetOptional();
-            a.Parse(new string[] {"-x", "--xxx"});
+            a.AddOption("xxx");//.WithArgument<int>("Test")
+                //.SetOptional();
+            a.Parse(new string[] {"--xxx"});
             Console.WriteLine(string.Join(Environment.NewLine, a.BuildHelpText()));
 
             // UKAZKOVY KOD IMPLEMENTUJICI PRIKLAD ZE ZADANI

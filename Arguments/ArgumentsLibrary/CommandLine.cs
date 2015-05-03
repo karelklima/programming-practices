@@ -8,13 +8,13 @@ namespace ArgumentsLibrary {
 
         internal Converter Converter { get; private set; }
 
-        internal Dictionary<OptionAlias, string> Options { get; private set; }
+        internal Dictionary<OptionAlias, object> Options { get; private set; }
 
         internal List<string> PlainArguments { get; private set; }
 
         internal CommandLine(Converter converter) {
             Converter = converter;
-            Options = new Dictionary<OptionAlias, string>();
+            Options = new Dictionary<OptionAlias, object>();
             PlainArguments = new List<string>();
         }
 
@@ -43,20 +43,20 @@ namespace ArgumentsLibrary {
         /// <param name="alias">One of the Option aliases</param>
         /// <returns>Typed Option value</returns>
         public T GetOptionValue<T>(string alias) {
-            if (IsOptionSet(alias)) {
-                var optionAlias = Parser.ParseAlias(alias);
-                try {
-                    return Converter.Convert<T>(Options[optionAlias]);
-                }
-                catch (Exception) {
-                    throw new CommandLineException(
-                        "Unable to convert option {0} to type {1}", alias,
-                        typeof (T).ToString());
-                }
+            if (!IsOptionSet(alias)) {
+                throw new CommandLineException(
+                    "Option with alias {0} is not set", alias);
             }
 
-            throw new CommandLineException("Option with alias {0} is not set",
-                alias);
+            var optionAlias = Parser.ParseAlias(alias);
+            try {
+                return (T)Options[optionAlias];
+            }
+            catch (Exception) {
+                throw new CommandLineException(
+                    "Unable to cast option {0} as type {1}", alias,
+                    typeof (T).ToString());
+            }
         }
 
         /// <summary>

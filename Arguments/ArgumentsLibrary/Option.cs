@@ -34,6 +34,10 @@ namespace ArgumentsLibrary {
             IsSet = false;
         }
 
+        internal void InvokeActions() {
+            Actions.ForEach(action => action.Invoke());
+        }
+
     }
 
 }

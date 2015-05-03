@@ -39,7 +39,7 @@ namespace ArgumentsLibrary.Builders {
             var typ = argument.GetType();
             var expectedType =
                 Type.GetType(String.Format("ArgumentsLibrary.Argument`1[{0}]",
-                    argumentType.ToString());
+                    argumentType.ToString()));
 
             if (argument.GetType() != expectedType) {
                 throw new ArgumentException(
