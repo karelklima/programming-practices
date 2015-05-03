@@ -9,8 +9,8 @@ namespace ArgumentsProgram {
         private static void Main(string[] args) {
 
 
-            var ax = new Arguments();
-            ax.AddOption("*");
+//            var ax = new Arguments();
+//            ax.AddOption("*");
 
             var a = new Arguments();
             a.AddOption("xxx");//.WithArgument<int>("Test")
