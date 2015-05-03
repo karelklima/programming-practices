@@ -65,7 +65,7 @@ namespace ArgumentsLibrary {
         internal List<Func<T, bool>> Conditions { get; set; }
 
         /// <summary>
-        /// Default constructor
+        /// Initializes a new instance of the <see cref="ArgumentsLibrary.Argument`1"/> class.
         /// </summary>
         internal Argument()
         {
