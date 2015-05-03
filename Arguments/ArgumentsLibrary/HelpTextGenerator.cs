@@ -85,9 +85,9 @@ namespace ArgumentsLibrary {
         /// <param name="opt">Option</param>
         /// Returns:
         /// <example>
-        /// -ShortAlias1, -ShortAlias2, ... <ArgumentInfo>
-        /// --LongAlias1, --LongAlias2, --LongAliasN=<ArgumentInfo>: <Optional|Mandatory>
-        ///         Option Description
+        /// -ShortAlias1, -ShortAlias2, ... <ArgumentInfo> <BR/>
+        /// --LongAlias1, --LongAlias2, --LongAliasN=<ArgumentInfo>: <Optional|Mandatory> <BR/>
+        ///         Option Description <BR/>
         /// </example>
         private static void GenerateOptionDescription(StringBuilder sb, Option opt) {
             var shorts = new List<OptionAlias>();

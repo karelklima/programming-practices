@@ -12,9 +12,9 @@ namespace ArgumentsLibrary {
     /// See <see cref="OptionBuilder"/> to access it.
     /// <example>
     /// <code>
-    /// var arguments = new Arguments();
-    /// arguments.AddOption("v|verbose")
-    ///     .WithDescription("Verbose option description");
+    /// var arguments = new Arguments(); <BR/>
+    /// arguments.AddOption("v|verbose") <BR/>
+    ///     .WithDescription("Verbose option description"); <BR/>
     /// </code>
     /// </example>
     /// </summary>

@@ -180,23 +180,23 @@ namespace ArgumentsLibrary {
         /// Detects type of the Option alias and removes its prefix if present.
         /// </summary>
         /// <example>
-        /// Alias = "v", OptionType = Short:
+        /// Alias = "v", OptionType = Short: <BR/>
         /// <code>
-        /// var optionAlias1 = Parser.ParseAlias("v");
-        /// var optionAlias2 = Parser.ParseAlias("-v");
+        /// var optionAlias1 = Parser.ParseAlias("v"); <BR/>
+        /// var optionAlias2 = Parser.ParseAlias("-v"); <BR/>
         /// </code>
-        /// Alias = "verbose", OptionType = Long:
+        /// Alias = "verbose", OptionType = Long: <BR/>
         /// <code>
-        /// var optionAlias3 = Parser.ParseAlias("verbose");
-        /// var optionAlias4 = Parser.ParseAlias("--verbose");
+        /// var optionAlias3 = Parser.ParseAlias("verbose"); <BR/>
+        /// var optionAlias4 = Parser.ParseAlias("--verbose"); <BR/>
         /// </code>
-        /// Alias = "v", OptionType = Long:
+        /// Alias = "v", OptionType = Long: <BR/>
         /// <code>
-        /// var optionAlias5 = Parser.ParseAlias("--v");
+        /// var optionAlias5 = Parser.ParseAlias("--v"); <BR/>
         /// </code>
-        /// Alias = "verbose", OptionType = Short:
+        /// Alias = "verbose", OptionType = Short: <BR/>
         /// <code>
-        /// var optionAlias6 = Parser.ParseAlias("-verbose");
+        /// var optionAlias6 = Parser.ParseAlias("-verbose"); <BR/>
         /// </code>
         /// </example>
         /// <param name="alias">User specified alias</param>

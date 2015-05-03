@@ -10,10 +10,10 @@ namespace ArgumentsLibrary {
     /// </summary>
     /// <example>
     /// <code>
-    /// var arguments = new Arguments();
-    /// arguments.AddOption(...)
-    /// ...
-    /// arguments.parse(args)
+    /// var arguments = new Arguments(); <BR/>
+    /// arguments.AddOption(...) <BR/>
+    /// ...  <BR/>
+    /// arguments.parse(args) <BR/>
     /// </code>
     /// </example>
     public sealed class Arguments {
@@ -109,15 +109,16 @@ namespace ArgumentsLibrary {
         /// <example>
         /// // The following examples do exactly the same thing
         /// <code>
-        /// Arguments.AddOption("v|verbose");
-        /// Arguments.AddOption("-v|--verbose");
-        /// Arguments.AddOption("v").WithAlias("verbose");
-        /// Arguments.AddOption("-v").WithAlias("--verbose");
+        /// Arguments.AddOption("v|verbose"); <BR/>
+        /// Arguments.AddOption("-v|--verbose"); <BR/>
+        /// Arguments.AddOption("v").WithAlias("verbose"); <BR/>
+        /// Arguments.AddOption("-v").WithAlias("--verbose"); <BR/>
         /// </code>
+        ///  <BR/>
         /// The following examples present non-standard usage:
         /// <code>
-        /// Arguments.AddOption("v|-verbose");
-        /// Arguments.AddOption("--v").WithAlias("--verbose");
+        /// Arguments.AddOption("v|-verbose"); <BR/>
+        /// Arguments.AddOption("--v").WithAlias("--verbose"); <BR/>
         /// </code>
         /// </example>
         /// <param name="aliases">One or more option aliases</param>

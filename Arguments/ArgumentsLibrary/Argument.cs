@@ -9,14 +9,15 @@ namespace ArgumentsLibrary {
     /// Option argument representation.
     /// It is internal class, to use it, see <see cref="ArgumentBuilder<T>" />. 
     /// <example>
+    /// Arguments.AddOption returns OptionBuilder instance <BR/>
+    /// OptionBuilder.WithArgument<T> returns ArgumentBuilder<T> instance <BR/>
     /// <code>
-    /// var arguments = new Arguments();
-    /// arguments.AddOption("s|size")
-    ///     .WithDescription("Size option with default value of 42")
-    ///     // OptionBuilder.WithArgument<T> returns ArgumentBuilder<T> instance
-    ///     .WithArgument<int>("SIZE")
-    ///     .WithDefaultValue(42)
-    ///     .WithCondition(v => v > 0);
+    /// var arguments = new Arguments(); <BR/>
+    /// arguments.AddOption("s|size") <BR/>
+    ///     .WithDescription("Size option with default value of 42") <BR/>
+    ///     .WithArgument<int>("SIZE") <BR/>
+    ///     .WithDefaultValue(42) <BR/>
+    ///     .WithCondition(v => v > 0); <BR/>
     /// </code>
     /// </example>
     /// </summary>
