@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using ArgumentsLibrary;
@@ -7,7 +6,8 @@ using ArgumentsLibrary.Exceptions;
 
 #if MSTEST
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Category = Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
+using Category =
+    Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
 #else
 using NUnit.Framework;
 using TestInitialize = NUnit.Framework.SetUpAttribute;
@@ -165,18 +165,18 @@ namespace ArgumentsTest {
         [TestMethod]
         [ExpectedException(typeof (ParseException))]
         public void ParseArguments_UnknownLongOption() {
-            var dictionary = CreateOptionsDictionary();
+            var dict = CreateOptionsDictionary();
             string[] args = {"--option"};
-            Parser.ParseArguments(args, CreateConverter(), dictionary);
+            Parser.ParseArguments(args, CreateConverter(), dict);
         }
 
         [TestMethod]
         public void ParseArguments_LongOption_ValidArgument() {
             var alias = CreateOptionAlias("option", OptionType.Long);
             var option = CreateOptionWithArgument<int>(alias);
-            var dictionary = CreateOptionsDictionary(option);
+            var dict = CreateOptionsDictionary(option);
             string[] args = {"--option=10"};
-            var cmd = Parser.ParseArguments(args, CreateConverter(), dictionary);
+            var cmd = Parser.ParseArguments(args, CreateConverter(), dict);
             Assert.IsTrue((int) cmd.Options[alias] == 10);
         }
 
@@ -185,9 +185,21 @@ namespace ArgumentsTest {
         public void ParseArguments_LongOption_InvalidArgument() {
             var alias = CreateOptionAlias("option", OptionType.Long);
             var option = CreateOptionWithArgument<int>(alias);
-            var dictionary = CreateOptionsDictionary(option);
+            var dict = CreateOptionsDictionary(option);
             string[] args = {"--option=text"};
-            Parser.ParseArguments(args, CreateConverter(), dictionary);
+            Parser.ParseArguments(args, CreateConverter(), dict);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (ParseException))]
+        public void ParseArguments_LongOption_InvalidArgumentCondition() {
+            var alias = CreateOptionAlias("option", OptionType.Long);
+            var option = CreateOptionWithArgument<int>(alias);
+            Func<int, bool> condition = i => i < 10;
+            option.Argument.Conditions.Add(condition);
+            var dict = CreateOptionsDictionary(option);
+            string[] args = {"--option=10"};
+            Parser.ParseArguments(args, CreateConverter(), dict);
         }
 
         [TestMethod]
@@ -195,26 +207,48 @@ namespace ArgumentsTest {
         public void ParseArguments_LongOption_MissingArgument() {
             var alias = CreateOptionAlias("option", OptionType.Long);
             var option = CreateOptionWithArgument<string>(alias);
-            var dictionary = CreateOptionsDictionary(option);
+            var dict = CreateOptionsDictionary(option);
             string[] args = {"--option"};
-            Parser.ParseArguments(args, CreateConverter(), dictionary);
+            Parser.ParseArguments(args, CreateConverter(), dict);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (ParseException))]
+        public void ParseArguments_LongOption_UnexpectedArgument() {
+            var alias = CreateOptionAlias("option", OptionType.Long);
+            var option = CreateOption(alias);
+            var dict = CreateOptionsDictionary(option);
+            string[] args = {"--option=argument"};
+            Parser.ParseArguments(args, CreateConverter(), dict);
+        }
+
+        [TestMethod]
+        public void ParseArguments_LongOption_DefaultArgumentValue() {
+            var alias = CreateOptionAlias("option", OptionType.Long);
+            var option = CreateOptionWithArgument<string>(alias);
+            option.Argument.Optional = true;
+            option.Argument.DefaultValue = "argument";
+            var dict = CreateOptionsDictionary(option);
+            string[] args = {"--option"};
+            var cmd = Parser.ParseArguments(args, CreateConverter(), dict);
+            Assert.AreEqual(cmd.Options[alias], "argument");
         }
 
         [TestMethod]
         [ExpectedException(typeof (ParseException))]
         public void ParseArguments_UnknownShortOption() {
-            var dictionary = CreateOptionsDictionary();
+            var dict = CreateOptionsDictionary();
             string[] args = {"-o"};
-            Parser.ParseArguments(args, CreateConverter(), dictionary);
+            Parser.ParseArguments(args, CreateConverter(), dict);
         }
 
         [TestMethod]
         public void ParseArguments_ShortOption_ValidArgument() {
             var alias = CreateOptionAlias("o", OptionType.Short);
             var option = CreateOptionWithArgument<int>(alias);
-            var dictionary = CreateOptionsDictionary(option);
+            var dict = CreateOptionsDictionary(option);
             string[] args = {"-o", "10"};
-            var cmd = Parser.ParseArguments(args, CreateConverter(), dictionary);
+            var cmd = Parser.ParseArguments(args, CreateConverter(), dict);
             Assert.IsTrue((int) cmd.Options[alias] == 10);
         }
 
@@ -223,9 +257,21 @@ namespace ArgumentsTest {
         public void ParseArguments_ShortOption_InvalidArgument() {
             var alias = CreateOptionAlias("o", OptionType.Short);
             var option = CreateOptionWithArgument<int>(alias);
-            var dictionary = CreateOptionsDictionary(option);
+            var dict = CreateOptionsDictionary(option);
             string[] args = {"-o", "text"};
-            Parser.ParseArguments(args, CreateConverter(), dictionary);
+            Parser.ParseArguments(args, CreateConverter(), dict);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (ParseException))]
+        public void ParseArguments_ShortOption_InvalidArgumentCondition() {
+            var alias = CreateOptionAlias("o", OptionType.Short);
+            var option = CreateOptionWithArgument<int>(alias);
+            Func<int, bool> condition = i => i < 10;
+            option.Argument.Conditions.Add(condition);
+            var dict = CreateOptionsDictionary(option);
+            string[] args = {"-o", "10"};
+            Parser.ParseArguments(args, CreateConverter(), dict);
         }
 
         [TestMethod]
@@ -233,9 +279,22 @@ namespace ArgumentsTest {
         public void ParseArguments_ShortOption_MissingArgument() {
             var alias = CreateOptionAlias("o", OptionType.Short);
             var option = CreateOptionWithArgument<string>(alias);
-            var dictionary = CreateOptionsDictionary(option);
+            var dict = CreateOptionsDictionary(option);
             string[] args = {"-o"};
-            Parser.ParseArguments(args, CreateConverter(), dictionary);
+            Parser.ParseArguments(args, CreateConverter(), dict);
+        }
+
+        [TestMethod]
+        public void ParseArguments_ShortOption_DefaultArgumentValue() {
+            var alias = CreateOptionAlias("o", OptionType.Short);
+            var option = CreateOptionWithArgument<string>(alias);
+            option.Argument.Optional = true;
+            option.Argument.DefaultValue = "argument";
+            option.Argument.DefaultValueIsSet = true;
+            var dict = CreateOptionsDictionary(option);
+            string[] args = {"-o"};
+            var cmd = Parser.ParseArguments(args, CreateConverter(), dict);
+            Assert.AreEqual(cmd.Options[alias], "argument");
         }
 
         [TestMethod]
@@ -246,6 +305,28 @@ namespace ArgumentsTest {
             Assert.IsTrue(cmd.PlainArguments.Count() == 2);
             Assert.AreEqual(cmd.PlainArguments.First(), "arg1");
             Assert.AreEqual(cmd.PlainArguments.Last(), "arg2");
+        }
+
+        [TestMethod]
+        public void ParseArguments_PlainArgumentsSeparator() {
+            var alias = CreateOptionAlias("option", OptionType.Long);
+            var option = CreateOption(alias);
+            var dict = CreateOptionsDictionary(option);
+            string[] args = {"--", "--option"};
+            var cmd = Parser.ParseArguments(args, CreateConverter(), dict);
+            Assert.IsFalse(cmd.Options.Any());
+            Assert.IsTrue(cmd.PlainArguments.Count() == 1);
+            Assert.AreEqual(cmd.PlainArguments.First(), "--option");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (ParseException))]
+        public void ParseArguments_OptionAfterPlainArgument() {
+            var alias = CreateOptionAlias("option", OptionType.Long);
+            var option = CreateOption(alias);
+            var dict = CreateOptionsDictionary(option);
+            string[] args = {"argument", "--option"};
+            Parser.ParseArguments(args, CreateConverter(), dict);
         }
 
     }
