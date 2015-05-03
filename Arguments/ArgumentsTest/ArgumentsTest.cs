@@ -23,6 +23,36 @@ namespace ArgumentsTest {
     public class ArgumentsTest {
 
         [TestMethod]
+        public void ArgumentsComplete() {
+            var arguments = new Arguments();
+
+            bool verbose = false;
+            int size = 0;
+
+            arguments.AddOption("v|verbose")
+                .WithDescription("Verbose option description")
+                .WithAction(() => verbose = true);
+
+            arguments.AddOption("s|size")
+                .WithDescription("Size option with default value of 42")
+                .WithArgument<int>("SIZE")
+                .WithDefaultValue(42)
+                .WithCondition(v => v > 0)
+                .WithAction(s => size = s);
+
+            string[] args = {"-v", "--size=42", "plain1", "plain2"};
+
+            var cmd = arguments.Parse(args);
+
+            Assert.IsTrue(verbose);
+            Assert.IsTrue(cmd.IsOptionSet("v"));
+            Assert.IsTrue(size == 42);
+            Assert.IsTrue(cmd.GetOptionValue<int>("--size") == 42);
+            Assert.AreEqual(cmd.GetPlainArguments().First(), "plain1");
+            Assert.AreEqual(cmd.GetPlainArguments().Last(), "plain2");
+        }
+
+        [TestMethod]
         public void RegisterTypeConverter_CustomType() {
             var arguments = new Arguments();
             arguments.RegisterTypeConverter(long.Parse);
@@ -96,6 +126,40 @@ namespace ArgumentsTest {
             var arguments = new Arguments();
             arguments.Parse(null);
         }
+
+        [TestMethod]
+        public void BuildHelpText_OptionsDefinitions()
+        {
+            var arguments = new Arguments();
+            // Option with extreme amount of aliases
+            arguments
+                .AddOption("o|option")
+                .WithAliases("t|test")
+                .WithDescription("This is a description\nThis is another line")
+                .WithOptionalArgument("ARG");
+            // Option with extreme description
+            arguments
+                .AddOption("v|verbose")
+                .WithDescription(String.Empty.PadRight(500, 'v'));
+            var help = arguments.BuildHelpText();
+            Assert.IsTrue(help.Contains("Options:"));
+        }
+
+        [TestMethod]
+        public void BuildHelpText_ValidUsage() {
+            var arguments = new Arguments();
+            var help = arguments.BuildHelpText("myapp [options]");
+            Assert.IsTrue(help.StartsWith("Usage: myapp [options]"));
+        }
+
+        [TestMethod]
+        public void BuildHelpText_Empty()
+        {
+            var arguments = new Arguments();
+            var help = arguments.BuildHelpText();
+            Assert.IsTrue(help.Length > 0);
+        }
+
 
     }
 

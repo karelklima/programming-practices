@@ -10,13 +10,18 @@ namespace ArgumentsProgram {
 
 
 //            var ax = new Arguments();
-//            ax.AddOption("*");
 
             var a = new Arguments();
-            a.AddOption("xxx");//.WithArgument<int>("Test")
+            a.AddOption("x|xxx")
+                .WithDescription(
+                    "Description of option -x which is really really really long and contains a new line. \nThis is the new line!")
+                //.WithArgument<int>("Test")
                 //.SetOptional();
-            a.Parse(new string[] {"--xxx"});
-            Console.WriteLine(string.Join(Environment.NewLine, a.BuildHelpText()));
+                ;
+            a.AddOption("v|verbose")
+                .WithDescription("Description of option --verbose")
+                ;
+            Console.WriteLine(a.BuildHelpText("app [options] <argument>"));
 
             // UKAZKOVY KOD IMPLEMENTUJICI PRIKLAD ZE ZADANI
             var arguments = new Arguments();
@@ -58,7 +63,7 @@ namespace ArgumentsProgram {
                 Console.WriteLine("arguments = {0}",
                     string.Join(" ", commandLine.GetPlainArguments()));
                 Console.WriteLine(string.Join(Environment.NewLine,
-                    arguments.BuildHelpText()));
+                    arguments.BuildHelpText("app [options] <arguments...>")));
             }
             catch (ParseException e) {
                 Console.WriteLine(e.StackTrace);

@@ -173,12 +173,14 @@ namespace ArgumentsTest.Builders
         }
 
         [TestMethod]
-        public void WithAction_Action()
-        {
+        public void WithAction_Action() {
             var optionBuilder = new OptionBuilder((o, a) => { });
             var actionsCount = optionBuilder.Option.Actions.Count;
-            optionBuilder.WithAction(() => { });
+            var detected = false;
+            optionBuilder.WithAction(() => { detected = true; });
+            optionBuilder.Option.InvokeActions();
             Assert.AreEqual(optionBuilder.Option.Actions.Count, actionsCount + 1);
+            Assert.IsTrue(detected);
         }
 
         [TestMethod]

@@ -155,8 +155,8 @@ namespace ArgumentsLibrary {
         /// <summary>
         /// Builds help text for all defined options with their descriptions
         /// </summary>
-        public string BuildHelpText() {
-            return HelpTextGenerator.Generate(Options);
+        public string BuildHelpText(string usage = null) {
+            return HelpTextGenerator.Generate(Options, usage);
         }
 
         #endregion

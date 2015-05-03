@@ -131,8 +131,11 @@ namespace ArgumentsTest.Builders {
         public void WithAction_Action() {
             var builder = new ArgumentBuilder<string>((a, t) => { });
             var conditionCount = builder.Argument.Actions.Count;
-            builder.WithAction(s => { });
+            string detectedValue = null;
+            builder.WithAction(s => { detectedValue = s; });
+            builder.Argument.InvokeActions("test");
             Assert.AreEqual(builder.Argument.Actions.Count, conditionCount + 1);
+            Assert.AreEqual(detectedValue, "test");
         }
 
         [TestMethod]

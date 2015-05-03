@@ -361,7 +361,8 @@ namespace ArgumentsLibrary {
                 throw new ParseException(
                     "Unexpected long option value: {0}", Args.First());
             }
-            else if (stringValue.Length == 0 && option.Argument != null) {
+
+            if (stringValue.Length == 0 && option.Argument != null) {
                 // An argument or default value is expected
                 if (!option.Argument.Optional) {
                     // Argument is mandatory and no value is provided
@@ -369,6 +370,7 @@ namespace ArgumentsLibrary {
                         "No option value specified for option {0}",
                         Args.First());
                 }
+                option.Argument.InvokeActions(option.Argument.DefaultValue);
                 SetCommandLineOptionValue(option, option.Argument.DefaultValue);
             }
             else if (stringValue.Length > 0 && option.Argument != null) {
