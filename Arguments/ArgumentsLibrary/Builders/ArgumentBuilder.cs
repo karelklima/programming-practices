@@ -63,6 +63,7 @@ namespace ArgumentsLibrary.Builders {
                 throw new SetupException("Argument default value cannot be null");
             }
             Argument.DefaultValue = value;
+            Argument.DefaultValueIsSet = true;
             return this;
         }
 

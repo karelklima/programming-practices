@@ -50,6 +50,11 @@ namespace ArgumentsLibrary {
         internal T DefaultValue { get; set; }
 
         /// <summary>
+        /// Indicates whether the default value is specified or not
+        /// </summary>
+        internal bool DefaultValueIsSet { get; set; }
+
+        /// <summary>
         /// List of actions, which are invoked when argument value appears in args string
         /// It will not be invoked, when default value is used.
         /// It will be invoked after value is parsed and tesed with defined conditions.
@@ -72,6 +77,7 @@ namespace ArgumentsLibrary {
             Name = DEFAULT_NAME;
             Optional = DEFAULT_OPTIONAL;
             DefaultValue = default(T);
+            DefaultValueIsSet = false;
             Actions = new List<Action<T>>();
             Conditions = new List<Func<T, bool>>();
         }
