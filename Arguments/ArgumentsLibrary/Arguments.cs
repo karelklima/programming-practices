@@ -59,8 +59,13 @@ namespace ArgumentsLibrary {
         /// <param name="option">Option.</param>
         /// <param name="aliases">List of aliases. See <see cref="Parser.ParseAliases"/> method.</param>
         private void RegisterOptionAliases(Option option, string aliases) {
-            foreach (var alias in Parser.ParseAliases(aliases)) {
-                RegisterOptionAlias(option, alias);
+            try {
+                foreach (var alias in Parser.ParseAliases(aliases)) {
+                    RegisterOptionAlias(option, alias);
+                }
+            }
+            catch (ArgumentException exception) {
+                throw new SetupException(exception.Message);
             }
         }
 
