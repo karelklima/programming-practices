@@ -7,8 +7,8 @@ namespace ArgumentsLibrary.Exceptions {
     /// </summary>
     public abstract class ArgumentsException : Exception {
 
-        internal ArgumentsException(string message, params object[] args)
-            : base(args == null ? message : String.Format(message, args)) {
+        internal ArgumentsException( string message, params object[] args )
+            : base( args == null ? message : String.Format( message, args ) ) {
         }
 
     }

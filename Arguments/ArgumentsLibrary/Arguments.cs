@@ -10,13 +10,14 @@ namespace ArgumentsLibrary {
     /// </summary>
     /// <example>
     /// <code>
-    /// var arguments = new Arguments(); <BR/>
-    /// arguments.AddOption(...) <BR/>
-    /// ...  <BR/>
-    /// arguments.parse(args) <BR/>
+    /// var arguments = new Arguments(); <br/>
+    /// arguments.AddOption(...) <br/>
+    /// ...  <br/>
+    /// var cmd = arguments.parse(args) <br/>
     /// </code>
     /// </example>
     public sealed class Arguments {
+
         #region Internals
 
         /// <summary>
@@ -33,7 +34,8 @@ namespace ArgumentsLibrary {
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ArgumentsLibrary.Arguments"/> class.
+        /// Initializes a new instance of the
+        /// <see cref="ArgumentsLibrary.Arguments" /> class.
         /// </summary>
         public Arguments() {
             Converter = new Converter();
@@ -42,41 +44,47 @@ namespace ArgumentsLibrary {
         }
 
         /// <summary>
-        /// Registers the default type converters.
-        /// Types are: string, int, float, double, bool
+        /// Registers default type converters
         /// </summary>
+        /// <remarks>
+        /// List of default types: string, int, float, double, bool
+        /// </remarks>
         private void RegisterDefaultTypeConverters() {
-            RegisterTypeConverter(string.Copy);
-            RegisterTypeConverter(int.Parse);
-            RegisterTypeConverter(float.Parse);
-            RegisterTypeConverter(double.Parse);
-            RegisterTypeConverter(bool.Parse);
+            RegisterTypeConverter( string.Copy );
+            RegisterTypeConverter( int.Parse );
+            RegisterTypeConverter( float.Parse );
+            RegisterTypeConverter( double.Parse );
+            RegisterTypeConverter( bool.Parse );
         }
 
         /// <summary>
-        /// Registers multiple option aliases.
+        /// Registers an option using multiple aliases
         /// </summary>
-        /// <param name="option">Option.</param>
-        /// <param name="aliases">List of aliases. See <see cref="Parser.ParseAliases"/> method.</param>
-        private void RegisterOptionAliases(Option option, string aliases) {
+        /// <param name="option">Option to be registered</param>
+        /// <param name="aliases">
+        /// List of aliases; see <see cref="Parser.ParseAliases" /> method
+        /// </param>
+        private void RegisterOptionAliases( Option option, string aliases ) {
             try {
-                foreach (var alias in Parser.ParseAliases(aliases)) {
-                    RegisterOptionAlias(option, alias);
+                foreach ( var alias in Parser.ParseAliases( aliases ) ) {
+                    RegisterOptionAlias( option, alias );
                 }
             }
-            catch (ArgumentException exception) {
-                throw new SetupException(exception.Message);
+            catch ( ArgumentException exception ) {
+                throw new SetupException( exception.Message );
             }
         }
 
         /// <summary>
-        /// Registers one option alias.
+        /// Registers an option using an alias
         /// </summary>
-        /// <param name="option">Option.</param>
-        /// <param name="alias">Alias. See <see cref="OptionAlias"/> class.</param>
-        private void RegisterOptionAlias(Option option, OptionAlias alias) {
-            Options.Add(alias, option);
-            option.Aliases.Add(alias);
+        /// <param name="option">Option to be registered</param>
+        /// <param name="alias">
+        /// Option alias; see <see cref="OptionAlias" /> class
+        /// </param>
+        private void RegisterOptionAlias( Option option, OptionAlias alias ) {
+            Options.Add( alias, option );
+            option.Aliases.Add( alias );
         }
 
         #endregion
@@ -89,13 +97,14 @@ namespace ArgumentsLibrary {
         /// string to the given type and returns the result.
         /// </summary>
         /// <typeparam name="T">Target converted type</typeparam>
-        /// <param name="converterFunc">Function to convert string to type T
+        /// <param name="converterFunc">
+        /// Function to convert string to type T
         /// </param>
-        public void RegisterTypeConverter<T>(Func<string, T> converterFunc) {
-            if (converterFunc == null) {
-                throw new SetupException("Converter function cannot be null");
+        public void RegisterTypeConverter<T>( Func<string, T> converterFunc ) {
+            if ( converterFunc == null ) {
+                throw new SetupException( "Converter function cannot be null" );
             }
-            Converter.RegisterTypeConverter(converterFunc);
+            Converter.RegisterTypeConverter( converterFunc );
         }
 
         /// <summary>
@@ -107,25 +116,26 @@ namespace ArgumentsLibrary {
         /// and "--" respectively.
         /// </summary>
         /// <example>
-        /// // The following examples do exactly the same thing
+        /// The following examples do exactly the same thing:
         /// <code>
-        /// Arguments.AddOption("v|verbose"); <BR/>
-        /// Arguments.AddOption("-v|--verbose"); <BR/>
-        /// Arguments.AddOption("v").WithAlias("verbose"); <BR/>
-        /// Arguments.AddOption("-v").WithAlias("--verbose"); <BR/>
+        /// The following examples do exactly the same thing
+        /// Arguments.AddOption("v|verbose"); <br/>
+        /// Arguments.AddOption("-v|--verbose"); <br/>
+        /// Arguments.AddOption("v").WithAlias("verbose"); <br/>
+        /// Arguments.AddOption("-v").WithAlias("--verbose"); <br/>
         /// </code>
-        ///  <BR/>
+        /// <BR />
         /// The following examples present non-standard usage:
         /// <code>
-        /// Arguments.AddOption("v|-verbose"); <BR/>
-        /// Arguments.AddOption("--v").WithAlias("--verbose"); <BR/>
+        /// Arguments.AddOption("v|-verbose"); <br/>
+        /// Arguments.AddOption("--v").WithAlias("--verbose"); <br/>
         /// </code>
         /// </example>
         /// <param name="aliases">One or more option aliases</param>
         /// <returns>OptionBuilder instance</returns>
-        public OptionBuilder AddOption(string aliases) {
-            return new OptionBuilder(RegisterOptionAliases)
-                .WithAliases(aliases);
+        public OptionBuilder AddOption( string aliases ) {
+            return new OptionBuilder( RegisterOptionAliases )
+                .WithAliases( aliases );
         }
 
         /// <summary>
@@ -134,29 +144,39 @@ namespace ArgumentsLibrary {
         /// </summary>
         /// <param name="aliases">One or more option aliases</param>
         /// <returns>OptionBuilder instance</returns>
-        public OptionBuilder AddMandatoryOption(string aliases) {
-            return AddOption(aliases).SetMandatory();
+        public OptionBuilder AddMandatoryOption( string aliases ) {
+            return AddOption( aliases ).SetMandatory();
         }
 
         /// <summary>
         /// Processes the command line input arguments.
         /// </summary>
         /// <param name="args">Arguments as passed to the Main</param>
-        /// <exception cref="ParseException">Arguments do not satisfy
-        /// the definition</exception>
-        public CommandLine Parse(IEnumerable<string> args) {
-            if (args == null) {
-                throw new ParseException("Passed arguments cannot be null");
+        /// <exception cref="ParseException">
+        /// Arguments do not satisfy the definition
+        /// </exception>
+        public CommandLine Parse( IEnumerable<string> args ) {
+            if ( args == null ) {
+                throw new ParseException( "Passed arguments cannot be null" );
             }
 
-            return Parser.ParseArguments(args, Converter, Options);
+            return Parser.ParseArguments( args, Converter, Options );
         }
 
         /// <summary>
         /// Builds help text for all defined options with their descriptions
         /// </summary>
-        public string BuildHelpText(string usage = null) {
-            return HelpTextGenerator.Generate(Options, usage);
+        /// <example>
+        /// <code>
+        /// var arguments = new Arguments();
+        /// ...
+        /// Console.Write(arguments.BuildHelpText("app [options] param1");
+        /// // Help text will start with following line:
+        /// // Usage: app [options] param1
+        /// </code>
+        /// </example>
+        public string BuildHelpText( string usage = null ) {
+            return HelpTextGenerator.Generate( Options, usage );
         }
 
         #endregion

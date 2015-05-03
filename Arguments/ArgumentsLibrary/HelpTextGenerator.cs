@@ -98,17 +98,17 @@ namespace ArgumentsLibrary {
         /// <param name="options">Options to generate help text for</param>
         /// <param name="usage">Usage string of the program</param>
         private HelpTextGenerator(
-            Dictionary<OptionAlias, Option> options, string usage) {
+            Dictionary<OptionAlias, Option> options, string usage ) {
             Builder = new StringBuilder();
             Options = options.Values.Distinct().ToList();
 
-            if (usage == null) {
+            if ( usage == null ) {
                 usage = DEFAULT_USAGE;
             }
 
-            PrintHeader(usage);
+            PrintHeader( usage );
 
-            if (Options.Any()) {
+            if ( Options.Any() ) {
                 DescriptionOffset = CalculateDescriptionOffset();
                 PrintOptionsHeader();
                 PrintOptionDefinitions();
@@ -126,9 +126,9 @@ namespace ArgumentsLibrary {
         /// <param name="usage">
         /// Usage string to be included in help text header
         /// </param>
-        internal static string Generate(
-            Dictionary<OptionAlias, Option> options, string usage) {
-            var generator = new HelpTextGenerator(options, usage);
+        internal static string Generate( 
+            Dictionary<OptionAlias, Option> options, string usage ) {
+            var generator = new HelpTextGenerator( options, usage );
             return generator.Builder.ToString();
         }
 
@@ -136,16 +136,16 @@ namespace ArgumentsLibrary {
         /// Generates the usage header
         /// </summary>
         /// <param name="usage">User specified usage string</param>
-        private void PrintHeader(string usage) {
-            Builder.Append(USAGE_HEADER);
-            Builder.AppendLine(usage);
+        private void PrintHeader( string usage ) {
+            Builder.Append( USAGE_HEADER );
+            Builder.AppendLine( usage );
         }
 
         /// <summary>
         /// Generates the header for options
         /// </summary>
         private void PrintOptionsHeader() {
-            Builder.AppendLine(OPTIONS_HEADER);
+            Builder.AppendLine( OPTIONS_HEADER );
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace ArgumentsLibrary {
         /// Prints help text for all options
         /// </summary>
         private void PrintOptionDefinitions() {
-            Options.ForEach(PrintOptionDefinition);
+            Options.ForEach( PrintOptionDefinition );
         }
 
         /// <summary>
@@ -172,19 +172,19 @@ namespace ArgumentsLibrary {
         /// </returns>
         private int CalculateDescriptionOffset() {
             var locatedMaximum = Options
-                .Select(option => GenerateOptionSignature(option).Length)
+                .Select( option => GenerateOptionSignature( option ).Length )
                 .Max() + MINIMUM_DESCRIPTION_INDENT;
-            return Math.Min(locatedMaximum, MAXIMUM_DESCRIPTION_OFFSET);
+            return Math.Min( locatedMaximum, MAXIMUM_DESCRIPTION_OFFSET );
         }
 
         /// <summary>
         /// Prints option aliases and its description
         /// </summary>
         /// <param name="option">Option to print the help text for</param>
-        private void PrintOptionDefinition(Option option) {
-            var signature = GenerateOptionSignature(option);
-            Builder.Append(signature);
-            PrintOptionDescription(option, signature.Length);
+        private void PrintOptionDefinition( Option option ) {
+            var signature = GenerateOptionSignature( option );
+            Builder.Append( signature );
+            PrintOptionDescription( option, signature.Length );
         }
 
         /// <summary>
@@ -193,12 +193,12 @@ namespace ArgumentsLibrary {
         /// </summary>
         /// <param name="option">Option to create a signature for</param>
         /// <returns>Signature of the option</returns>
-        private string GenerateOptionSignature(Option option) {
-            var partialSignatures = option.Aliases.Select(alias =>
-                GeneratePartialOptionSignature(option, alias)
+        private string GenerateOptionSignature( Option option ) {
+            var partialSignatures = option.Aliases.Select(
+                alias => GeneratePartialOptionSignature( option, alias )
                 );
 
-            return String.Join(OPTION_ALIASES_SEPARATOR, partialSignatures);
+            return String.Join( OPTION_ALIASES_SEPARATOR, partialSignatures );
         }
 
         /// <summary>
@@ -209,10 +209,9 @@ namespace ArgumentsLibrary {
         /// </param>
         /// <param name="alias">Particular option alias</param>
         /// <returns>Signature for a single option alias</returns>
-        private string GeneratePartialOptionSignature(Option option,
-            OptionAlias alias) {
-            return alias.ToString()
-                + GenerateOptionArgument(option, alias.Type);
+        private string GeneratePartialOptionSignature( Option option,
+            OptionAlias alias ) {
+            return alias + GenerateOptionArgument( option, alias.Type );
         }
 
         /// <summary>
@@ -221,9 +220,8 @@ namespace ArgumentsLibrary {
         /// <param name="option">Parent option</param>
         /// <param name="type">Short or Long option type</param>
         /// <returns></returns>
-        private string GenerateOptionArgument(Option option,
-            OptionType type) {
-            if (option.Argument == null) {
+        private string GenerateOptionArgument( Option option, OptionType type ) {
+            if ( option.Argument == null ) {
                 return "";
             }
 
@@ -232,11 +230,11 @@ namespace ArgumentsLibrary {
                 ? SHORT_ARGUMENT_SEPARATOR
                 : LONG_ARGUMENT_SEPARATOR;
             var signature = prefix
-                + String.Format(ARGUMENT_NAME_FORMAT, option.Argument.Name);
+                + String.Format( ARGUMENT_NAME_FORMAT, option.Argument.Name );
 
             // Apply special formatting if the Argument is optional
-            if (option.Argument.Optional) {
-                signature = String.Format(OPTIONAL_ARGUMENT_FORMAT, signature);
+            if ( option.Argument.Optional ) {
+                signature = String.Format( OPTIONAL_ARGUMENT_FORMAT, signature );
             }
 
             return signature;
@@ -247,57 +245,58 @@ namespace ArgumentsLibrary {
         /// </summary>
         /// <param name="option">Option to print a description for</param>
         /// <param name="offset">Length of the option signature</param>
-        private void PrintOptionDescription(Option option, int offset) {
-            if (offset > DescriptionOffset) {
+        private void PrintOptionDescription( Option option, int offset ) {
+            if ( offset > DescriptionOffset ) {
                 // Option signature is longer than desired description offset
                 Builder.AppendLine();
                 offset = 0;
             }
 
             // Split description into paragraphs and print them independently
-            option.Description.Split(NEWLINE).ToList().ForEach(description => {
-                PrintDescriptionParagraph(description, offset);
-                offset = 0; // reset offset for additional paragraphs
-            });
+            option.Description.Split( NEWLINE )
+                .ToList()
+                .ForEach( description => {
+                    PrintDescriptionParagraph( description, offset );
+                    offset = 0; // reset offset for additional paragraphs
+                } );
         }
 
         /// <summary>
-        /// Prints a paragraph of option description as a justified block of
-        /// text
+        /// Prints a paragraph of option description as a justified block of text
         /// </summary>
         /// <param name="line">Description line to process</param>
         /// <param name="lineOffset">
         /// Offset from the beginning of the line in output
         /// </param>
-        private void PrintDescriptionParagraph(string line, int lineOffset) {
+        private void PrintDescriptionParagraph( string line, int lineOffset ) {
             // Real possible length of single description line
             var availableSpace = LINE_LENGTH - DescriptionOffset;
 
             // Pad any already written characters specified by the line offset
             // to a desired description offset
-            Builder.Append(String.Empty
-                .PadRight(DescriptionOffset - lineOffset));
+            Builder.Append( String.Empty
+                .PadRight( DescriptionOffset - lineOffset ) );
 
-            if (line.Length <= availableSpace) {
+            if ( line.Length <= availableSpace ) {
                 // The paragraph ends here
-                Builder.AppendLine(line);
+                Builder.AppendLine( line );
                 return;
             }
 
             // Calculate the amount of text that can be appended to the line
-            var chunk = line.Substring(0, availableSpace + 1);
-            var chunkCut = chunk.LastIndexOf(WHITESPACE);
+            var chunk = line.Substring( 0, availableSpace + 1 );
+            var chunkCut = chunk.LastIndexOf( WHITESPACE );
             var restCut = chunkCut + 1;
-            if (chunkCut == -1) {
+            if ( chunkCut == -1 ) {
                 // No whitespace detected, we need to break and existing word
                 chunkCut = availableSpace;
                 restCut = chunkCut;
             }
 
             // Append the calculated part of the paragraph
-            Builder.AppendLine(chunk.Substring(0, chunkCut));
+            Builder.AppendLine( chunk.Substring( 0, chunkCut ) );
             // Process the remainder
-            PrintDescriptionParagraph(line.Substring(restCut), 0);
+            PrintDescriptionParagraph( line.Substring( restCut ), 0 );
         }
 
     }

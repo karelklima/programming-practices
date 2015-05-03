@@ -6,8 +6,8 @@
     /// </summary>
     public class SetupException : ArgumentsException {
 
-        internal SetupException(string message, object args = null)
-            : base(message, args) {
+        internal SetupException( string message, object args = null )
+            : base( message, args ) {
         }
 
     }

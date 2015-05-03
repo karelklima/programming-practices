@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using ArgumentsLibrary.Exceptions;
 
 namespace ArgumentsLibrary {
@@ -82,28 +80,28 @@ namespace ArgumentsLibrary {
         private const string PLAIN_ARGUMENTS_SEPARATOR = "--";
 
         /// <summary>
-        /// Regex instance of <see cref="SHORT_OPTION_REGEX"/>
+        /// Regex instance of <see cref="SHORT_OPTION_REGEX" />
         /// </summary>
         private static readonly Regex _shortOptionRegex =
-            new Regex(SHORT_OPTION_REGEX);
+            new Regex( SHORT_OPTION_REGEX );
 
         /// <summary>
-        /// Regex instance of <see cref="SHORT_OPTION_ALIAS_REGEX"/>
+        /// Regex instance of <see cref="SHORT_OPTION_ALIAS_REGEX" />
         /// </summary>
         private static readonly Regex _shortOptionAliasRegex =
-            new Regex(SHORT_OPTION_ALIAS_REGEX);
+            new Regex( SHORT_OPTION_ALIAS_REGEX );
 
         /// <summary>
-        /// Regex instance of <see cref="LONG_OPTION_REGEX"/>
+        /// Regex instance of <see cref="LONG_OPTION_REGEX" />
         /// </summary>
         private static readonly Regex _longOptionRegex =
-            new Regex(LONG_OPTION_REGEX);
+            new Regex( LONG_OPTION_REGEX );
 
         /// <summary>
-        /// Regex instance of <see cref="LONG_OPTION_ALIAS_REGEX"/>
+        /// Regex instance of <see cref="LONG_OPTION_ALIAS_REGEX" />
         /// </summary>
         private static readonly Regex _longOptionAliasRegex =
-            new Regex(LONG_OPTION_ALIAS_REGEX);
+            new Regex( LONG_OPTION_ALIAS_REGEX );
 
         /// <summary>
         /// CommandLine instance to insert detected options and arguments into
@@ -130,10 +128,10 @@ namespace ArgumentsLibrary {
         /// </summary>
         /// <param name="converter">Converter instance</param>
         /// <param name="options">Definition of setup Options</param>
-        private Parser(IEnumerable<string> args, Converter converter,
-            Dictionary<OptionAlias, Option> options) {
-            CommandLine = new CommandLine(converter);
-            Args = new Queue<string>(args);
+        private Parser( IEnumerable<string> args, Converter converter,
+            Dictionary<OptionAlias, Option> options ) {
+            CommandLine = new CommandLine( converter );
+            Args = new Queue<string>( args );
             Converter = converter;
             Options = options;
         }
@@ -151,85 +149,86 @@ namespace ArgumentsLibrary {
         /// <returns>
         /// CommandLine instance with detected options and arguments
         /// </returns>
-        internal static CommandLine ParseArguments(IEnumerable<string> args,
-            Converter converter,
-            Dictionary<OptionAlias, Option> options) {
-            var parser = new Parser(args, converter, options);
+        internal static CommandLine ParseArguments( IEnumerable<string> args,
+            Converter converter, Dictionary<OptionAlias, Option> options ) {
+            var parser = new Parser( args, converter, options );
             parser.ProcessArguments();
             return parser.CommandLine;
         }
 
         /// <summary>
-        /// Detects types of Option aliases separated by separator 
-        /// <see cref="OPTION_ALIAS_SEPARATOR"/>.
-        /// For details on parsing aliases see <see cref="ParseAlias"/>
+        /// Detects types of Option aliases separated by separator
+        /// <see cref="OPTION_ALIAS_SEPARATOR" />
         /// </summary>
+        /// <remarks>
+        /// For details on parsing aliases see <see cref="ParseAlias" />
+        /// </remarks>
         /// <param name="aliases">User specified aliases</param>
         /// <returns>Set of detected OptionAlias instances</returns>
-        internal static IEnumerable<OptionAlias> ParseAliases(string aliases) {
-            if (aliases == null) {
-                throw new ArgumentNullException("aliases");
+        internal static IEnumerable<OptionAlias> ParseAliases( string aliases ) {
+            if ( aliases == null ) {
+                throw new ArgumentNullException( "aliases" );
             }
 
             return aliases
-                .Split(OPTION_ALIAS_SEPARATOR.ToCharArray())
-                .Select(ParseAlias).ToList();
+                .Split( OPTION_ALIAS_SEPARATOR.ToCharArray() )
+                .Select( ParseAlias ).ToList();
         }
 
         /// <summary>
         /// Detects type of the Option alias and removes its prefix if present.
         /// </summary>
         /// <example>
-        /// Alias = "v", OptionType = Short: <BR/>
+        /// Alias = "v", OptionType = Short: <br/>
         /// <code>
-        /// var optionAlias1 = Parser.ParseAlias("v"); <BR/>
-        /// var optionAlias2 = Parser.ParseAlias("-v"); <BR/>
+        /// var optionAlias1 = Parser.ParseAlias("v"); <br/>
+        /// var optionAlias2 = Parser.ParseAlias("-v"); <br/>
         /// </code>
-        /// Alias = "verbose", OptionType = Long: <BR/>
+        /// Alias = "verbose", OptionType = Long: <br/>
         /// <code>
-        /// var optionAlias3 = Parser.ParseAlias("verbose"); <BR/>
-        /// var optionAlias4 = Parser.ParseAlias("--verbose"); <BR/>
+        /// var optionAlias3 = Parser.ParseAlias("verbose"); <br/>
+        /// var optionAlias4 = Parser.ParseAlias("--verbose"); <br/>
         /// </code>
-        /// Alias = "v", OptionType = Long: <BR/>
+        /// Alias = "v", OptionType = Long: <br/>
         /// <code>
-        /// var optionAlias5 = Parser.ParseAlias("--v"); <BR/>
+        /// var optionAlias5 = Parser.ParseAlias("--v"); <br/>
         /// </code>
-        /// Alias = "verbose", OptionType = Short: <BR/>
+        /// Alias = "verbose", OptionType = Short: <br/>
         /// <code>
-        /// var optionAlias6 = Parser.ParseAlias("-verbose"); <BR/>
+        /// var optionAlias6 = Parser.ParseAlias("-verbose"); <br/>
         /// </code>
         /// </example>
         /// <param name="alias">User specified alias</param>
         /// <returns>OptionAlias with alias and its type</returns>
-        internal static OptionAlias ParseAlias(string alias) {
+        internal static OptionAlias ParseAlias( string alias ) {
             OptionType type;
             string realAlias;
-            if (_shortOptionAliasRegex.IsMatch(alias)) {
+            if ( _shortOptionAliasRegex.IsMatch( alias ) ) {
                 type = OptionType.Short;
-                realAlias = RemoveOptionalPrefix(alias, SHORT_OPTION_PREFIX);
+                realAlias = RemoveOptionalPrefix( alias, SHORT_OPTION_PREFIX );
             }
-            else if (_longOptionAliasRegex.IsMatch(alias)) {
+            else if ( _longOptionAliasRegex.IsMatch( alias ) ) {
                 type = OptionType.Long;
-                realAlias = RemoveOptionalPrefix(alias, LONG_OPTION_PREFIX);
+                realAlias = RemoveOptionalPrefix( alias, LONG_OPTION_PREFIX );
             }
             else {
                 throw new ArgumentException(
-                    "Input alias is not in valid format");
+                    "Input alias is not in valid format" );
             }
 
-            return new OptionAlias(realAlias, type);
+            return new OptionAlias( realAlias, type );
         }
 
         /// <summary>
         /// Inserts a "is set" marker to the CommandLine for input Option
         /// </summary>
         /// <param name="option">Option that is detected in arguments</param>
-        private void SetCommandLineOptionIsSet(Option option) {
-            option.Aliases.ForEach(alias => {
-                if (!CommandLine.Options.ContainsKey(alias)) {
-                    CommandLine.Options[alias] = null; // is set indicator
+        private void SetCommandLineOptionIsSet( Option option ) {
+            option.Aliases.ForEach( alias => {
+                if ( !CommandLine.Options.ContainsKey( alias ) ) {
+                    CommandLine.Options[ alias ] = null; // is set indicator
                 }
-            });
+            } );
         }
 
         /// <summary>
@@ -237,17 +236,17 @@ namespace ArgumentsLibrary {
         /// </summary>
         /// <param name="option">Detected Option</param>
         /// <param name="value">Option value</param>
-        private void SetCommandLineOptionValue(Option option, object value) {
+        private void SetCommandLineOptionValue( Option option, object value ) {
             option.Aliases.ForEach(
-                alias => { CommandLine.Options[alias] = value; });
+                alias => { CommandLine.Options[ alias ] = value; } );
         }
 
         /// <summary>
         /// Inserts a plain argument to the CommandLine
         /// </summary>
         /// <param name="value">Plain argument value</param>
-        private void AddCommandLinePlainArgument(string value) {
-            CommandLine.PlainArguments.Add(value);
+        private void AddCommandLinePlainArgument( string value ) {
+            CommandLine.PlainArguments.Add( value );
         }
 
         /// <summary>
@@ -257,13 +256,13 @@ namespace ArgumentsLibrary {
         /// CommandLine object
         /// </summary>
         private void ProcessArguments() {
-            while (Args.Any()) {
-                if (DetectPlainArgumentsSeparator()) {
+            while ( Args.Any() ) {
+                if ( DetectPlainArgumentsSeparator() ) {
                     // The rest of the arguments are plain arguments except
                     // the first one, which is the detected separator
                     Args.Dequeue();
                     // Add all arguments to the CommandLine
-                    Args.ToList().ForEach(AddCommandLinePlainArgument);
+                    Args.ToList().ForEach( AddCommandLinePlainArgument );
                     Args.Clear();
                     // Finish the cycle as there are no more args to process
                     break;
@@ -272,38 +271,38 @@ namespace ArgumentsLibrary {
                 // Check if the next argument could be an Option
                 var optionAlias = DetectPotentialOption();
 
-                if (optionAlias == null) {
+                if ( optionAlias == null ) {
                     // All remaining arguments should be plain arguments
-                    AddCommandLinePlainArgument(Args.Dequeue());
+                    AddCommandLinePlainArgument( Args.Dequeue() );
                 }
-                else if (!Options.ContainsKey(optionAlias)) {
+                else if ( !Options.ContainsKey( optionAlias ) ) {
                     // Unknown option was detected
                     throw new ParseException(
                         "Unknown program option detected: {0}",
-                        optionAlias.ToString());
+                        optionAlias.ToString() );
                 }
-                else if (CommandLine.PlainArguments.Any()) {
+                else if ( CommandLine.PlainArguments.Any() ) {
                     // There were already some plain arguments detected
                     throw new ParseException(
                         "Unexpected option detected in plain arguments: {0}",
-                        optionAlias.ToString());
+                        optionAlias.ToString() );
                 }
                 else {
                     // Detected option and correct placement in input arguments
-                    ProcessDetectedOption(optionAlias);
+                    ProcessDetectedOption( optionAlias );
                 }
             }
         }
 
         /// <summary>
         /// Checks if the next argument is plain arguments separator,
-        /// i.e. if it equals to <see cref="PLAIN_ARGUMENTS_SEPARATOR"/>
+        /// i.e. if it equals to <see cref="PLAIN_ARGUMENTS_SEPARATOR" />
         /// </summary>
         /// <returns>
         /// True if next argument in Args is a plain arguments separator
         /// </returns>
         private bool DetectPlainArgumentsSeparator() {
-            return Args.First().Equals(PLAIN_ARGUMENTS_SEPARATOR);
+            return Args.First().Equals( PLAIN_ARGUMENTS_SEPARATOR );
         }
 
         /// <summary>
@@ -313,15 +312,15 @@ namespace ArgumentsLibrary {
         /// <returns>OptionAlias of detected potential Option or null</returns>
         private OptionAlias DetectPotentialOption() {
             var arg = Args.First();
-            var longMatch = _longOptionRegex.Match(arg);
-            if (longMatch.Success) {
-                return new OptionAlias(longMatch.Groups[1].Value,
-                    OptionType.Long);
+            var longMatch = _longOptionRegex.Match( arg );
+            if ( longMatch.Success ) {
+                return new OptionAlias( longMatch.Groups[ 1 ].Value,
+                    OptionType.Long );
             }
-            var shortMatch = _shortOptionRegex.Match(arg);
-            if (shortMatch.Success) {
-                return new OptionAlias(shortMatch.Groups[1].Value,
-                    OptionType.Short);
+            var shortMatch = _shortOptionRegex.Match( arg );
+            if ( shortMatch.Success ) {
+                return new OptionAlias( shortMatch.Groups[ 1 ].Value,
+                    OptionType.Short );
             }
             return null;
         }
@@ -331,19 +330,19 @@ namespace ArgumentsLibrary {
         /// and checks potential Option arguments
         /// </summary>
         /// <param name="optionAlias">Option specified by its alias</param>
-        private void ProcessDetectedOption(OptionAlias optionAlias) {
+        private void ProcessDetectedOption( OptionAlias optionAlias ) {
             // locate corresponding Option
-            var option = Options[optionAlias];
+            var option = Options[ optionAlias ];
             // set default value to null
-            SetCommandLineOptionIsSet(option);
+            SetCommandLineOptionIsSet( option );
             // invoke user callbacks
             option.InvokeActions();
 
-            if (optionAlias.Type == OptionType.Long) {
-                ProcessLongOptionArgument(optionAlias, option);
+            if ( optionAlias.Type == OptionType.Long ) {
+                ProcessLongOptionArgument( optionAlias, option );
             }
             else {
-                ProcessShortOptionArgument(optionAlias, option);
+                ProcessShortOptionArgument( optionAlias, option );
             }
         }
 
@@ -352,49 +351,49 @@ namespace ArgumentsLibrary {
         /// </summary>
         /// <param name="optionAlias">Option alias.</param>
         /// <param name="option">Option.</param>
-        private void ProcessLongOptionArgument(OptionAlias optionAlias,
-            Option option) {
-            var stringValue = ExtractLongOptionValue(Args.First());
+        private void ProcessLongOptionArgument( OptionAlias optionAlias,
+            Option option ) {
+            var stringValue = ExtractLongOptionValue( Args.First() );
 
-            if (stringValue.Length > 0 && option.Argument == null) {
+            if ( stringValue.Length > 0 && option.Argument == null ) {
                 // There is an Option value present, but it should not be there
                 throw new ParseException(
-                    "Unexpected long option value: {0}", Args.First());
+                    "Unexpected long option value: {0}", Args.First() );
             }
 
-            if (stringValue.Length == 0 && option.Argument != null) {
+            if ( stringValue.Length == 0 && option.Argument != null ) {
                 // An argument or default value is expected
-                if (!option.Argument.Optional) {
+                if ( !option.Argument.Optional ) {
                     // Argument is mandatory and no value is provided
                     throw new ParseException(
                         "No option value specified for option {0}",
-                        Args.First());
+                        Args.First() );
                 }
-                option.Argument.InvokeActions(option.Argument.DefaultValue);
-                SetCommandLineOptionValue(option, option.Argument.DefaultValue);
+                option.Argument.InvokeActions( option.Argument.DefaultValue );
+                SetCommandLineOptionValue( option, option.Argument.DefaultValue );
             }
-            else if (stringValue.Length > 0 && option.Argument != null) {
+            else if ( stringValue.Length > 0 && option.Argument != null ) {
                 // An argument is expected and its value is set
                 dynamic value;
                 try {
                     value = option.Argument
-                        .Parse(stringValue, Converter);
-                    option.Argument.AssertConditions(value);
+                        .Parse( stringValue, Converter );
+                    option.Argument.AssertConditions( value );
                 }
-                catch (ArgumentOutOfRangeException) {
+                catch ( ArgumentOutOfRangeException ) {
                     // Value does not satisfy Argument Conditions
                     throw new ParseException(
                         "Value for option {0} does not meet conditions",
-                        optionAlias.ToString());
+                        optionAlias.ToString() );
                 }
-                catch (Exception) {
+                catch ( Exception ) {
                     // Value cannot be converted to specified format
                     throw new ParseException(
                         "Value for option {0} is not of required type",
-                        optionAlias.ToString());
+                        optionAlias.ToString() );
                 }
-                option.Argument.InvokeActions(value);
-                SetCommandLineOptionValue(option, value);
+                option.Argument.InvokeActions( value );
+                SetCommandLineOptionValue( option, value );
             }
 
             // Remove processed option from arguments list
@@ -406,12 +405,12 @@ namespace ArgumentsLibrary {
         /// </summary>
         /// <param name="optionAlias">Option alias.</param>
         /// <param name="option">Option.</param>
-        private void ProcessShortOptionArgument(OptionAlias optionAlias,
-            Option option) {
+        private void ProcessShortOptionArgument( OptionAlias optionAlias,
+            Option option ) {
             // Remove processed option from arguments list
             Args.Dequeue();
 
-            if (option.Argument == null) {
+            if ( option.Argument == null ) {
                 // No argument specified for the Option
                 return;
             }
@@ -422,38 +421,38 @@ namespace ArgumentsLibrary {
             dynamic value = null;
             string exceptionMessage = null;
             try {
-                if (stringValue.Length == 0) {
+                if ( stringValue.Length == 0 ) {
                     throw new ArgumentNullException();
                 }
                 value = option.Argument
-                    .Parse(stringValue, Converter);
-                option.Argument.AssertConditions(value);
+                    .Parse( stringValue, Converter );
+                option.Argument.AssertConditions( value );
             }
-            catch (ArgumentNullException) {
+            catch ( ArgumentNullException ) {
                 // Argument is mandatory and no value is provided
                 exceptionMessage =
                     "No option value specified for option {0}";
             }
-            catch (ArgumentOutOfRangeException) {
+            catch ( ArgumentOutOfRangeException ) {
                 // Value does not satisfy Argument Conditions
                 exceptionMessage =
                     "Value for option {0} does not meet conditions";
             }
-            catch (Exception) {
+            catch ( Exception ) {
                 // Value cannot be converted to specified format
                 exceptionMessage =
                     "Value for option {0} is not of required type";
             }
 
-            if (exceptionMessage != null) {
-                if (option.Argument.DefaultValueIsSet) {
+            if ( exceptionMessage != null ) {
+                if ( option.Argument.DefaultValueIsSet ) {
                     // Provided value is not valid and a default value exists
                     value = option.Argument.DefaultValue;
                 }
-                else if (!option.Argument.Optional) {
+                else if ( !option.Argument.Optional ) {
                     // Provided value is not valid and it is mandatory
                     throw new ParseException(
-                        exceptionMessage, optionAlias.ToString());
+                        exceptionMessage, optionAlias.ToString() );
                 }
             }
             else {
@@ -461,8 +460,8 @@ namespace ArgumentsLibrary {
                 Args.Dequeue();
             }
 
-            option.Argument.InvokeActions(value);
-            SetCommandLineOptionValue(option, value);
+            option.Argument.InvokeActions( value );
+            SetCommandLineOptionValue( option, value );
         }
 
         /// <summary>
@@ -470,15 +469,15 @@ namespace ArgumentsLibrary {
         /// </summary>
         /// <returns>The long option value.</returns>
         /// <param name="arg">Option string.</param>
-        private static string ExtractLongOptionValue(string arg) {
-            var longMatch = _longOptionRegex.Match(arg);
-            return RemoveOptionalPrefix(longMatch.Groups[2].Value,
-                LONG_OPTION_VALUE_SEPARATOR);
+        private static string ExtractLongOptionValue( string arg ) {
+            var longMatch = _longOptionRegex.Match( arg );
+            return RemoveOptionalPrefix( longMatch.Groups[ 2 ].Value,
+                LONG_OPTION_VALUE_SEPARATOR );
         }
 
-        private static string RemoveOptionalPrefix(string value, string prefix) {
-            return value.StartsWith(prefix)
-                ? value.Remove(0, prefix.Length)
+        private static string RemoveOptionalPrefix( string value, string prefix ) {
+            return value.StartsWith( prefix )
+                ? value.Remove( 0, prefix.Length )
                 : value;
         }
 

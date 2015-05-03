@@ -1,28 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace ArgumentsLibrary {
 
     /// <summary>
-    /// Option argument representation.
-    /// It is internal class, to use it, see <see cref="ArgumentBuilder<T>" />. 
-    /// <example>
-    /// Arguments.AddOption returns OptionBuilder instance <BR/>
-    /// OptionBuilder.WithArgument<T> returns ArgumentBuilder<T> instance <BR/>
-    /// <code>
-    /// var arguments = new Arguments(); <BR/>
-    /// arguments.AddOption("s|size") <BR/>
-    ///     .WithDescription("Size option with default value of 42") <BR/>
-    ///     .WithArgument<int>("SIZE") <BR/>
-    ///     .WithDefaultValue(42) <BR/>
-    ///     .WithCondition(v => v > 0); <BR/>
-    /// </code>
-    /// </example>
+    /// Representation of a defined option argument of particular type
     /// </summary>
     internal class Argument<T> {
-        
+
         /// <summary>
         /// Definition of default name for argument
         /// </summary>
@@ -39,14 +25,12 @@ namespace ArgumentsLibrary {
         internal string Name { get; set; }
 
         /// <summary>
-        /// Is argument optinal?
+        /// Whether or not the argument is optional
         /// </summary>
         internal bool Optional { get; set; }
 
         /// <summary>
-        /// Default value of argument. 
-        /// It is ignored, if argument is not optional.
-        /// Constructor = default(T)
+        /// Default value of argument
         /// </summary>
         internal T DefaultValue { get; set; }
 
@@ -56,28 +40,33 @@ namespace ArgumentsLibrary {
         internal bool DefaultValueIsSet { get; set; }
 
         /// <summary>
-        /// List of actions, which are invoked when argument value appears in args string
-        /// It will not be invoked, when default value is used.
-        /// It will be invoked after value is parsed and tesed with defined conditions.
-        /// Action signature: void function(T value){ ... }
+        /// List of actions, which are invoked when argument value appears in
+        /// args string. It will be invoked after value is parsed and tesed with
+        /// defined conditions.
         /// </summary>
+        /// <remarks>
+        /// Action signature: void function(T value){ ... }
+        /// </remarks>
         internal List<Action<T>> Actions { get; set; }
 
         /// <summary>
-        /// List of conditions, which are checked when argument value appears in args string
+        /// List of conditions which are checked when argument value appears in
+        /// input arguments list
+        /// </summary>
+        /// <remarks>
         /// Default value will not be checked.
         /// Condition signature: bool function(T value){ ... }
-        /// </summary>
+        /// </remarks>
         internal List<Func<T, bool>> Conditions { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ArgumentsLibrary.Argument`1"/> class.
+        /// Initializes a new instance of the
+        /// <see cref="ArgumentsLibrary.Argument`1" /> class.
         /// </summary>
-        internal Argument()
-        {
+        internal Argument() {
             Name = DEFAULT_NAME;
             Optional = DEFAULT_OPTIONAL;
-            DefaultValue = default(T);
+            DefaultValue = default( T );
             DefaultValueIsSet = false;
             Actions = new List<Action<T>>();
             Conditions = new List<Func<T, bool>>();
@@ -88,27 +77,26 @@ namespace ArgumentsLibrary {
         /// </summary>
         /// <param name="value">String value</param>
         /// <param name="converter">Type converters</param>
-        internal T Parse(string value, Converter converter) {
-            return converter.Convert<T>(value);
+        internal T Parse( string value, Converter converter ) {
+            return converter.Convert<T>( value );
         }
 
         /// <summary>
         /// Invokes the actions.
         /// </summary>
         /// <param name="value">Argument value</param>
-        internal void InvokeActions(T value)
-        {
-            Actions.ForEach(action => action.Invoke(value));
+        internal void InvokeActions( T value ) {
+            Actions.ForEach( action => action.Invoke( value ) );
         }
 
         /// <summary>
         /// Asserts the conditions.
         /// </summary>
         /// <param name="value">Argument value</param>
-        internal void AssertConditions(T value) {
-            if (!Conditions.All(condition => condition.Invoke(value))) {
-                throw new ArgumentOutOfRangeException("value",
-                    "Argument does not satisfy required conditions");
+        internal void AssertConditions( T value ) {
+            if ( !Conditions.All( condition => condition.Invoke( value ) ) ) {
+                throw new ArgumentOutOfRangeException( "value",
+                    "Argument does not satisfy required conditions" );
             }
         }
 
