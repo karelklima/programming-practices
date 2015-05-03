@@ -39,7 +39,7 @@ namespace ArgumentsLibrary {
         }
 
         public override int GetHashCode() {
-            // If hash is equal (Dictionary.ContainsKey), than Equals() is used
+            // If hash is equal (in Dictionary.ContainsKey), than Equals() is used
             return Alias.GetHashCode();
         }
 
