@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="/Users/zaitsevyan/Documents/programming-practices/Arguments/build/Debug/ArgumentsTest.dll" total="95" errors="0" failures="2" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2015-05-03" time="16:46:47">
+  <environment nunit-version="2.6.4.14350" clr-version="4.0.30319.17020" os-version="Unix 14.3.0.0" platform="Unix" cwd="/Users/zaitsevyan/Documents/programming-practices/Arguments" machine-name="Yan-Zaitsev.local" user="zaitsevyan" user-domain="Yan-Zaitsev.local" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="/Users/zaitsevyan/Documents/programming-practices/Arguments/build/Debug/ArgumentsTest.dll" executed="True" result="Failure" success="False" time="0.869" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="ArgumentsTest" executed="True" result="Failure" success="False" time="0.862" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="ArgumentsTest" executed="True" result="Failure" success="False" time="0.565" asserts="0">
+            <results>
+              <test-case name="ArgumentsTest.ArgumentsTest.AddMandatoryOption_Aliases" executed="True" result="Success" success="True" time="0.066" asserts="1" />
+              <test-case name="ArgumentsTest.ArgumentsTest.AddMandatoryOption_InvalidAlias" executed="True" result="Failure" success="False" time="0.007" asserts="0">
+                <failure>
+                  <message><![CDATA[An unexpected exception type was thrown
+Expected: ArgumentsLibrary.Exceptions.SetupException
+ but was: System.ArgumentException : Input alias is not in valid format]]></message>
+                  <stack-trace><![CDATA[at ArgumentsLibrary.Parser.ParseAlias (System.String alias) [0x00051] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Parser.cs:216
+at System.Linq.Enumerable+<CreateSelectIterator>c__Iterator10`2[System.String,ArgumentsLibrary.OptionAlias].MoveNext () [0x00059] in /private/tmp/source-mono-mac-4.0.0-branch/bockbuild-mono-4.0.0-branch/profiles/mono-mac-xamarin/build-root/mono-4.0.0/mcs/class/System.Core/System.Linq/Enumerable.cs:2266
+at System.Collections.Generic.List`1[ArgumentsLibrary.OptionAlias]..ctor (IEnumerable`1 collection) [0x0008b] in /private/tmp/source-mono-mac-4.0.0-branch/bockbuild-mono-4.0.0-branch/profiles/mono-mac-xamarin/build-root/mono-4.0.0/external/referencesource/mscorlib/system/collections/generic/list.cs:105
+at System.Linq.Enumerable.ToList[OptionAlias] (IEnumerable`1 source) [0x00006] in /private/tmp/source-mono-mac-4.0.0-branch/bockbuild-mono-4.0.0-branch/profiles/mono-mac-xamarin/build-root/mono-4.0.0/mcs/class/System.Core/System.Linq/Enumerable.cs:2948
+at ArgumentsLibrary.Parser.ParseAliases (System.String aliases) [0x0001e] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Parser.cs:175
+at ArgumentsLibrary.Arguments.RegisterOptionAliases (ArgumentsLibrary.Option option, System.String aliases) [0x00003] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Arguments.cs:41
+at ArgumentsLibrary.Builders.OptionBuilder.WithAliases (System.String aliases) [0x00021] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Builders/OptionBuilder.cs:75
+at ArgumentsLibrary.Arguments.AddOption (System.String aliases) [0x00013] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Arguments.cs:96
+at ArgumentsLibrary.Arguments.AddMandatoryOption (System.String aliases) [0x00003] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Arguments.cs:106
+at ArgumentsTest.ArgumentsTest.AddMandatoryOption_InvalidAlias () [0x0000d] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsTest/ArgumentsTest.cs:70
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case name="ArgumentsTest.ArgumentsTest.AddMandatoryOption_Null" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="ArgumentsTest.ArgumentsTest.AddOption_Aliases" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="ArgumentsTest.ArgumentsTest.AddOption_InvalidAlias" executed="True" result="Failure" success="False" time="0.000" asserts="0">
+                <failure>
+                  <message><![CDATA[An unexpected exception type was thrown
+Expected: ArgumentsLibrary.Exceptions.SetupException
+ but was: System.ArgumentException : Input alias is not in valid format]]></message>
+                  <stack-trace><![CDATA[at ArgumentsLibrary.Parser.ParseAlias (System.String alias) [0x00051] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Parser.cs:216
+at System.Linq.Enumerable+<CreateSelectIterator>c__Iterator10`2[System.String,ArgumentsLibrary.OptionAlias].MoveNext () [0x00059] in /private/tmp/source-mono-mac-4.0.0-branch/bockbuild-mono-4.0.0-branch/profiles/mono-mac-xamarin/build-root/mono-4.0.0/mcs/class/System.Core/System.Linq/Enumerable.cs:2266
+at System.Collections.Generic.List`1[ArgumentsLibrary.OptionAlias]..ctor (IEnumerable`1 collection) [0x0008b] in /private/tmp/source-mono-mac-4.0.0-branch/bockbuild-mono-4.0.0-branch/profiles/mono-mac-xamarin/build-root/mono-4.0.0/external/referencesource/mscorlib/system/collections/generic/list.cs:105
+at System.Linq.Enumerable.ToList[OptionAlias] (IEnumerable`1 source) [0x00006] in /private/tmp/source-mono-mac-4.0.0-branch/bockbuild-mono-4.0.0-branch/profiles/mono-mac-xamarin/build-root/mono-4.0.0/mcs/class/System.Core/System.Linq/Enumerable.cs:2948
+at ArgumentsLibrary.Parser.ParseAliases (System.String aliases) [0x0001e] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Parser.cs:175
+at ArgumentsLibrary.Arguments.RegisterOptionAliases (ArgumentsLibrary.Option option, System.String aliases) [0x00003] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Arguments.cs:41
+at ArgumentsLibrary.Builders.OptionBuilder.WithAliases (System.String aliases) [0x00021] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Builders/OptionBuilder.cs:75
+at ArgumentsLibrary.Arguments.AddOption (System.String aliases) [0x00013] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsLibrary/Arguments.cs:96
+at ArgumentsTest.ArgumentsTest.AddOption_InvalidAlias () [0x0000d] in /Users/zaitsevyan/Documents/programming-practices/Arguments/ArgumentsTest/ArgumentsTest.cs:49
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case name="ArgumentsTest.ArgumentsTest.AddOption_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ArgumentsTest.Parse_Null" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="ArgumentsTest.ArgumentsTest.Parse_Option" executed="True" result="Success" success="True" time="0.338" asserts="0" />
+              <test-case name="ArgumentsTest.ArgumentsTest.Parse_PlainArguments" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ArgumentsTest.RegisterTypeConverter_CustomType" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="ArgumentsTest.ArgumentsTest.RegisterTypeConverter_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+            </results>
+          </test-suite>
+          <test-suite type="Namespace" name="Builders" executed="True" result="Success" success="True" time="0.173" asserts="0">
+            <results>
+              <test-suite type="TestFixture" name="ArgumentBuilderTest" executed="True" result="Success" success="True" time="0.034" asserts="0">
+                <results>
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.CompleteArgumentBuilder" executed="True" result="Success" success="True" time="0.012" asserts="3" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.Constructor_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.Constructor_RegisterArgumentAction" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.SetName_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.SetName_Text" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.SetOptional_False" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.SetOptional_True" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.WithAction_Action" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.WithAction_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.WithCondition_Condition" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.WithCondition_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.WithDefaultValue_Null" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.WithDefaultValue_ValidString" executed="True" result="Success" success="True" time="0.001" asserts="2" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.WithEnumeratedValue_EnumeratedValue" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.ArgumentBuilderTest.WithEnumeratedValue_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="OptionBuilderTest" executed="True" result="Success" success="True" time="0.135" asserts="0">
+                <results>
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.Constructor_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.Constructor_RegisterAliasesAction" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.RegisterArgument_InvalidInstanceAndType" executed="True" result="Success" success="True" time="0.071" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.RegisterArgument_NullInstance" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.RegisterArgument_ValidInstanceAndType" executed="True" result="Success" success="True" time="0.012" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.SetMandatory_False" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.SetMandatory_True" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithAction_Action" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithAction_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithAlias_InvalidFormat" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithAlias_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithAlias_ValidFormat" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithAliases_InvalidFormat" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithAliases_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithAliases_ValidFormat" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithArgument_DefaultType_ValidName" executed="True" result="Success" success="True" time="0.002" asserts="2" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithArgument_Int_InvalidName" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithArgument_Int_ValidName" executed="True" result="Success" success="True" time="0.002" asserts="2" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithDescription_Null" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithDescription_Text" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithOptionalArgument_DefaultType_ValidName" executed="True" result="Success" success="True" time="0.008" asserts="3" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithOptionalArgument_Int_InvalidName" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                  <test-case name="ArgumentsTest.Builders.OptionBuilderTest.WithOptionalArgument_Int_ValidName" executed="True" result="Success" success="True" time="0.002" asserts="3" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="CommandLineTest" executed="True" result="Success" success="True" time="0.026" asserts="0">
+            <results>
+              <test-case name="ArgumentsTest.CommandLineTest.Constructor_Ok" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="ArgumentsTest.CommandLineTest.GetOptionValue_DefaultType_InvalidAlias" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="ArgumentsTest.CommandLineTest.GetOptionValue_DefaultType_NotSet" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.CommandLineTest.GetOptionValue_DefaultType_Ok" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+              <test-case name="ArgumentsTest.CommandLineTest.GetOptionValue_Int_InvalidAlias" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="ArgumentsTest.CommandLineTest.GetOptionValue_Int_NotSet" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.CommandLineTest.GetOptionValue_Int_Ok" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="ArgumentsTest.CommandLineTest.GetPlainArguments_DefaultType_ValidInput" executed="True" result="Success" success="True" time="0.002" asserts="2" />
+              <test-case name="ArgumentsTest.CommandLineTest.GetPlainArguments_Int_InvalidInput" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="ArgumentsTest.CommandLineTest.GetPlainArguments_Int_ValidInput" executed="True" result="Success" success="True" time="0.003" asserts="2" />
+              <test-case name="ArgumentsTest.CommandLineTest.IsOptionSet_InvalidAlias" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.CommandLineTest.IsOptionSet_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.CommandLineTest.IsOptionSet_ValidAlias" executed="True" result="Success" success="True" time="0.001" asserts="3" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="ConverterTest" executed="True" result="Success" success="True" time="0.008" asserts="0">
+            <results>
+              <test-case name="ArgumentsTest.ConverterTest.Constructor_Ok" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ConverterTest.Convert_Int_InvalidInt" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="ArgumentsTest.ConverterTest.Convert_Int_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ConverterTest.Convert_Int_ValidInt" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="ArgumentsTest.ConverterTest.Convert_UndefinedTypeConverter" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ConverterTest.RegisterTypeConverter_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ConverterTest.RegisterTypeConverter_ValidConverter" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="OptionAliasTest" executed="True" result="Success" success="True" time="0.013" asserts="0">
+            <results>
+              <test-case name="ArgumentsTest.OptionAliasTest.Constructor_EmptyAlias" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.OptionAliasTest.Constructor_NullAlias" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.OptionAliasTest.Constructor_Ok" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="ArgumentsTest.OptionAliasTest.Equals_EqualAliasAndType" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="ArgumentsTest.OptionAliasTest.Equals_EqualAliasUnequalType" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="ArgumentsTest.OptionAliasTest.Equals_UnequalAliasEqualType" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="ArgumentsTest.OptionAliasTest.GetHashCode_ValidComparison" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="ArgumentsTest.OptionAliasTest.OptionAliasUsage_DictionaryContainsKey_Absent" executed="True" result="Success" success="True" time="0.002" asserts="2" />
+              <test-case name="ArgumentsTest.OptionAliasTest.OptionAliasUsage_DictionaryContainsKey_Present" executed="True" result="Success" success="True" time="0.001" asserts="2" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="ParserTest" executed="True" result="Success" success="True" time="0.061" asserts="0">
+            <results>
+              <test-case name="ArgumentsTest.ParserTest.ParseAlias_Invalid" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseAlias_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseAlias_Ok" executed="True" result="Success" success="True" time="0.001" asserts="6" />
+              <test-case name="ArgumentsTest.ParserTest.ParseAliases_Multiple_Invalid" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseAliases_Multiple_Ok" executed="True" result="Success" success="True" time="0.003" asserts="5" />
+              <test-case name="ArgumentsTest.ParserTest.ParseAliases_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseAliases_Single_Invalid" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseAliases_Single_Ok" executed="True" result="Success" success="True" time="0.000" asserts="3" />
+              <test-case name="ArgumentsTest.ParserTest.ParseArguments_LongOption_InvalidArgument" executed="True" result="Success" success="True" time="0.014" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseArguments_LongOption_MissingArgument" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseArguments_LongOption_ValidArgument" executed="True" result="Success" success="True" time="0.011" asserts="1" />
+              <test-case name="ArgumentsTest.ParserTest.ParseArguments_PlainArguments" executed="True" result="Success" success="True" time="0.001" asserts="3" />
+              <test-case name="ArgumentsTest.ParserTest.ParseArguments_ShortOption_InvalidArgument" executed="True" result="Success" success="True" time="0.003" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseArguments_ShortOption_MissingArgument" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseArguments_ShortOption_ValidArgument" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+              <test-case name="ArgumentsTest.ParserTest.ParseArguments_UnknownLongOption" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+              <test-case name="ArgumentsTest.ParserTest.ParseArguments_UnknownShortOption" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
