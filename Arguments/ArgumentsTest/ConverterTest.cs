@@ -3,7 +3,7 @@ using ArgumentsLibrary;
 
 #if MSTEST
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Category = Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
+using Category =  Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
 #else
 using NUnit.Framework;
 using TestInitialize = NUnit.Framework.SetUpAttribute;
@@ -27,45 +27,45 @@ namespace ArgumentsTest {
         [TestMethod]
         public void RegisterTypeConverter_ValidConverter() {
             var converter = new Converter();
-            converter.RegisterTypeConverter<int>(int.Parse);
+            converter.RegisterTypeConverter<int>( int.Parse );
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
+        [ExpectedException( typeof ( ArgumentNullException ) )]
         public void RegisterTypeConverter_Null() {
             var converter = new Converter();
-            converter.RegisterTypeConverter<string>(null);
+            converter.RegisterTypeConverter<string>( null );
         }
 
         [TestMethod]
         public void Convert_Int_ValidInt() {
             var converter = new Converter();
-            converter.RegisterTypeConverter<int>(int.Parse);
-            var number = converter.Convert<int>("12345");
-            Assert.AreEqual(number, 12345);
+            converter.RegisterTypeConverter<int>( int.Parse );
+            var number = converter.Convert<int>( "12345" );
+            Assert.AreEqual( number, 12345 );
         }
 
         [TestMethod]
-        [ExpectedException(typeof (FormatException))]
+        [ExpectedException( typeof ( FormatException ) )]
         public void Convert_Int_InvalidInt() {
             var converter = new Converter();
-            converter.RegisterTypeConverter<int>(int.Parse);
-            var number = converter.Convert<int>("123ABC");
+            converter.RegisterTypeConverter<int>( int.Parse );
+            var number = converter.Convert<int>( "123ABC" );
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
+        [ExpectedException( typeof ( ArgumentNullException ) )]
         public void Convert_Int_Null() {
             var converter = new Converter();
-            converter.RegisterTypeConverter<int>(int.Parse);
-            var number = converter.Convert<int>(null);
+            converter.RegisterTypeConverter<int>( int.Parse );
+            var number = converter.Convert<int>( null );
         }
 
         [TestMethod]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException( typeof ( InvalidOperationException ) )]
         public void Convert_UndefinedTypeConverter() {
             var converter = new Converter();
-            var number = converter.Convert<int>("12345");
+            var number = converter.Convert<int>( "12345" );
         }
 
     }
