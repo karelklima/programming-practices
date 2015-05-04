@@ -206,21 +206,40 @@ List<string> plainArguments = cmd.GetPlainArguments();
 ### Example 9: Explicit help text option and usage ###
 
 The following option definition writes a help text to the console immediately
-when the option is detected among input command line arguments. The example also
-shows a custom program usage definition.
+when the help option is detected among input command line arguments. The example
+also shows a custom program usage definition.
+
+The output help message is formatted so that it fits into the console. Each line
+is 80 chars long at maximum and option descriptions are justified in a block
+of text.
 
 ~~~{.cs}
 var arguments = new Arguments();
 
-arguments.AddOption( "h|help" )
-    .WithDescription( "Show help text" )
-    .WithAction( () => Console.Write(
-        arguments.BuildHelpText( "app [options] <param1>" ) ) );
+var usage = "copy [options] <file>";
 
-// Help text will begin with following lines:
-// Usage: app [options] <param1>
+arguments.AddOption( "h|help" )
+    .WithDescription( "Shows help text" )
+    .WithAction( () =>
+        Console.WriteLine( arguments.BuildHelpText( usage) ) );
+
+arguments.AddOption( "r|recursive" )
+    .WithDescription( "Denotes in depth copying" );
+
+arguments.AddMandatoryOption( "t" )
+    .WithDescription( "Copy target\nThis option is mandatory!" )
+    .WithArgument( "TARGET" );
+
+// args = { "--help" }
+arguments.Parse(args);
+// Option --help is triggered and writes following lines to the console:
+//
+// Usage: copy [options] <file>
 // Options:
-// ... option definitions
+// -h, --help        Shows help text
+// -r, --recursive   Denotes in depth copying
+// -t <TARGET>       Copy target
+//                   This option is mandatory!
 ~~~
 
 ### Example 10: Conditions and enumerations ###
