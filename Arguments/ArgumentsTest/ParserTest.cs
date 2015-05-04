@@ -236,6 +236,17 @@ namespace ArgumentsTest {
 
         [TestMethod]
         [ExpectedException(typeof (ParseException))]
+        public void ParseArguments_LongOption_MandatoryMissing() {
+            var alias = CreateOptionAlias("option", OptionType.Long);
+            var option = CreateOptionWithArgument<string>(alias);
+            option.Mandatory = true;
+            var dict = CreateOptionsDictionary(option);
+            string[] args = { "argument" };
+            var cmd = Parser.ParseArguments(args, CreateConverter(), dict);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (ParseException))]
         public void ParseArguments_UnknownShortOption() {
             var dict = CreateOptionsDictionary();
             string[] args = {"-o"};

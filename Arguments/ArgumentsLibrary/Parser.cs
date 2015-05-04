@@ -179,23 +179,23 @@ namespace ArgumentsLibrary {
         /// Detects type of the Option alias and removes its prefix if present.
         /// </summary>
         /// <example>
-        /// Alias = "v", OptionType = Short: <br/>
+        /// Alias = "v", OptionType = Short: <br />
         /// <code>
-        /// var optionAlias1 = Parser.ParseAlias("v"); <br/>
-        /// var optionAlias2 = Parser.ParseAlias("-v"); <br/>
+        /// var optionAlias1 = Parser.ParseAlias("v"); <br />
+        /// var optionAlias2 = Parser.ParseAlias("-v"); <br />
         /// </code>
-        /// Alias = "verbose", OptionType = Long: <br/>
+        /// Alias = "verbose", OptionType = Long: <br />
         /// <code>
-        /// var optionAlias3 = Parser.ParseAlias("verbose"); <br/>
-        /// var optionAlias4 = Parser.ParseAlias("--verbose"); <br/>
+        /// var optionAlias3 = Parser.ParseAlias("verbose"); <br />
+        /// var optionAlias4 = Parser.ParseAlias("--verbose"); <br />
         /// </code>
-        /// Alias = "v", OptionType = Long: <br/>
+        /// Alias = "v", OptionType = Long: <br />
         /// <code>
-        /// var optionAlias5 = Parser.ParseAlias("--v"); <br/>
+        /// var optionAlias5 = Parser.ParseAlias("--v"); <br />
         /// </code>
-        /// Alias = "verbose", OptionType = Short: <br/>
+        /// Alias = "verbose", OptionType = Short: <br />
         /// <code>
-        /// var optionAlias6 = Parser.ParseAlias("-verbose"); <br/>
+        /// var optionAlias6 = Parser.ParseAlias("-verbose"); <br />
         /// </code>
         /// </example>
         /// <param name="alias">User specified alias</param>
@@ -292,6 +292,8 @@ namespace ArgumentsLibrary {
                     ProcessDetectedOption( optionAlias );
                 }
             }
+
+            CheckMandatoryOptionsPresent();
         }
 
         /// <summary>
@@ -465,6 +467,24 @@ namespace ArgumentsLibrary {
         }
 
         /// <summary>
+        /// Checks if all mandatory options are present in the CommandLine
+        /// </summary>
+        /// <exception cref="ParseException">
+        /// Thrown when at least one mandatory option is not set
+        /// </exception>
+        private void CheckMandatoryOptionsPresent() {
+            var mandatoryOptions =
+                Options.Values.Distinct().Where( option => option.Mandatory );
+            var allMandatoryPresent = mandatoryOptions.All( option => {
+                return CommandLine.Options.ContainsKey( option.Aliases.First() );
+            } );
+            if ( !allMandatoryPresent ) {
+                throw new ParseException(
+                    "Not all mandatory options are present" );
+            }
+        }
+
+        /// <summary>
         /// Divide string into option alias and argument value
         /// </summary>
         /// <returns>The long option value.</returns>
@@ -475,6 +495,12 @@ namespace ArgumentsLibrary {
                 LONG_OPTION_VALUE_SEPARATOR );
         }
 
+        /// <summary>
+        /// Removes a prefix from the beginning of a string, if any
+        /// </summary>
+        /// <param name="value">String to be shortened</param>
+        /// <param name="prefix">Prefix to cut</param>
+        /// <returns>String without the prefix</returns>
         private static string RemoveOptionalPrefix( string value, string prefix ) {
             return value.StartsWith( prefix )
                 ? value.Remove( 0, prefix.Length )
