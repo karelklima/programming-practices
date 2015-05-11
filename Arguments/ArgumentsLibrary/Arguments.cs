@@ -92,7 +92,7 @@ namespace ArgumentsLibrary {
         #region API
 
         /// <summary>
-        /// Registers types to be used as Option or Plain Arguments, along with
+        /// Registers types to be used as Option or plain arguments, along with
         /// their converter function. The converter function converts input
         /// string to the given type and returns the result.
         /// </summary>
@@ -151,9 +151,9 @@ namespace ArgumentsLibrary {
         /// <summary>
         /// Processes the command line input arguments.
         /// </summary>
-        /// <param name="args">Arguments as passed to the Main</param>
+        /// <param name="args">Standard list of args as passed to the Main</param>
         /// <exception cref="ParseException">
-        /// Arguments do not satisfy the definition
+        /// Passed args do not satisfy the definition
         /// </exception>
         public CommandLine Parse( IEnumerable<string> args ) {
             if ( args == null ) {
